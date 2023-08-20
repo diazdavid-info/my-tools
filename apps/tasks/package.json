@@ -1,7 +1,6 @@
 {
   "name": "@mytools/tasks",
   "version": "0.0.0",
-  "private": true,
   "bin": {
     "tasks": "./dist/index.js"
   },
