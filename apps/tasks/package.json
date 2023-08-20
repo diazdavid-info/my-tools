@@ -1,5 +1,5 @@
 {
-  "name": "@mytools/tasks",
+  "name": "mytools-tasks",
   "version": "0.1.0",
   "bin": {
     "tasks": "./dist/index.js"
