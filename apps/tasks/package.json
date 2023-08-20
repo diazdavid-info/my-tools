@@ -1,0 +1,25 @@
+{
+  "name": "@mytools/tasks",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "tasks": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf dist",
+    "dev": "ncc build ./index.ts -w -o dist/",
+    "lint": "eslint index.ts",
+    "release": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register"
+  },
+  "devDependencies": {
+    "@mytools/tsconfig": "workspace:*",
+    "@types/node": "^20.5.1",
+    "@types/prompts": "2.4.4",
+    "@vercel/ncc": "0.36.1",
+    "eslint-config-mytools": "workspace:*",
+    "prompts": "2.4.2"
+  }
+}
