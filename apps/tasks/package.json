@@ -19,7 +19,12 @@
     "@types/prompts": "2.4.4",
     "@vercel/ncc": "0.36.1",
     "eslint-config-mytools": "workspace:*",
+    "node-fetch": "3.3.2",
+    "picocolors": "1.0.0",
     "prompts": "2.4.2",
     "simple-git": "3.19.1"
+  },
+  "engines": {
+    "node": ">=18.16.0"
   }
 }
