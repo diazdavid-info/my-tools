@@ -30,3 +30,12 @@ pnpm i
 2. Inicializa pnpm `pnpm init`
 3. Instala ts y eslint `pnpm i -D @mytools/tsconfig eslint-config-mytools`
 4. Copia los ficheros `.eslintrc.js` y `tsconfig.json` de cualquiera otra app
+
+## Como subir de versión un paquete y publicarlo
+
+1. Ejecutar `changeset add`
+2. Añadir el paquete que se quiere subir de versión y si es `major`, `minor` o `patch`
+3. Hacer un commit. Ejemplo de mensaje `Add changeset`
+4. Ejecutar `changeset version` que subirá de versión los paquete que hemos selecionado antes
+5. Hacer un commit. Ejemplo de mensaje `update version`
+6. Ejecutar `changeset publish` que subirar los paquete que tienen que subir
