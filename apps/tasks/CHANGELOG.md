@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.2.0
+
+### Minor Changes
+
+- d8f6d8b: add new library and add git fetch
+
 ## 0.1.1
 
 ### Patch Changes
