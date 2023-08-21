@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.2.1
+
+### Patch Changes
+
+- 3f6932e: fix error exec task
+
 ## 0.2.0
 
 ### Minor Changes
