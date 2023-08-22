@@ -2,7 +2,7 @@
 
 import prompts from 'prompts'
 import { simpleGit } from 'simple-git'
-import { cyan, yellow, red } from 'picocolors'
+import { cyan, green, yellow, red } from 'picocolors'
 import { searchInProgressTasks } from './jira-provider'
 import { formatBranchName } from './format-branch-name'
 
@@ -21,7 +21,7 @@ async function ensureEnvs() {
 async function createBranch(): Promise<void> {
   console.log(`🐷  ${cyan('info')} making a git fetch`)
   await simpleGit().fetch()
-  console.log(`🐷  ${cyan('info')} git fetch completed`)
+  console.log(`🐷  ${green('success')} git fetch completed`)
 
   console.log(`🐷  ${cyan('info')} requesting task in progress`)
 
@@ -66,7 +66,7 @@ async function run(): Promise<void> {
 
 run()
   .then(() => {
-    console.log(`🐷  ${cyan('info')} process completed`)
+    console.log(`🐷  ${green('success')} process completed`)
 
     process.exit()
   })
