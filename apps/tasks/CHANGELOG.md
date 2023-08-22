@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.3.0
+
+### Minor Changes
+
+- add search in progress task
+
 ## 0.2.1
 
 ### Patch Changes
