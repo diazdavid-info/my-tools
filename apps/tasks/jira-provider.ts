@@ -40,6 +40,6 @@ export const searchInProgressTasks = async (): Promise<Task[]> => {
       key,
       self
     } = issue
-    return { id: key, name: summary, type: name, url: self }
+    return { id: key.trim(), name: summary.trim(), type: name.trim(), url: self.trim() }
   })
 }

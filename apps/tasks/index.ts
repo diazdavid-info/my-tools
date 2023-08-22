@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import prompts, { Choice } from 'prompts'
+import prompts from 'prompts'
 import { simpleGit } from 'simple-git'
-import { cyan, red } from 'picocolors'
+import { cyan, yellow, red } from 'picocolors'
 import { searchInProgressTasks } from './jira-provider'
+import { formatBranchName } from './format-branch-name'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -26,21 +27,27 @@ async function createBranch(): Promise<void> {
 
   const issues = await searchInProgressTasks()
 
-  const choices: Choice[] = []
-  issues.forEach((issue) => {
-    const taskDescription = `${issue.id}; ${issue.name}; ${issue.type}; ${issue.url}`
-    choices.push({ title: taskDescription, value: taskDescription })
-  })
-
   const { task } = await prompts({
     type: 'select',
     name: 'task',
     message: 'What task do you want to start?',
-    choices,
-    initial: 1
+    choices: issues.map((issue) => {
+      const title = `${cyan(issue.id)} => ${issue.name} => ${yellow(issue.type)}`
+      const value = `${issue.id};${issue.name};${issue.type}`
+      return { title, value }
+    })
   })
 
-  console.log(task)
+  const formatBranch = formatBranchName(task)
+
+  const { branchName } = await prompts({
+    type: 'select',
+    name: 'branchName',
+    message: 'What name of brunch do you like?',
+    choices: formatBranch.map((format) => ({ title: format, value: format }))
+  })
+
+  console.log(branchName)
 }
 
 async function run(): Promise<void> {
