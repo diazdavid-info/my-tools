@@ -18,11 +18,11 @@ async function ensureEnvs() {
 }
 
 async function createBranch(): Promise<void> {
-  console.log(`🦋  ${cyan('info')} making a git fetch`)
+  console.log(`🐷  ${cyan('info')} making a git fetch`)
   await simpleGit().fetch()
-  console.log(`🦋  ${cyan('info')} git fetch completed`)
+  console.log(`🐷  ${cyan('info')} git fetch completed`)
 
-  console.log(`🦋  ${cyan('info')} requesting task in progress`)
+  console.log(`🐷  ${cyan('info')} requesting task in progress`)
 
   const issues = await searchInProgressTasks()
 
@@ -59,13 +59,13 @@ async function run(): Promise<void> {
 
 run()
   .then(() => {
-    console.log(`🦋  ${cyan('info')} process completed`)
+    console.log(`🐷  ${cyan('info')} process completed`)
 
     process.exit()
   })
   .catch((reason) => {
-    console.log(`🦋  ${red('error')} aborting`)
-    console.log(`🦋  ${red('error')} ${reason}`)
+    console.log(`🐷  ${red('error')} aborting`)
+    console.log(`🐷  ${red('error')} ${reason}`)
 
     process.exit(1)
   })
