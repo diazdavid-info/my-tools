@@ -1,4 +1,7 @@
 module.exports = {
   root: true,
-  extends: ['mytools']
+  extends: ['mytools'],
+  rules: {
+    '@typescript-eslint/no-explicit-any': 'off'
+  }
 }
