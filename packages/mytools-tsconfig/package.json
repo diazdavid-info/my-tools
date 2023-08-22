@@ -1,5 +1,5 @@
 {
-  "name": "@mytools/tsconfig",
+  "name": "mytools-tsconfig",
   "version": "0.0.0",
   "license": "MIT",
   "publishConfig": {

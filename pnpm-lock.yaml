@@ -23,9 +23,6 @@ importers:
 
   apps/tasks:
     devDependencies:
-      '@mytools/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/mytools-tsconfig
       '@types/node':
         specifier: ^20.5.1
         version: 20.5.1
@@ -38,6 +35,9 @@ importers:
       eslint-config-mytools:
         specifier: workspace:*
         version: link:../../packages/eslint-config-mytools
+      mytools-tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/mytools-tsconfig
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
@@ -68,9 +68,6 @@ importers:
 
   packages/mytools-components:
     devDependencies:
-      '@mytools/tsconfig':
-        specifier: workspace:*
-        version: link:../mytools-tsconfig
       '@types/react':
         specifier: ^18.2.20
         version: 18.2.20
@@ -80,6 +77,9 @@ importers:
       eslint-config-mytools:
         specifier: workspace:*
         version: link:../eslint-config-mytools
+      mytools-tsconfig:
+        specifier: workspace:*
+        version: link:../mytools-tsconfig
       react:
         specifier: ^18.2.0
         version: 18.2.0
