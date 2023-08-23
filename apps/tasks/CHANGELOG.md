@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.4.0
+
+### Minor Changes
+
+- finish all flow
+
 ## 0.3.1
 
 ### Patch Changes
