@@ -19,11 +19,15 @@ async function ensureEnvs() {
 }
 
 async function createBranch(): Promise<void> {
-  console.log(`🐷  ${cyan('info')} making a git fetch`)
+  console.log(`🐷  ${cyan('info')} making a git fetch...`)
   await simpleGit().fetch()
   console.log(`🐷  ${green('success')} git fetch completed`)
 
-  console.log(`🐷  ${cyan('info')} requesting task in progress`)
+  console.log(`🐷  ${cyan('info')} pulling branches...`)
+  await simpleGit().pull()
+  console.log(`🐷  ${green('success')} pull branches completed`)
+
+  console.log(`🐷  ${cyan('info')} requesting task in progress...`)
 
   const issues = await searchInProgressTasks()
 
@@ -47,7 +51,8 @@ async function createBranch(): Promise<void> {
     choices: formatBranch.map((format) => ({ title: format, value: format }))
   })
 
-  console.log(branchName)
+  console.log(`🐷  ${cyan('info')} creating new branch ${yellow(branchName)}`)
+  await simpleGit().checkoutLocalBranch(branchName)
 }
 
 async function run(): Promise<void> {
