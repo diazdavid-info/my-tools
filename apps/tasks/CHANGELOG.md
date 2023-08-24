@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.4.1
+
+### Patch Changes
+
+- update readme, add image
+
 ## 0.4.0
 
 ### Minor Changes
