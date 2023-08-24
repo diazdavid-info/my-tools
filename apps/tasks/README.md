@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/diazdavid-info/my-tools/blob/main/apps/tasks/tasks.png" alt="Tasks" width="500" />
+  <img src="https://github.com/diazdavid-info/my-tools/blob/main/apps/tasks/tasks-v2.png" alt="Tasks" width="500" />
 </p>
 
 <h1 align="center">❯ Tasks</h1>
