@@ -1,6 +1,10 @@
-# Herramientas de mi día a día
+<p align="center">
+  <img src="https://github.com/diazdavid-info/my-tools/blob/main/apps/tasks/tasks.png" alt="Tasks" width="500" />
+</p>
 
-Script con diferentes herramientas que uso en mi día a día
+<h1 align="center">❯ Tasks</h1>
+
+<br />
 
 ## Instalación
 
