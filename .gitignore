@@ -1,5 +1,8 @@
 # build output
 dist
+build/**
+.next/**
+.turbo
 
 # dependencies
 node_modules
