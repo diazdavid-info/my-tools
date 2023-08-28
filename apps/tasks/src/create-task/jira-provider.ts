@@ -7,6 +7,44 @@ export type Task = {
   url: string
 }
 
+type JiraResponse = {
+  expand: string
+  startAt: number
+  maxResults: number
+  total: number
+  issues: Issue[]
+  names: Names
+}
+
+type Issue = {
+  expand: string
+  id: string
+  self: string
+  key: string
+  fields: Fields
+}
+
+type Fields = {
+  summary: string
+  issuetype: Issuetype
+}
+
+type Issuetype = {
+  self: string
+  id: string
+  description: string
+  iconUrl: string
+  name: string
+  subtask: boolean
+  avatarId?: number
+  hierarchyLevel: number
+}
+
+type Names = {
+  summary: string
+  issuetype: string
+}
+
 export const searchInProgressTasks = async (): Promise<Task[]> => {
   const url = `${process.env.JIRA_DOMAIN}/rest/api/3/search`
   const body = {
@@ -28,7 +66,9 @@ export const searchInProgressTasks = async (): Promise<Task[]> => {
     }
   })
 
-  const jiraResponse: any = await response.json()
+  if (!response.ok) return []
+
+  const jiraResponse = (await response.json()) as JiraResponse
   const { issues = [] } = jiraResponse
 
   return issues.map((issue: any) => {

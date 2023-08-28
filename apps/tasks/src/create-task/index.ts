@@ -55,6 +55,7 @@ const run = async () => {
   await gitPull()
 
   const issues = await searchTasks()
+  if (!issues.length) return Promise.reject('There are not in progress tasks')
   const task = await askUserByTask(issues)
 
   const formatBranch = formatBranchName(task)
