@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 
 import prompts from 'prompts'
-import { simpleGit } from 'simple-git'
-import { cyan, green, yellow, red } from 'picocolors'
-import { searchInProgressTasks } from './jira-provider'
-import { formatBranchName } from './format-branch-name'
+import { green, red } from 'picocolors'
+import createTask from './src/create-task'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -18,43 +16,6 @@ async function ensureEnvs() {
   }
 }
 
-async function createBranch(): Promise<void> {
-  console.log(`🐷  ${cyan('info')} making a git fetch...`)
-  await simpleGit().fetch()
-  console.log(`🐷  ${green('success')} git fetch completed`)
-
-  console.log(`🐷  ${cyan('info')} pulling branches...`)
-  await simpleGit().pull()
-  console.log(`🐷  ${green('success')} pull branches completed`)
-
-  console.log(`🐷  ${cyan('info')} requesting task in progress...`)
-
-  const issues = await searchInProgressTasks()
-
-  const { task } = await prompts({
-    type: 'select',
-    name: 'task',
-    message: 'What task do you want to start?',
-    choices: issues.map((issue) => {
-      const title = `${cyan(issue.id)} => ${issue.name} => ${yellow(issue.type)}`
-      const value = `${issue.id};${issue.name};${issue.type}`
-      return { title, value }
-    })
-  })
-
-  const formatBranch = formatBranchName(task)
-
-  const { branchName } = await prompts({
-    type: 'select',
-    name: 'branchName',
-    message: 'What name of brunch do you like?',
-    choices: formatBranch.map((format) => ({ title: format, value: format }))
-  })
-
-  console.log(`🐷  ${cyan('info')} creating new branch ${yellow(branchName)}`)
-  await simpleGit().checkoutLocalBranch(branchName)
-}
-
 async function run(): Promise<void> {
   await ensureEnvs()
 
@@ -66,7 +27,7 @@ async function run(): Promise<void> {
     initial: 0
   })
 
-  if (task === 'Create branch') await createBranch()
+  if (task === 'Create branch') await createTask()
 }
 
 run()
