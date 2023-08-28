@@ -11,7 +11,6 @@ process.on('SIGTERM', handleSigTerm)
 
 async function ensureEnvs() {
   if (!process.env.JIRA_DOMAIN || !process.env.JIRA_AUTHORIZATION) {
-    console.log(process.env)
     return Promise.reject('The envs JIRA_DOMAIN or JIRA_AUTHORIZATION not exist. More info in doc')
   }
 }
