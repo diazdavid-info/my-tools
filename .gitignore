@@ -9,3 +9,6 @@ node_modules
 
 # Editors
 **/.idea
+
+enviroments
+**/.env
