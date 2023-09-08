@@ -34,12 +34,18 @@ app.get('/login', async (req: Request, res: Response) => {
 
   const authCodeUrlRequest = {
     redirectUri: config.redirectUri,
-    responseMode: ResponseMode.FORM_POST,
-    scopes: []
+    responseMode: ResponseMode.QUERY,
+    scopes: ['User.Read', 'Calendars.ReadWrite', 'Calendars.ReadWrite.Shared']
   }
   const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(authCodeUrlRequest)
 
   res.redirect(authCodeUrlResponse)
+})
+
+app.get('/logout', async (req: Request, res: Response) => {
+  const logoutUri = `${config.msalConfig.auth.authority}/oauth2/v2.0/logout?post_logout_redirect_uri=${config.postLogoutRedirectUri}`
+
+  res.redirect(logoutUri)
 })
 
 app.post('/auth/redirect', async (req: Request, res: Response) => {
@@ -61,6 +67,48 @@ app.post('/auth/redirect', async (req: Request, res: Response) => {
     createdAt: new Date(),
     updatedAt: new Date()
   })
+
+  return res.json({ token: tokenResponse, tokenCache: msalInstance.getTokenCache().serialize() })
+})
+
+app.get('/auth/redirect', async (req: Request, res: Response) => {
+  const msalInstance = new ConfidentialClientApplication(config.msalConfig)
+
+  const authCodeRequest = {
+    redirectUri: config.redirectUri,
+    scopes: ['User.Read', 'Calendars.ReadWrite', 'Calendars.ReadWrite.Shared'],
+    code: req.query.code as string
+  }
+
+  const tokenResponse = await msalInstance.acquireTokenByCode(authCodeRequest)
+
+  if (tokenResponse.account?.homeAccountId === undefined)
+    return res.status(401).json({ status: 401, error: 'Fallo al optener la cuenta' })
+
+  const [account] = await dbConnection('accounts')
+    .select('*')
+    .where('accountId', '=', tokenResponse.account.homeAccountId)
+
+  if (account) {
+    await dbConnection('accounts')
+      .update({
+        accountId: tokenResponse.account.homeAccountId,
+        account: JSON.stringify(tokenResponse.account),
+        token: tokenResponse.accessToken,
+        cacheToken: msalInstance.getTokenCache().serialize(),
+        updatedAt: new Date()
+      })
+      .where('id', '=', account.id)
+  } else {
+    await dbConnection('accounts').insert({
+      accountId: tokenResponse.account.homeAccountId,
+      account: JSON.stringify(tokenResponse.account),
+      token: tokenResponse.accessToken,
+      cacheToken: msalInstance.getTokenCache().serialize(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })
+  }
 
   return res.json({ token: tokenResponse, tokenCache: msalInstance.getTokenCache().serialize() })
 })
