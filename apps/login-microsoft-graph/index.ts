@@ -185,6 +185,52 @@ app.get('/me/:accountId/calendars', async (req: Request, res: Response) => {
   res.status(200).json({ me })
 })
 
+app.post('/me/:accountId/subscriptions', async (req: Request, res: Response) => {
+  const { accountId } = req.params
+  const { cacheToken, account } = await dbConnection('accounts').select('*').where('accountId', '=', accountId).first()
+
+  const msalInstance = new ConfidentialClientApplication(config.msalConfig)
+
+  msalInstance.getTokenCache().deserialize(cacheToken)
+
+  const tokenResponse = await msalInstance.acquireTokenSilent({
+    account,
+    scopes: ['User.Read'],
+    claims: undefined
+  })
+
+  const client = Client.init({
+    authProvider: (done) => {
+      done(null, tokenResponse.accessToken)
+    }
+  })
+
+  const subscription = {
+    changeType: 'created,updated,deleted',
+    notificationUrl: 'https://01b0-85-55-15-25.ngrok-free.app/api/send/myNotifyClient',
+    resource: 'me/events',
+    expirationDateTime: '2023-09-14T18:23:45.9356913Z',
+    clientState: 'secretClientValue',
+    latestSupportedTlsVersion: 'v1_2'
+  }
+
+  const subscriptionResponse = await client.api('/subscriptions').post(subscription)
+
+  return res.status(200).json({ subscriptionResponse })
+})
+
+app.post('/api/send/myNotifyClient', async (req: Request, res: Response) => {
+  const { validationToken } = req.query
+
+  if (validationToken) return res.status(200).send(validationToken)
+
+  console.log(JSON.stringify(req.body))
+
+  const { clientState } = req.body
+
+  return res.status(200).send(clientState)
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
