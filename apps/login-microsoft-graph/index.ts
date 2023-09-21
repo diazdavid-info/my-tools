@@ -9,6 +9,8 @@ dotenv.config({ path: './.env' })
 const app = express()
 const port = 4001
 
+const SCOPES = ['User.Read', 'Calendars.Read', 'Calendars.ReadWrite']
+
 const config = {
   msalConfig: {
     auth: {
@@ -35,7 +37,7 @@ app.get('/login', async (req: Request, res: Response) => {
   const authCodeUrlRequest = {
     redirectUri: config.redirectUri,
     responseMode: ResponseMode.QUERY,
-    scopes: ['User.Read', 'Calendars.ReadWrite', 'Calendars.ReadWrite.Shared']
+    scopes: SCOPES
   }
   const authCodeUrlResponse = await msalInstance.getAuthCodeUrl(authCodeUrlRequest)
 
@@ -53,7 +55,7 @@ app.post('/auth/redirect', async (req: Request, res: Response) => {
 
   const authCodeRequest = {
     redirectUri: config.redirectUri,
-    scopes: ['User.Read'],
+    scopes: SCOPES,
     code: req.body.code as string
   }
 
@@ -76,7 +78,7 @@ app.get('/auth/redirect', async (req: Request, res: Response) => {
 
   const authCodeRequest = {
     redirectUri: config.redirectUri,
-    scopes: ['User.Read', 'Calendars.ReadWrite', 'Calendars.ReadWrite.Shared'],
+    scopes: SCOPES,
     code: req.query.code as string
   }
 
@@ -126,7 +128,7 @@ app.get('/me/:accountId', async (req: Request, res: Response) => {
 
   const tokenResponse = await msalInstance.acquireTokenSilent({
     account: JSON.parse(account),
-    scopes: ['User.Read'],
+    scopes: SCOPES,
     claims: undefined
   })
 
@@ -166,7 +168,7 @@ app.get('/me/:accountId/calendars', async (req: Request, res: Response) => {
 
   const tokenResponse = await msalInstance.acquireTokenSilent({
     account,
-    scopes: ['User.Read'],
+    scopes: SCOPES,
     claims: undefined
   })
 
@@ -195,7 +197,7 @@ app.post('/me/:accountId/subscriptions', async (req: Request, res: Response) => 
 
   const tokenResponse = await msalInstance.acquireTokenSilent({
     account,
-    scopes: ['User.Read'],
+    scopes: SCOPES,
     claims: undefined
   })
 
