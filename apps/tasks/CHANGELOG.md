@@ -1,5 +1,17 @@
 # @mytools/tasks
 
+## 0.6.1
+
+### Patch Changes
+
+- republish version
+
+## 0.6.0
+
+### Minor Changes
+
+- clean characters
+
 ## 0.5.1
 
 ### Patch Changes
