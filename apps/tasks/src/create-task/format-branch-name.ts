@@ -6,11 +6,14 @@ const clearName = (name: string): string =>
     .replace(/\+\s/, '')
     .replace(/-\s/, '')
     .replace(/\./, '')
-    .replace(/\s/g, '-')
+    .replace(/>/g, '')
+    .replace(/</g, '')
     .replace(/:/g, '')
     .replace(/"/g, '')
     .replace(/&/g, '')
     .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s/g, '-')
     .toLowerCase()
 
 const getTypeTask = (type: string): string => {
