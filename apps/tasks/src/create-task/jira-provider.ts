@@ -45,7 +45,19 @@ type Names = {
   issuetype: string
 }
 
-export const searchInProgressTasks = async (): Promise<Task[]> => {
+export enum TaskOwnership {
+  MY_TASKS = 1,
+  ALL = 2
+}
+
+const getQuery = (ownership: TaskOwnership): string => {
+  const inProgress = 'status = "In Progress"'
+  if (ownership === TaskOwnership.MY_TASKS) return `${inProgress} AND assignee = currentUser()`
+
+  return inProgress
+}
+
+export const searchInProgressTasks = async (ownership: TaskOwnership): Promise<Task[]> => {
   const url = `${process.env.JIRA_DOMAIN}/rest/api/3/search`
   const body = {
     expand: ['names'],
@@ -53,7 +65,7 @@ export const searchInProgressTasks = async (): Promise<Task[]> => {
     fieldsByKeys: false,
     fields: ['summary', 'issuetype'],
     startAt: 0,
-    jql: 'status = "In Progress"'
+    jql: getQuery(ownership)
   }
 
   const response = await fetch(url, {
