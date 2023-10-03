@@ -1,6 +1,6 @@
 import { cyan, green, yellow } from 'picocolors'
 import { simpleGit } from 'simple-git'
-import { searchInProgressTasks, Task } from './jira-provider'
+import { searchInProgressTasks, Task, TaskOwnership } from './jira-provider'
 import prompts from 'prompts'
 import { formatBranchName } from './format-branch-name'
 
@@ -16,9 +16,23 @@ async function gitPull() {
   console.log(`🐷  ${green('success')} pull branches completed`)
 }
 
-async function searchTasks() {
+async function searchTasks(ownership: TaskOwnership) {
   console.log(`🐷  ${cyan('info')} requesting task in progress...`)
-  return await searchInProgressTasks()
+  return await searchInProgressTasks(ownership)
+}
+
+async function askUserByTaskOwnership() {
+  const { ownership } = await prompts({
+    type: 'select',
+    name: 'ownership',
+    message: 'What kind of task do you want to search?',
+    choices: [
+      { title: 'My tasks', value: TaskOwnership.MY_TASKS },
+      { title: 'All tasks', value: TaskOwnership.ALL }
+    ],
+    initial: 0
+  })
+  return ownership
 }
 
 async function askUserByTask(issues: Task[]) {
@@ -54,7 +68,8 @@ const run = async () => {
   await gitFetch()
   await gitPull()
 
-  const issues = await searchTasks()
+  const ownership = await askUserByTaskOwnership()
+  const issues = await searchTasks(ownership)
   if (!issues.length) return Promise.reject('There are not in progress tasks')
   const task = await askUserByTask(issues)
 
