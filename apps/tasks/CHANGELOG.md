@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.7.0
+
+### Minor Changes
+
+- add task ownership filter from user prompt input
+
 ## 0.6.1
 
 ### Patch Changes
