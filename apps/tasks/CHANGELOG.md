@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.7.1
+
+### Patch Changes
+
+- fix typo
+
 ## 0.7.0
 
 ### Minor Changes
