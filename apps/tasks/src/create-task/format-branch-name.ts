@@ -18,7 +18,7 @@ const clearName = (name: string): string =>
 
 const getTypeTask = (type: string): string => {
   if (type === 'Epic') return 'story'
-  if (type === 'bug') return 'fix'
+  if (type === 'Bug') return 'fix'
   return 'feat'
 }
 
