@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.8.0
+
+### Minor Changes
+
+- add create pr action
+
 ## 0.7.1
 
 ### Patch Changes
