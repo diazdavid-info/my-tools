@@ -3,6 +3,7 @@
 import prompts from 'prompts'
 import { green, red } from 'picocolors'
 import createTask from './src/create-task'
+import createPullRequest from './src/create-pull-request'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -22,11 +23,15 @@ async function run(): Promise<void> {
     type: 'select',
     name: 'task',
     message: 'What do you want to do?',
-    choices: [{ title: 'Create branch', description: '', value: 'Create branch' }],
+    choices: [
+      { title: 'Create branch', description: '', value: 'Create branch' },
+      { title: 'Create PR', description: '', value: 'Create PR' }
+    ],
     initial: 0
   })
 
   if (task === 'Create branch') await createTask()
+  if (task === 'Create PR') await createPullRequest()
 }
 
 run()
