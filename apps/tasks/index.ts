@@ -10,13 +10,13 @@ const handleSigTerm = () => process.exit(0)
 process.on('SIGINT', handleSigTerm)
 process.on('SIGTERM', handleSigTerm)
 
-async function ensureEnvs() {
+const ensureEnvs = async () => {
   if (!process.env.JIRA_DOMAIN || !process.env.JIRA_AUTHORIZATION) {
     return Promise.reject('The envs JIRA_DOMAIN or JIRA_AUTHORIZATION not exist. More info in doc')
   }
 }
 
-async function run(): Promise<void> {
+const run = async (): Promise<void> => {
   await ensureEnvs()
 
   const { task } = await prompts({
