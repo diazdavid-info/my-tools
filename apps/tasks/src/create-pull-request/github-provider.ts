@@ -433,13 +433,13 @@ export const createPullRequest = async (pullRequestCreate: PullRequestCreate): P
     `https://api.github.com/repos/${process.env.GITHUB_ORGANIZATION}/${pullRequestCreate.repo}/pulls`,
     {
       method: 'post',
-      body: {
+      body: JSON.stringify({
         title: pullRequestCreate.title,
         body: pullRequestCreate.body,
         head: pullRequestCreate.head,
         base: pullRequestCreate.base,
         draft: true
-      },
+      }),
       headers: {
         Accept: 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
@@ -448,7 +448,10 @@ export const createPullRequest = async (pullRequestCreate: PullRequestCreate): P
     }
   )
 
-  if (!response.ok) return Promise.reject('Fail to create PR')
+  if (!response.ok) {
+    const { message } = (await response.json()) as { message: string }
+    return Promise.reject(`Fail to create PR -> ${response.statusText}: ${message}`)
+  }
 
   const githubPullRequest = (await response.json()) as GithubPullRequest
 
