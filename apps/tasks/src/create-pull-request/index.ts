@@ -42,7 +42,7 @@ const ensureCurrentBranchIsOrigin = async () => {
 const createPullRequest = async (currentBranch: string, baseBranch: string, projectSelected: string) => {
   await githubCreatePullRequest({
     title: `${currentBranch} pull request`,
-    body: 'Esta PR [cierra, soluciona, resuelve] [#000](https://zityhub.atlassian.net/browse/000)\\n\\n![required gif]()\\n\\n### Descripción\\n\\n- Sobre Esta PR\\n\\n### Aceptación\\n\\n- [ ] Hay que probar....\\n\\n### Información extra\\n\\n- Más info\\n\\n',
+    body: 'Esta PR [cierra, soluciona, resuelve] [#000](https://zityhub.atlassian.net/browse/000)\n\n![required gif]()\n\n### Descripción\n\n- Sobre Esta PR\n\n### Aceptación\n\n- [ ] Hay que probar....\n\n### Información extra\n\n- Más info\n\n',
     head: currentBranch,
     base: baseBranch,
     repo: projectSelected
