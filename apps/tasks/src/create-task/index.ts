@@ -3,6 +3,7 @@ import { simpleGit } from 'simple-git'
 import { searchInProgressTasks, Task, TaskOwnership } from './jira-provider'
 import prompts from 'prompts'
 import { formatBranchName } from './format-branch-name'
+import { isJiraConfigured } from '../shared/config'
 
 async function gitFetch() {
   console.log(`🐷  ${cyan('info')} making a git fetch...`)
@@ -64,7 +65,14 @@ async function checkoutBranch(branchName: string) {
   await simpleGit().checkoutLocalBranch(branchName)
 }
 
+const ensureEnvs = async () => {
+  if (!(await isJiraConfigured())) {
+    return Promise.reject('The envs JIRA_DOMAIN or JIRA_AUTHORIZATION not exist. More info in doc')
+  }
+}
+
 const run = async () => {
+  await ensureEnvs()
   await gitFetch()
   await gitPull()
 
