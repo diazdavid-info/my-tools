@@ -27,6 +27,7 @@ export type Config = {
       tools: ProjectTools
       createdAt: number
       updatedAt: number
+      tasks: []
     }
   }
   advanced: boolean

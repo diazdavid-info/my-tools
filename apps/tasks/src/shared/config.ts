@@ -28,3 +28,19 @@ export const isJiraConfigured = async () => {
 
   return generalConfig.domain && generalConfig.authorization
 }
+
+export const addCurrentProject = async () => {
+  const projectName = base64Encode(processDir())
+
+  const fileContent = await readFile(`${homeDir()}/.mytools/config`)
+  const config = JSON.parse(fileContent) as Config
+
+  const project = config.projects[projectName]
+
+  if (!project) {
+    const date = new Date()
+    config.projects[projectName] = { tasks: [], createdAt: date.valueOf(), updatedAt: date.valueOf(), tools: {} }
+    const data = JSON.stringify(config, null, 2)
+    await writeFile(`${homeDir()}/.mytools/config`, data)
+  }
+}

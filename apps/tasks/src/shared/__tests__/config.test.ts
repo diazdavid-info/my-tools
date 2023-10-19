@@ -59,7 +59,8 @@ describe('config', () => {
         base64fake: {
           tools: { jira: { domain: 'fakeDomain', authorization: 'key' } },
           createdAt: 1697575949,
-          updatedAt: 1697575949
+          updatedAt: 1697575949,
+          tasks: []
         }
       }
       processDirSpy.mockReturnValue('/fakeDir')

@@ -3,7 +3,7 @@ import { simpleGit } from 'simple-git'
 import { searchInProgressTasks, Task, TaskOwnership } from './jira-provider'
 import prompts from 'prompts'
 import { formatBranchName } from './format-branch-name'
-import { isJiraConfigured } from '../shared/config'
+import { addCurrentProject, isJiraConfigured } from '../shared/config'
 
 async function gitFetch() {
   console.log(`🐷  ${cyan('info')} making a git fetch...`)
@@ -72,6 +72,7 @@ const ensureEnvs = async () => {
 }
 
 const run = async () => {
+  await addCurrentProject()
   await ensureEnvs()
   await gitFetch()
   await gitPull()
