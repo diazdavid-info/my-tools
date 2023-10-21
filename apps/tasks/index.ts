@@ -4,20 +4,19 @@ import prompts from 'prompts'
 import { green, red } from 'picocolors'
 import createTask from './src/create-task'
 import createPullRequest from './src/create-pull-request'
+import { init as configInit } from './src/shared/config'
 
 const handleSigTerm = () => process.exit(0)
 
 process.on('SIGINT', handleSigTerm)
 process.on('SIGTERM', handleSigTerm)
 
-async function ensureEnvs() {
-  if (!process.env.JIRA_DOMAIN || !process.env.JIRA_AUTHORIZATION) {
-    return Promise.reject('The envs JIRA_DOMAIN or JIRA_AUTHORIZATION not exist. More info in doc')
-  }
+const install = async () => {
+  await configInit()
 }
 
-async function run(): Promise<void> {
-  await ensureEnvs()
+const run = async (): Promise<void> => {
+  await install()
 
   const { task } = await prompts({
     type: 'select',

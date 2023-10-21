@@ -1,3 +1,5 @@
+import { Task } from './jira-provider'
+
 const clearName = (name: string): string =>
   name
     ?.trim()
@@ -22,11 +24,11 @@ const getTypeTask = (type: string): string => {
   return 'feat'
 }
 
-export const formatBranchName = (tasks: string): string[] => {
-  const [key, summary, type] = tasks.split(';')
+export const formatBranchName = (task: Task): [string, string, string] => {
+  const { id, name, type } = task
 
   const typeTask = getTypeTask(type)
-  const summaryFormat = clearName(summary)
+  const summaryFormat = clearName(name)
 
-  return [`${typeTask}/${key}_${summaryFormat}`, `${typeTask}/${key}`, `${key}`]
+  return [`${typeTask}/${id}_${summaryFormat}`, `${typeTask}/${id}`, `${id}`]
 }
