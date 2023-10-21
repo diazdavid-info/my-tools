@@ -3,7 +3,7 @@ import { simpleGit } from 'simple-git'
 import { searchInProgressTasks, Task, TaskOwnership } from './jira-provider'
 import prompts from 'prompts'
 import { formatBranchName } from './format-branch-name'
-import { addCurrentProject, isJiraConfigured } from '../shared/config'
+import { addCurrentProject, addTask, isJiraConfigured } from '../shared/config'
 
 async function gitFetch() {
   console.log(`🐷  ${cyan('info')} making a git fetch...`)
@@ -22,7 +22,7 @@ async function searchTasks(ownership: TaskOwnership) {
   return await searchInProgressTasks(ownership)
 }
 
-async function askUserByTaskOwnership() {
+async function askUserByTaskOwnership(): Promise<TaskOwnership> {
   const { ownership } = await prompts({
     type: 'select',
     name: 'ownership',
@@ -33,24 +33,26 @@ async function askUserByTaskOwnership() {
     ],
     initial: 0
   })
+
   return ownership
 }
 
-async function askUserByTask(issues: Task[]) {
+async function askUserByTask(issues: Task[]): Promise<Task> {
   const { task } = await prompts({
     type: 'select',
     name: 'task',
     message: 'What task do you want to start?',
     choices: issues.map((issue) => {
       const title = `${cyan(issue.id)} => ${issue.name} => ${yellow(issue.type)}`
-      const value = `${issue.id};${issue.name};${issue.type}`
+      const value = issue
       return { title, value }
     })
   })
+
   return task
 }
 
-async function askUserByFormatBranch(formatBranch: string[]) {
+async function askUserByFormatBranch(formatBranch: [string, string, string]): Promise<string> {
   const { branchName } = await prompts({
     type: 'select',
     name: 'branchName',
@@ -71,6 +73,10 @@ const ensureEnvs = async () => {
   }
 }
 
+const addTaskToFileConfig = async (task: Task) => {
+  await addTask(task)
+}
+
 const run = async () => {
   await addCurrentProject()
   await ensureEnvs()
@@ -86,6 +92,8 @@ const run = async () => {
   const branchName = await askUserByFormatBranch(formatBranch)
 
   await checkoutBranch(branchName)
+
+  await addTaskToFileConfig(task)
 }
 
 export default run

@@ -20,6 +20,20 @@ export type GeneralTools = {
   }
 }
 
+export enum ConfigTaskStatus {
+  IN_PROGRESS = 'In Progress'
+}
+
+export type ConfigTask = {
+  jiraId: string
+  jiraName: string
+  jiraType: string
+  jiraUrl: string
+  status: ConfigTaskStatus
+  createdAt: number
+  updatedAt: number
+}
+
 export type Config = {
   tools: GeneralTools
   projects: {
@@ -27,10 +41,11 @@ export type Config = {
       tools: ProjectTools
       createdAt: number
       updatedAt: number
-      tasks: []
+      tasks: ConfigTask[]
     }
   }
   advanced: boolean
+  debug: boolean
 }
 
 export const contentConfig: Config = {
@@ -45,5 +60,6 @@ export const contentConfig: Config = {
     }
   },
   projects: {},
-  advanced: false
+  advanced: false,
+  debug: false
 }
