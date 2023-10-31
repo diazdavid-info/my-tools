@@ -401,7 +401,7 @@ type PullRequestCreate = {
   repo: string
 }
 
-type PullRequest = PullRequestCreate & {
+export type PullRequest = PullRequestCreate & {
   id: number
   number: number
   url: string
