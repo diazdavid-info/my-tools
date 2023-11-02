@@ -1,0 +1,21 @@
+---
+interface Props {
+	name: string;
+	storyId: string;
+	storyName: string;
+	statusName: string;
+	imageAssign: string;
+}
+
+const { name, storyId, storyName, statusName, imageAssign } = Astro.props;
+---
+
+<div class="bg-gray-700 rounded-sm m-1 p-2">
+	<p class="text-sm mb-2 text-ellipsis line-clamp-3">{name}</p>
+	<p class="text-xs mb-2 bg-red-500 text-gray-950 font-bold px-1 py-0.5 rounded text-ellipsis line-clamp-1 uppercase">{storyName}</p>
+	<p class="text-xs mb-2">{statusName}</p>
+	<div class="flex flex-row justify-between mb-2">
+		<p class="text-sm">{storyId}</p>
+		<img class="rounded-full w-5" src={imageAssign}/>
+	</div>
+</div>
