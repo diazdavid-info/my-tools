@@ -2,96 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import ColumnStatus from "../components/ColumnStatus.astro";
-import {searchTasks} from "./jira";
-import * as console from "console";
+import {tasks} from "../task/jira-provider";
+import {group} from "./index";
 
-const data = await searchTasks()
-const pene = {}
-const stories = {}
-
-const getStatus = (status) => {
-    const statusList = {
-        'Blocked': 'BLOCKED',
-        'Blocked Review': 'BLOCKED',
-        'Blocked product review': 'BLOCKED',
-        'Build Broken': 'BLOCKED',
-        'Building': 'BLOCKED',
-        'Closed': 'DONE',
-        'Design Accepted': 'PR ACCEPTED',
-        'Done': 'DONE',
-        'IN PROGRESS': 'IN PROGRESS',
-        'In Progress': 'IN PROGRESS',
-        'In QA': 'IN PROGRESS',
-        'In Review': 'IN PROGRESS',
-        'Open': 'TO DO',
-        'PR Accepted': 'PR ACCEPTED',
-        'Pending': 'TO DO',
-        'Product review in progress': 'IN PROGRESS',
-        'Reimplement': 'TO DO',
-        'Reopened': 'TO DO',
-        'Resolved': 'DONE',
-        'Review in progress': 'IN PROGRESS',
-        'To Do': 'TO DO',
-        'To Front Review': 'TO REVIEW',
-        'To Product Review': 'TO REVIEW',
-        'To Review': 'TO REVIEW',
-        'WIP IN PROGRESS': 'IN PROGRESS',
-        'Waiting BG': 'BLOCKED',
-        'Waiting Design': 'BLOCKED',
-        'Waiting Product': 'BLOCKED',
-        'Waiting QADoc': 'BLOCKED',
-        'Waiting for approval': 'BLOCKED',
-        'Work in progress': 'IN PROGRESS'
-    }
-    return statusList[status] ?? 'DONE'
-}
-
-data.forEach(task => {
-    const storyName = task.fields.parent.fields.summary
-    const statusTask = getStatus(task.fields.status.name)
-    if(!stories[storyName]) stories[storyName] = {
-        'TO DO': [],
-        'BLOCKED': [],
-        'IN PROGRESS': [],
-        'TO REVIEW': [],
-        'PR ACCEPTED': [],
-        'DONE': []
-    }
-    stories[storyName][statusTask].push({
-        name: task.fields.summary,
-        storyId: task.fields.parent.key,
-        storyName: task.fields.parent.fields.summary,
-        statusName: task.fields.status.name,
-        imageAssign: task.fields.assignee?.avatarUrls['16x16'] ?? ''
-    })
-})
-
-console.log(stories)
-
-data.forEach(task => {
-    // console.log(task.fields.status.name)
-    const s = task.fields.status.name
-    if(!pene[s]) pene[s] = []
-    pene[s].push({
-        name: task.fields.summary,
-        storyId: task.fields.parent.key,
-        storyName: task.fields.parent.fields.summary,
-        statusName: s,
-        imageAssign: task.fields.assignee?.avatarUrls['16x16'] ?? ''
-    })
-})
-
-// console.log(pene)
+const taskGrouped = group(await tasks())
 ---
 
 <Layout title="Daily Helper">
     <main class="m-auto p-2 text-white text-sm leading-6 w-full">
         <section class="flex flex-row gap-2 mb-2">
             {['TO DO', 'BLOCKED', 'IN PROGRESS', 'TO REVIEW', 'PR ACCEPTED', 'DONE'].map((status) => (
-              <ColumnStatus class="flex-1" name={status} />
+              <ColumnStatus name={status} />
             ))}
         </section>
-        {Object.entries(stories).map(([key, value]) => {
+        {Object.entries(taskGrouped).map(([key, value]) => {
             return (
               <section class="flex flex-col gap-2 mb-2">
                   <header>

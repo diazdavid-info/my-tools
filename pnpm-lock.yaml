@@ -28,7 +28,7 @@ importers:
     dependencies:
       '@astrojs/check':
         specifier: ^0.2.1
-        version: 0.2.1(prettier@3.0.2)(typescript@5.2.2)
+        version: 0.2.1(typescript@5.2.2)
       '@astrojs/tailwind':
         specifier: ^5.0.2
         version: 5.0.2(astro@3.4.0)(tailwindcss@3.3.5)
@@ -198,13 +198,13 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.19
 
-  /@astrojs/check@0.2.1(prettier@3.0.2)(typescript@5.2.2):
+  /@astrojs/check@0.2.1(typescript@5.2.2):
     resolution: {integrity: sha512-s85uBS/qjnqsKAeM0VKNWKvNaqvR06ZJupEwr2oT5/6Bti7qB5Vd8KekWIRAu2/WqOXHMFaDJz5D+qSizFnq5g==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
     dependencies:
-      '@astrojs/language-server': 2.4.1(prettier@3.0.2)(typescript@5.2.2)
+      '@astrojs/language-server': 2.4.1(typescript@5.2.2)
       chokidar: 3.5.3
       fast-glob: 3.3.1
       kleur: 4.1.5
@@ -227,7 +227,7 @@ packages:
     resolution: {integrity: sha512-06DD2ZnItMwUnH81LBLco3tWjcZ1lGU9rLCCBaeUCGYe9cI0wKyY2W3kDyoW1I6GmcWgt1fu+D1CTvz+FIKf8A==}
     dev: false
 
-  /@astrojs/language-server@2.4.1(prettier@3.0.2)(typescript@5.2.2):
+  /@astrojs/language-server@2.4.1(typescript@5.2.2):
     resolution: {integrity: sha512-+yHvvcLcyfr1kq2UsQ4/b84EhQo3450MZGRhIA+aw7/1BrJVjWiyOrBi4nVLVyBq8i4a5qIU+MsYu3HdS7kWwQ==}
     hasBin: true
     peerDependencies:
@@ -249,11 +249,10 @@ packages:
       '@volar/typescript': 1.10.6
       fast-glob: 3.3.1
       muggle-string: 0.3.1
-      prettier: 3.0.2
       volar-service-css: 0.0.14(@volar/language-service@1.10.6)
       volar-service-emmet: 0.0.14(@volar/language-service@1.10.6)
       volar-service-html: 0.0.14(@volar/language-service@1.10.6)
-      volar-service-prettier: 0.0.14(@volar/language-service@1.10.6)(prettier@3.0.2)
+      volar-service-prettier: 0.0.14(@volar/language-service@1.10.6)
       volar-service-typescript: 0.0.14(@volar/language-service@1.10.6)(@volar/typescript@1.10.6)
       volar-service-typescript-twoslash-queries: 0.0.14(@volar/language-service@1.10.6)
       vscode-html-languageservice: 5.1.1
@@ -5968,6 +5967,7 @@ packages:
 
   /minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+    requiresBuild: true
 
   /mixme@0.5.9:
     resolution: {integrity: sha512-VC5fg6ySUscaWUpI4gxCBTQMH2RdUpNrk+MsbpCYtIvf9SBJdiUey4qE7BXviJsJR4nDQxCZ+3yaYNW3guz/Pw==}
@@ -6516,6 +6516,7 @@ packages:
     resolution: {integrity: sha512-o2YR9qtniXvwEZlOKbveKfDQVyqxbEIWn48Z8m3ZJjBjcCmUy3xZGIv+7AkaeuaTr6yPXJjwv07ZWlsWbEy1rQ==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: true
 
   /pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
@@ -6950,6 +6951,7 @@ packages:
 
   /safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
+    requiresBuild: true
     dev: false
 
   /safe-regex-test@1.0.0:
@@ -7380,6 +7382,7 @@ packages:
   /strip-json-comments@2.0.1:
     resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
 
   /strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
@@ -8274,7 +8277,7 @@ packages:
       vscode-uri: 3.0.8
     dev: false
 
-  /volar-service-prettier@0.0.14(@volar/language-service@1.10.6)(prettier@3.0.2):
+  /volar-service-prettier@0.0.14(@volar/language-service@1.10.6):
     resolution: {integrity: sha512-woZLBikvv8u0jUAq10ZTtuo9hmnQ1RHZubMhzyJbWwkr6L7wT7bPZkscdyaCGrzBT3Pz4zbS0bnpAC5GLAILTA==}
     peerDependencies:
       '@volar/language-service': ~1.10.0
@@ -8286,7 +8289,6 @@ packages:
         optional: true
     dependencies:
       '@volar/language-service': 1.10.6
-      prettier: 3.0.2
     dev: false
 
   /volar-service-typescript-twoslash-queries@0.0.14(@volar/language-service@1.10.6):
