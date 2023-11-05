@@ -368,7 +368,7 @@ export type Task = {
 }
 
 export const tasks = async (): Promise<Task[]> => {
-  const response = await fetch(`${process.env.JIRA_DOMAIN}/rest/api/3/search`, {
+  const response = await fetch(`${import.meta.env.JIRA_DOMAIN}/rest/api/3/search`, {
     method: 'POST',
     body: JSON.stringify({
       maxResults: 50,
@@ -377,7 +377,7 @@ export const tasks = async (): Promise<Task[]> => {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Basic ${process.env.JIRA_AUTHORIZATION}`
+      Authorization: `Basic ${import.meta.env.JIRA_AUTHORIZATION}`
     }
   })
   const {issues = []} = await response.json() as JiraTasks;
