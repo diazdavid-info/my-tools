@@ -1,8 +1,7 @@
 import prompts from 'prompts'
 import { cyan, green } from 'picocolors'
 import { simpleGit } from 'simple-git'
-import { getProjectList, Project, createPullRequest as githubCreatePullRequest, PullRequest } from './github-provider'
-import open from 'open'
+import { getProjectList, Project, createPullRequest as githubCreatePullRequest } from './github-provider'
 
 async function gitFetch() {
   console.log(`🐷  ${cyan('info')} making a git fetch...`)
@@ -40,18 +39,16 @@ const ensureCurrentBranchIsOrigin = async () => {
   }
 }
 
-const createPullRequest = async (
-  currentBranch: string,
-  baseBranch: string,
-  projectSelected: string
-): Promise<PullRequest> => {
-  return await githubCreatePullRequest({
+const createPullRequest = async (currentBranch: string, baseBranch: string, projectSelected: string) => {
+  const { url } = await githubCreatePullRequest({
     title: `${currentBranch} pull request`,
     body: 'Esta PR [cierra, soluciona, resuelve] [#000](https://zityhub.atlassian.net/browse/000)\n\n![required gif]()\n\n### Descripción\n\n- Sobre Esta PR\n\n### Aceptación\n\n- [ ] Hay que probar....\n\n### Información extra\n\n- Más info\n\n',
     head: currentBranch,
     base: baseBranch,
     repo: projectSelected
   })
+
+  console.log(`🐷  ${green('success')} ${url}`)
 }
 
 function excludeLocalBranches(allBranch: string[]) {
@@ -103,12 +100,7 @@ const run = async () => {
   const baseBranches = excludeCurrentBranch(currentBranch, originBranches)
   const baseBranch = await askUserByBaseBranch(baseBranches)
   const confirmed = await askUserByAllDataIsCorrect(projectSelected, baseBranch, currentBranch)
-
-  if (confirmed) {
-    const { url } = await createPullRequest(currentBranch, baseBranch, projectSelected)
-
-    await open(url)
-  }
+  if (confirmed) await createPullRequest(currentBranch, baseBranch, projectSelected)
 }
 
 export default run
