@@ -15,9 +15,7 @@ const install = async () => {
   await configInit()
 }
 
-const run = async (): Promise<void> => {
-  await install()
-
+const assUserByOption = async (): Promise<string> => {
   const { task } = await prompts({
     type: 'select',
     name: 'task',
@@ -29,6 +27,13 @@ const run = async (): Promise<void> => {
     ],
     initial: 0
   })
+
+  return task
+}
+
+const run = async (): Promise<void> => {
+  await install()
+  const task = await assUserByOption()
 
   if (task === 'Create branch') await createTask()
   if (task === 'Create PR') await createPullRequest()
