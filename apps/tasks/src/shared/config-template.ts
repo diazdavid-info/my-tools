@@ -46,6 +46,7 @@ export type Config = {
   }
   advanced: boolean
   debug: boolean
+  experimental: boolean
 }
 
 export const contentConfig: Config = {
@@ -61,5 +62,6 @@ export const contentConfig: Config = {
   },
   projects: {},
   advanced: false,
-  debug: false
+  debug: false,
+  experimental: false
 }

@@ -11,6 +11,12 @@ export const init = async () => {
   await writeConfig(contentConfig)
 }
 
+export const ensureFormatConfigFile = async () => {
+  const config = await readConfig()
+
+  await writeConfig({ ...contentConfig, ...config })
+}
+
 export const isJiraConfigured = async () => {
   const projectName = base64Encode(processDir())
 

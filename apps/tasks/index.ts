@@ -4,7 +4,7 @@ import prompts from 'prompts'
 import { green, red } from 'picocolors'
 import createTask from './src/create-task'
 import createPullRequest from './src/create-pull-request'
-import { init as configInit } from './src/shared/config'
+import { init as configInit, ensureFormatConfigFile } from './src/shared/config'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -13,6 +13,7 @@ process.on('SIGTERM', handleSigTerm)
 
 const install = async () => {
   await configInit()
+  await ensureFormatConfigFile()
 }
 
 const assUserByOption = async (): Promise<string> => {
