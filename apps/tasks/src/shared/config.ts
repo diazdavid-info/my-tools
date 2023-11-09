@@ -1,7 +1,7 @@
 import { createDir, homeDir, pathExists, processDir, readFile, writeFile } from './file-system'
 import { Config, ConfigTaskStatus, contentConfig } from './config-template'
 import { base64Encode } from './encoder'
-import { Task } from '../create-task/jira-provider'
+import { Task } from './task'
 
 export const init = async () => {
   if (pathExists(`${homeDir()}/.mytools/config`)) return

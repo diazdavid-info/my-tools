@@ -1,9 +1,10 @@
 import { cyan, green, yellow } from 'picocolors'
 import { simpleGit } from 'simple-git'
-import { searchInProgressTasks, Task, TaskOwnership } from './jira-provider'
 import prompts from 'prompts'
 import { formatBranchName } from './format-branch-name'
 import { addCurrentProject, addTask, isJiraConfigured } from '../shared/config'
+import { TaskOwnership, searchInProgressTasks } from '../shared/jira-provider'
+import { Task } from '../shared/task'
 
 async function gitFetch() {
   console.log(`🐷  ${cyan('info')} making a git fetch...`)
