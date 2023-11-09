@@ -1,7 +1,7 @@
 import { createDir, homeDir, pathExists, processDir, readFile, writeFile } from './file-system'
 import { Config, ConfigTaskStatus, contentConfig } from './config-template'
 import { base64Encode } from './encoder'
-import { Task } from '../create-task/jira-provider'
+import { Task } from './task'
 
 export const init = async () => {
   if (pathExists(`${homeDir()}/.mytools/config`)) return
@@ -9,6 +9,12 @@ export const init = async () => {
   if (!pathExists(`${homeDir()}/.mytools`)) await createDir(`${homeDir()}/.mytools`)
 
   await writeConfig(contentConfig)
+}
+
+export const ensureFormatConfigFile = async () => {
+  const config = await readConfig()
+
+  await writeConfig({ ...contentConfig, ...config })
 }
 
 export const isJiraConfigured = async () => {
@@ -62,9 +68,40 @@ export const addTask = async (task: Task) => {
   await writeConfig(config)
 }
 
+export const removeTask = async (task: Task) => {
+  await addCurrentProject()
+
+  const projectName = base64Encode(processDir())
+
+  const config = await readConfig()
+
+  const project = config.projects[projectName]
+
+  const tasks = project.tasks
+
+  project.tasks = tasks.filter((t) => t.jiraId !== task.id)
+
+  await writeConfig(config)
+}
+
 export const isDebugMode = async () => {
   const { debug } = await readConfig()
   return debug
+}
+
+export const isExperimentalMode = async () => {
+  const { experimental } = await readConfig()
+  return experimental
+}
+
+export const getInProgressTasks = async () => {
+  const projectName = base64Encode(processDir())
+
+  const config = await readConfig()
+
+  const project = config.projects[projectName]
+
+  return project.tasks
 }
 
 const readConfig = async () => {

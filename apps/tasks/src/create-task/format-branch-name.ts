@@ -1,4 +1,4 @@
-import { Task } from './jira-provider'
+import { Task } from '../shared/task'
 
 const clearName = (name: string): string =>
   name

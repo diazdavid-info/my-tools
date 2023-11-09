@@ -1,11 +1,5 @@
 import fetch from 'node-fetch'
-
-export type Task = {
-  id: string
-  name: string
-  type: string
-  url: string
-}
+import { Task } from './task'
 
 type JiraResponse = {
   expand: string
@@ -27,6 +21,7 @@ type Issue = {
 type Fields = {
   summary: string
   issuetype: Issuetype
+  status: Status
 }
 
 type Issuetype = {
@@ -43,6 +38,10 @@ type Issuetype = {
 type Names = {
   summary: string
   issuetype: string
+}
+
+type Status = {
+  name: string
 }
 
 export enum TaskOwnership {
@@ -87,11 +86,41 @@ export const searchInProgressTasks = async (ownership: TaskOwnership): Promise<T
     const {
       fields: {
         summary,
-        issuetype: { name }
+        issuetype: { name },
+        status: { name: statusName }
       },
       key,
       self
     } = issue
-    return { id: key.trim(), name: summary.trim(), type: name.trim(), url: self.trim() }
+    return { id: key.trim(), name: summary.trim(), type: name.trim(), url: self.trim(), status: statusName }
   })
+}
+
+export const findTask = async (taskId: string): Promise<Task | null> => {
+  const url = `${process.env.JIRA_DOMAIN}/rest/api/3/issue/${taskId}`
+
+  const response = await fetch(url, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Basic ${process.env.JIRA_AUTHORIZATION}`
+    }
+  })
+
+  if (!response.ok) return null
+
+  const issue = (await response.json()) as Issue
+
+  const {
+    fields: {
+      summary,
+      issuetype: { name },
+      status: { name: statusName }
+    },
+    key,
+    self
+  } = issue
+
+  return { id: key.trim(), name: summary.trim(), type: name.trim(), url: self.trim(), status: statusName }
 }

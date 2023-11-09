@@ -1,5 +1,41 @@
 # @mytools/tasks
 
+## 0.10.5
+
+### Patch Changes
+
+- fix
+
+## 0.10.4
+
+### Patch Changes
+
+- fix
+
+## 0.10.3
+
+### Patch Changes
+
+- fix
+
+## 0.10.2
+
+### Patch Changes
+
+- fix
+
+## 0.10.1
+
+### Patch Changes
+
+- fix
+
+## 0.10.0
+
+### Minor Changes
+
+- open url PR
+
 ## 0.9.0
 
 ### Minor Changes
