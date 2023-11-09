@@ -24,7 +24,8 @@ const run = async (): Promise<void> => {
     message: 'What do you want to do?',
     choices: [
       { title: 'Create branch', description: '', value: 'Create branch' },
-      { title: 'Create PR', description: '', value: 'Create PR' }
+      { title: 'Create PR', description: '', value: 'Create PR' },
+      { title: 'Exit', description: '', value: 'Exit' }
     ],
     initial: 0
   })
