@@ -68,6 +68,22 @@ export const addTask = async (task: Task) => {
   await writeConfig(config)
 }
 
+export const removeTask = async (task: Task) => {
+  await addCurrentProject()
+
+  const projectName = base64Encode(processDir())
+
+  const config = await readConfig()
+
+  const project = config.projects[projectName]
+
+  const tasks = project.tasks
+
+  project.tasks = tasks.filter((t) => t.jiraId !== task.id)
+
+  await writeConfig(config)
+}
+
 export const isDebugMode = async () => {
   const { debug } = await readConfig()
   return debug
