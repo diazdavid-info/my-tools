@@ -73,6 +73,21 @@ export const isDebugMode = async () => {
   return debug
 }
 
+export const isExperimentalMode = async () => {
+  const { experimental } = await readConfig()
+  return experimental
+}
+
+export const getInProgressTasks = async () => {
+  const projectName = base64Encode(processDir())
+
+  const config = await readConfig()
+
+  const project = config.projects[projectName]
+
+  return project.tasks
+}
+
 const readConfig = async () => {
   const fileContent = await readFile(`${homeDir()}/.mytools/config`)
   return JSON.parse(fileContent) as Config
