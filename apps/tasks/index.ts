@@ -4,7 +4,8 @@ import prompts from 'prompts'
 import { green, red } from 'picocolors'
 import createTask from './src/create-task'
 import createPullRequest from './src/create-pull-request'
-import { init as configInit, ensureFormatConfigFile } from './src/shared/config'
+import { init as configInit, ensureFormatConfigFile, isExperimentalMode, getInProgressTasks } from './src/shared/config'
+import checkInProgressTasks from './src/check-in-progress-tasks'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -17,15 +18,26 @@ const install = async () => {
 }
 
 const assUserByOption = async (): Promise<string> => {
+  const choices = [
+    { title: 'Create branch', description: '', value: 'Create branch' },
+    { title: 'Create PR', description: '', value: 'Create PR' },
+    { title: 'Exit', description: '', value: 'Exit' }
+  ]
+
+  if (await isExperimentalMode()) {
+    const lengthInProgressTasks = (await getInProgressTasks()).length
+    choices.push({
+      title: `Check ${lengthInProgressTasks} in progress tasks`,
+      description: '',
+      value: 'Check in progress tasks'
+    })
+  }
+
   const { task } = await prompts({
     type: 'select',
     name: 'task',
     message: 'What do you want to do?',
-    choices: [
-      { title: 'Create branch', description: '', value: 'Create branch' },
-      { title: 'Create PR', description: '', value: 'Create PR' },
-      { title: 'Exit', description: '', value: 'Exit' }
-    ],
+    choices,
     initial: 0
   })
 
@@ -38,6 +50,7 @@ const run = async (): Promise<void> => {
 
   if (task === 'Create branch') await createTask()
   if (task === 'Create PR') await createPullRequest()
+  if (task === 'Check in progress tasks') await checkInProgressTasks()
 }
 
 run()
