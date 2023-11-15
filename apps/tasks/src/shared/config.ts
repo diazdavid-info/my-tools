@@ -101,6 +101,8 @@ export const getInProgressTasks = async () => {
 
   const project = config.projects[projectName]
 
+  if (!project) return []
+
   return project.tasks
 }
 
