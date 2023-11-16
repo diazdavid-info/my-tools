@@ -364,6 +364,7 @@ export type Task = {
   storyId: string
   storyName: string
   statusName: string
+  nameAssign: string
   imageAssign: string
 }
 
@@ -396,6 +397,7 @@ export const tasks = async (): Promise<Task[]> => {
       storyId: key,
       storyName: parentSummary,
       statusName: statusName,
+      nameAssign: assignee?.displayName ?? '',
       imageAssign: assignee?.avatarUrls['16x16'] ?? ''
     }
   });

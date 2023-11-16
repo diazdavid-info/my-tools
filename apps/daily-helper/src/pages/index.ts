@@ -9,6 +9,15 @@ type TaskGrouped = {
     [key: string]: Task[]
   }
 }
+
+type Steps = {
+  [key: string]: {
+    [key: string]: {
+      [key: string]: Task[]
+    }
+  }
+}
+
 const getStatus = (status: string): string => {
   const statusList: StatusList = {
     'Blocked': 'BLOCKED',
@@ -66,4 +75,36 @@ export const group = (tasks: Task[]): TaskGrouped => {
   })
 
   return stories
+}
+
+export const createSteps = (tasks: Task[]): Steps[] => {
+  const stories: Steps = {}
+
+  tasks.forEach(task => {
+    const storyName = task.storyName
+    const assignName = task.nameAssign
+    const statusTask = getStatus(task.statusName)
+
+    if(!stories[storyName]) stories[storyName] = {}
+
+    if(!stories[storyName][assignName]) stories[storyName][assignName] = {
+      'TO DO': [],
+      'BLOCKED': [],
+      'IN PROGRESS': [],
+      'TO REVIEW': [],
+      'PR ACCEPTED': [],
+      'DONE': []
+    }
+    stories[storyName][assignName][statusTask].push({ ...task })
+  })
+
+  const steps: any = []
+
+  Object.entries(stories).map(([storyName, userList]) => {
+    Object.entries(userList).map(([userName, value]) => {
+      steps.push({storyName, userName, value})
+    })
+  })
+
+  return steps
 }
