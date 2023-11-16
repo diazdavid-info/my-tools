@@ -62,7 +62,7 @@ export const searchInProgressTasks = async (ownership: TaskOwnership): Promise<T
     expand: ['names'],
     maxResults: 50,
     fieldsByKeys: false,
-    fields: ['summary', 'issuetype'],
+    fields: ['summary', 'issuetype', 'status'],
     startAt: 0,
     jql: getQuery(ownership)
   }
