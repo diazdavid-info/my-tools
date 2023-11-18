@@ -421,7 +421,10 @@ export const getProjectList = async (): Promise<Project[]> => {
     }
   )
 
-  if (!response.ok) return []
+  if (!response.ok) {
+    const { message } = (await response.json()) as { message: string }
+    return Promise.reject(`Fail to find projects in github -> ${response.statusText}: ${message}`)
+  }
 
   const githubProjects = (await response.json()) as GithubProject[]
 
@@ -450,7 +453,7 @@ export const createPullRequest = async (pullRequestCreate: PullRequestCreate): P
 
   if (!response.ok) {
     const { message } = (await response.json()) as { message: string }
-    return Promise.reject(`Fail to create PR -> ${response.statusText}: ${message}`)
+    return Promise.reject(`Fail to create PR in github -> ${response.statusText}: ${message}`)
   }
 
   const githubPullRequest = (await response.json()) as GithubPullRequest

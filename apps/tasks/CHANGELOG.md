@@ -1,5 +1,17 @@
 # @mytools/tasks
 
+## 0.11.1
+
+### Patch Changes
+
+- fix problem with status
+
+## 0.11.0
+
+### Minor Changes
+
+- fix errors
+
 ## 0.10.5
 
 ### Patch Changes
