@@ -1,0 +1,5 @@
+{
+  "extends": "mytools-tsconfig/node.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"]
+}
