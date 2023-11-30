@@ -1,0 +1,17 @@
+{
+  "name": "calendar-microsoft-graph",
+  "description": "kata calendar microsoft graph",
+  "private": true,
+  "author": "David Diaz <diazdavid.info@gmail.com>",
+  "license": "ISC",
+  "scripts": {},
+  "devDependencies": {
+    "@microsoft/microsoft-graph-types": "2.40.0",
+    "@types/node": "20.5.1",
+    "eslint-config-mytools": "workspace:*",
+    "mytools-tsconfig": "workspace:*"
+  },
+  "dependencies": {
+    "@microsoft/microsoft-graph-client": "3.0.6"
+  }
+}

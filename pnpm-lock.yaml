@@ -24,6 +24,25 @@ importers:
         specifier: ^5.1.6
         version: 5.1.6
 
+  apps/calendar-microsoft-graph:
+    dependencies:
+      '@microsoft/microsoft-graph-client':
+        specifier: 3.0.6
+        version: 3.0.6
+    devDependencies:
+      '@microsoft/microsoft-graph-types':
+        specifier: 2.40.0
+        version: 2.40.0
+      '@types/node':
+        specifier: 20.5.1
+        version: 20.5.1
+      eslint-config-mytools:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-mytools
+      mytools-tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/mytools-tsconfig
+
   apps/jws:
     dependencies:
       jws:
@@ -1309,6 +1328,10 @@ packages:
       '@babel/runtime': 7.22.10
       tslib: 2.6.2
     dev: false
+
+  /@microsoft/microsoft-graph-types@2.40.0:
+    resolution: {integrity: sha512-1fcPVrB/NkbNcGNfCy+Cgnvwxt6/sbIEEFgZHFBJ670zYLegENYJF8qMo7x3LqBjWX2/Eneq5BVVRCLTmlJN+g==}
+    dev: true
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
