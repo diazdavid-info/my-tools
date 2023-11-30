@@ -4,9 +4,7 @@
   "private": true,
   "author": "David Diaz <diazdavid.info@gmail.com>",
   "license": "ISC",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "devDependencies": {
     "@microsoft/microsoft-graph-types": "2.40.0",
     "@types/node": "20.5.1",
