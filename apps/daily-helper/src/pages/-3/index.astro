@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import {tasksThreeDayAgo} from "../../task/jira-provider";
+import {createSteps} from "../index";
+import {ColumnStatus} from "../../components/ColumnStatus";
+import {CardList} from "../../components/CardList";
+
+const steps = createSteps(await tasksThreeDayAgo())
+---
+
+<Layout title="Daily Helper">
+    <main class="m-auto p-2 text-white text-sm leading-6 w-full">
+        <section class="flex flex-row gap-2 mb-2">
+            {['TO DO', 'BLOCKED', 'IN PROGRESS', 'TO REVIEW', 'PR ACCEPTED', 'DONE'].map((status) => (
+              <ColumnStatus name={status} />
+            ))}
+        </section>
+        <section class="flex flex-col gap-2 mb-2">
+            <header>
+                <h2>data.storyName</h2>
+            </header>
+            <article class="flex flex-row gap-2">
+                <CardList client:load taskList={steps} />
+            </article>
+        </section>
+    </main>
+</Layout>

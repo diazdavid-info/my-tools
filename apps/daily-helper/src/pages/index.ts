@@ -10,7 +10,7 @@ type TaskGrouped = {
   }
 }
 
-type Steps = {
+export type Steps = {
   [key: string]: {
     [key: string]: {
       [key: string]: Task[]

@@ -1,9 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
-import ColumnStatus from "../components/ColumnStatus.astro";
 import {tasks} from "../task/jira-provider";
 import {group} from "./index";
+import {ColumnStatus} from "../components/ColumnStatus";
+import {CardList} from "../components/CardList";
+import {Card} from "../components/Card";
 
 const taskGrouped = group(await tasks())
 ---

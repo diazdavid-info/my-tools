@@ -360,6 +360,7 @@ export type Watches = {
 
 
 export type Task = {
+  id: string
   name: string
   storyId: string
   storyName: string
@@ -368,12 +369,12 @@ export type Task = {
   imageAssign: string
 }
 
-export const tasks = async (): Promise<Task[]> => {
+const search = async (jql: string): Promise<Task[]> => {
   const response = await fetch(`${import.meta.env.JIRA_DOMAIN}/rest/api/3/search`, {
     method: 'POST',
     body: JSON.stringify({
-      maxResults: 50,
-      jql: 'Sprint in openSprints() AND assignee != null'
+      maxResults: 100,
+      jql
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -386,19 +387,33 @@ export const tasks = async (): Promise<Task[]> => {
   if(!issues.length) return []
 
   return issues.map((issue) => {
-    const {fields} = issue
+    if(!issue.fields.parent) console.log(issue.fields.summary)
+    const {fields, key} = issue
     const {summary, parent, status, assignee} = fields
-    const {key, fields: parentFields} = parent
+    const {key: parentKey, fields: parentFields} = parent
     const {summary: parentSummary} = parentFields
     const {name: statusName} = status
 
     return {
+      id: key,
       name: summary,
-      storyId: key,
+      storyId: parentKey,
       storyName: parentSummary,
       statusName: statusName,
       nameAssign: assignee?.displayName ?? '',
       imageAssign: assignee?.avatarUrls['16x16'] ?? ''
     }
   });
+}
+
+export const tasks = async (): Promise<Task[]> => {
+  return search('Sprint in openSprints() AND project not in (Operations) ORDER BY Rank ASC')
+}
+
+export const tasksOneDayAgo = async () => {
+  return search('Sprint in openSprints() AND (status = Done AND resolved >= startOfDay(-13h) OR status != Done)')
+}
+
+export const tasksThreeDayAgo = async () => {
+  return search('Sprint in openSprints() AND (status = Done AND resolved >= startOfDay(-63h) OR status != Done)')
 }
