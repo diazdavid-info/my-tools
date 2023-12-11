@@ -1,3 +1,10 @@
+type ContentText = {
+  type: 'text'
+  content: string
+}
+
+type Content = ContentText | { type: 'list'; content: Content[] }
+
 export type Task = {
   id: string
   title: string
