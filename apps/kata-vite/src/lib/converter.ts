@@ -16,7 +16,7 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
       id: btoa(title),
       title,
       points,
-      content: JSON.stringify(listItem, null, 2)
+      content: JSON.stringify([{ type: 'bulletList', content: [listItem] }], null, 2)
     }
   })
 }
