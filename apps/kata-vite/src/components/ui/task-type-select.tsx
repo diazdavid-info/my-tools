@@ -18,9 +18,8 @@ export const TaskTypeSelect = ({ className }: PropsWithChildren<TaskTypeSelectPr
         <SelectValue placeholder="Tipo de tarea" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="book">Task</SelectItem>
-        <SelectItem value="dark">Spike</SelectItem>
-        <SelectItem value="system">Admin (ADM)</SelectItem>
+        <SelectItem value="10002">Task</SelectItem>
+        <SelectItem value="10009">Spike</SelectItem>
       </SelectContent>
     </Select>
   )

@@ -21,9 +21,7 @@ export const CardList: FC<CardListProp> = () => {
         </div>
       </CardHeader>
       <CardContent className="text-sm">
-        {content.map((line: string) => (
-          <p key={line}>- {line}</p>
-        ))}
+        <code className="max-h-64 overflow-hidden block">{content}</code>
       </CardContent>
     </Card>
   ))
