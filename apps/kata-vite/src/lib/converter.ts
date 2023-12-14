@@ -40,7 +40,7 @@ export const tasksToCommand = ({ tasks, token, domain }: { tasks: Task[]; token:
       }
     }
     return `
-      curl - sX POST '${domain}/rest/api/3/issue' \\
+      curl -sX POST '${domain}/rest/api/3/issue' \\
       -H 'Content-Type: application/json' \\
       -H 'Authorization: Basic ${token}' \\
       -d '${JSON.stringify({ ...body })}'`
