@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Task } from '@/types/task'
-import { htmlElementToTasks, tasksToCommand } from '@/lib/converter.ts'
+import { jiraTasksToTasks, tasksToCommand } from '@/lib/converter.ts'
+import { JiraTask } from '@/lib/__tests__/fixture.ts'
 
 type TaskOptions = {
   dev?: string
@@ -13,7 +14,7 @@ type State = {
   token: string
   domain: string
   tasks: Task[]
-  content: string
+  content: JiraTask | null
   tasksOptions: TaskOptions
   command: string
 
@@ -32,7 +33,7 @@ const setLocalStorage = (key: string, value: string) => window.localStorage.setI
 export const useTasksStore = create<State>((set) => ({
   token: getLocalStorage('token') || '',
   domain: getLocalStorage('domain') || '',
-  content: '',
+  content: null,
   tasks: [],
   tasksOptions: { dev: undefined, epic: undefined, project: undefined, type: undefined },
   command: '',
@@ -56,14 +57,20 @@ export const useTasksStore = create<State>((set) => ({
         command: tasksToCommand({ tasks, token, domain })
       }
     }),
-  createTask: (content) =>
+  createTask: (content: string) =>
     set(({ token, domain }) => {
-      const tasks = htmlElementToTasks(content)
+      try {
+        const jsonContent = JSON.parse(content)
+        const tasks = jiraTasksToTasks(jsonContent)
 
-      return {
-        tasks,
-        content,
-        command: tasksToCommand({ tasks, token, domain })
+        return {
+          tasks,
+          content: jsonContent,
+          command: tasksToCommand({ tasks, token, domain })
+        }
+      } catch (e: any) {
+        console.log(e.message)
+        return {}
       }
     }),
   setDev: (value: string) =>

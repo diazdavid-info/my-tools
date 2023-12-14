@@ -13,5 +13,5 @@ export type Task = {
   epic?: string
   project?: string
   type?: string
-  content: string[]
+  content: string
 }

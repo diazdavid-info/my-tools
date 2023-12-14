@@ -18,9 +18,9 @@ export const ProjectSelect = ({ className }: PropsWithChildren<ProjectSelectProp
         <SelectValue placeholder="Projecto" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="book">BookingApp (BOOK)</SelectItem>
-        <SelectItem value="dark">API (API)</SelectItem>
-        <SelectItem value="system">Admin (ADM)</SelectItem>
+        <SelectItem value="10000">BookingApp (BOOK)</SelectItem>
+        <SelectItem value="10001">API (API)</SelectItem>
+        <SelectItem value="10002">Admin (ADM)</SelectItem>
       </SelectContent>
     </Select>
   )
