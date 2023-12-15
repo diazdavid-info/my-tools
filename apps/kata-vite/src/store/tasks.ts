@@ -11,6 +11,8 @@ type TaskOptions = {
 }
 
 type State = {
+  devItemList: { key: string; value: string }[]
+
   token: string
   domain: string
   tasks: Task[]
@@ -25,12 +27,21 @@ type State = {
   setEpic: (value: string) => void
   setProject: (value: string) => void
   setType: (value: string) => void
+
+  setPointsTask: (id: string, points: number) => void
+  setDevTask: (id: string, dev: string) => void
 }
 
 const getLocalStorage = (key: string) => window.localStorage.getItem(key)
 const setLocalStorage = (key: string, value: string) => window.localStorage.setItem(key, value)
 
 export const useTasksStore = create<State>((set) => ({
+  devItemList: [
+    { key: 'Backend', value: 'Backend' },
+    { key: 'Frontend', value: 'Frontend' },
+    { key: 'Tech', value: 'Tech' }
+  ],
+
   token: getLocalStorage('token') || '',
   domain: getLocalStorage('domain') || '',
   content: null,
@@ -112,5 +123,35 @@ export const useTasksStore = create<State>((set) => ({
         tasksOptions: { ...tasksOptions, type: value },
         command: tasksToCommand({ tasks, token, domain })
       }
+    }),
+  setPointsTask: (id: string, points: number) => {
+    set(({ tasks, token, domain }) => {
+      const taskFound = tasks.find(({ id: taskId }) => taskId === id)
+      if (!taskFound) return {}
+
+      const newTask = { ...taskFound, points }
+      const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
+      const allTasks = [newTask, ...restTasks]
+
+      return {
+        tasks: allTasks,
+        command: tasksToCommand({ tasks: allTasks, token, domain })
+      }
     })
+  },
+  setDevTask: (id: string, dev: string) => {
+    set(({ tasks, token, domain }) => {
+      const taskFound = tasks.find(({ id: taskId }) => taskId === id)
+      if (!taskFound) return {}
+
+      const newTask = { ...taskFound, dev }
+      const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
+      const allTasks = [newTask, ...restTasks]
+
+      return {
+        tasks: allTasks,
+        command: tasksToCommand({ tasks: allTasks, token, domain })
+      }
+    })
+  }
 }))

@@ -7,7 +7,7 @@ type DevSelectProps = {
 }
 
 export const DevSelect = ({ className }: PropsWithChildren<DevSelectProps>) => {
-  const setDev = useTasksStore((state) => state.setDev)
+  const { setDev, devItemList } = useTasksStore((state) => state)
   const handleChange = (value: string) => {
     setDev(value)
   }
@@ -18,9 +18,11 @@ export const DevSelect = ({ className }: PropsWithChildren<DevSelectProps>) => {
         <SelectValue placeholder="Equipo" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="Backend">Backend</SelectItem>
-        <SelectItem value="Frontend">Frontend</SelectItem>
-        <SelectItem value="Tech">Tech</SelectItem>
+        {devItemList.map(({ key, value }) => (
+          <SelectItem key={key} value={key}>
+            {value}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   )
