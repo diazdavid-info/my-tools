@@ -1,4 +1,4 @@
-import { useTasksStore } from '@/store/tasks.ts'
+import { useTasksStore } from '@/store/tasks-store.ts'
 import { ClipboardIcon } from '@/components/icons.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useToast } from '@/hooks/use-toast.ts'

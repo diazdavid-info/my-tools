@@ -2,7 +2,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Textarea } from '@/components/ui/textarea.tsx'
 import React from 'react'
 import { CardList } from '@/components/card-list.tsx'
-import { useTasksStore } from '@/store/tasks.ts'
+import { useTasksStore } from '@/store/tasks-store.ts'
 import { Command } from '@/components/command.tsx'
 import { GeneralOptions } from '@/components/general-options.tsx'
 
