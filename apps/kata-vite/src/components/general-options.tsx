@@ -5,7 +5,7 @@ import { EpicInput } from '@/components/epic-input.tsx'
 import { DevSelect } from '@/components/dev-select.tsx'
 import { DomainInput } from '@/components/domain-input.tsx'
 
-export const CardGeneralOptions = () => {
+export const GeneralOptions = () => {
   return (
     <div className="flex flex-row gap-2">
       <DomainInput className="flex-1" />

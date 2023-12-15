@@ -4,7 +4,7 @@ import React from 'react'
 import { CardList } from '@/components/card-list.tsx'
 import { useTasksStore } from '@/store/tasks.ts'
 import { Command } from '@/components/command.tsx'
-import { CardGeneralOptions } from '@/components/card-general-options.tsx'
+import { GeneralOptions } from '@/components/general-options.tsx'
 
 function App() {
   const { createTask } = useTasksStore((state) => state)
@@ -24,7 +24,7 @@ function App() {
         </section>
         <section className="flex flex-col gap-5">
           <header>
-            <CardGeneralOptions />
+            <GeneralOptions />
           </header>
           <main className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2">
             <CardList />
