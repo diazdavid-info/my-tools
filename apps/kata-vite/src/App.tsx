@@ -2,9 +2,9 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Textarea } from '@/components/ui/textarea.tsx'
 import React from 'react'
 import { CardList } from '@/components/ui/card-list.tsx'
-import { CardOptions } from '@/components/ui/card-options.tsx'
 import { useTasksStore } from '@/store/tasks.ts'
 import { Command } from '@/components/ui/command.tsx'
+import { CardGeneralOptions } from '@/components/ui/card-general-options'
 
 function App() {
   const { createTask } = useTasksStore((state) => state)
@@ -24,7 +24,7 @@ function App() {
         </section>
         <section className="flex flex-col gap-5">
           <header>
-            <CardOptions />
+            <CardGeneralOptions />
           </header>
           <main className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2">
             <CardList />
