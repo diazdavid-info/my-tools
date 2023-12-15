@@ -1,41 +1,7 @@
 import { create } from 'zustand'
 import { Task } from '@/types/task'
 import { jiraTasksToTasks, tasksToCommand } from '@/lib/converter.ts'
-import { JiraTask } from '@/lib/__tests__/fixture.ts'
-
-type TaskOptions = {
-  dev?: string
-  epic?: string
-  project?: string
-  type?: string
-}
-
-type State = {
-  devItemList: { key: string; value: string }[]
-  projectItemList: { key: string; value: string }[]
-  typeItemList: { key: string; value: string }[]
-
-  token: string
-  domain: string
-  tasks: Task[]
-  content: JiraTask | null
-  tasksOptions: TaskOptions
-  command: string
-
-  addToken: (token: string) => void
-  addDomain: (domain: string) => void
-  createTask: (content: string) => void
-  setDev: (value: string) => void
-  setEpic: (value: string) => void
-  setProject: (value: string) => void
-  setType: (value: string) => void
-
-  setPointsTask: (id: string, points: number) => void
-  setDevTask: (id: string, dev: string) => void
-  setProjectTask: (id: string, dev: string) => void
-  setTypeTask: (id: string, dev: string) => void
-  setEpicTask: (id: string, dev: string) => void
-}
+import { State } from '@/types/tasks-store'
 
 const getLocalStorage = (key: string) => window.localStorage.getItem(key)
 const setLocalStorage = (key: string, value: string) => window.localStorage.setItem(key, value)
