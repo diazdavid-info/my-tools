@@ -1,8 +1,8 @@
 import { ChangeEvent, FC } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx'
 import { useTasksStore } from '@/store/tasks.ts'
-import { CardInputOption } from '@/components/ui/card-input-option.tsx'
-import { CardSelectOption } from '@/components/ui/card-select-option.tsx'
+import { CardInputOption } from '@/components/card-input-option.tsx'
+import { CardSelectOption } from '@/components/card-select-option.tsx'
 
 type CardListProp = object
 

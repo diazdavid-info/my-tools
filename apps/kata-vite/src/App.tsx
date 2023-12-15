@@ -1,10 +1,10 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import { Textarea } from '@/components/ui/textarea.tsx'
 import React from 'react'
-import { CardList } from '@/components/ui/card-list.tsx'
+import { CardList } from '@/components/card-list.tsx'
 import { useTasksStore } from '@/store/tasks.ts'
-import { Command } from '@/components/ui/command.tsx'
-import { CardGeneralOptions } from '@/components/ui/card-general-options'
+import { Command } from '@/components/command.tsx'
+import { CardGeneralOptions } from '@/components/card-general-options.tsx'
 
 function App() {
   const { createTask } = useTasksStore((state) => state)
