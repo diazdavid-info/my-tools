@@ -8,10 +8,15 @@ type TaskOptions = {
   type?: string
 }
 
+type ItemList = {
+  key: string
+  value: string
+}
+
 type State = {
-  devItemList: { key: string; value: string }[]
-  projectItemList: { key: string; value: string }[]
-  typeItemList: { key: string; value: string }[]
+  devItemList: ItemList[]
+  projectItemList: ItemList[]
+  typeItemList: ItemList[]
 
   token: string
   domain: string
