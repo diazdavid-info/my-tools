@@ -1,15 +1,23 @@
 import { ChangeEvent, FC } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx'
 import { useTasksStore } from '@/store/tasks.ts'
-import { Badge } from '@/components/ui/badge.tsx'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { CardInputOption } from '@/components/ui/card-input-option.tsx'
 import { CardSelectOption } from '@/components/ui/card-select-option.tsx'
 
 type CardListProp = object
 
 export const CardList: FC<CardListProp> = () => {
-  const { tasks, setPointsTask, devItemList, setDevTask } = useTasksStore((state) => state)
+  const {
+    tasks,
+    devItemList,
+    projectItemList,
+    typeItemList,
+    setPointsTask,
+    setDevTask,
+    setProjectTask,
+    setTypeTask,
+    setEpicTask
+  } = useTasksStore((state) => state)
 
   const handlePointsChange = (id: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -24,30 +32,33 @@ export const CardList: FC<CardListProp> = () => {
     }
   }
 
+  const handleProjectChange = (id: string) => {
+    return (event: string) => {
+      setProjectTask(id, event)
+    }
+  }
+
+  const handleTypeChange = (id: string) => {
+    return (event: string) => {
+      setTypeTask(id, event)
+    }
+  }
+
+  const handleEpicChange = (id: string) => {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      setEpicTask(id, event.target.value)
+    }
+  }
+
   return tasks.map(({ id, title, points, dev, epic, project, type, content }) => (
     <Card key={id}>
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
         <div className="text-sm text-muted-foreground">
           <CardInputOption value={points.toString()} handleValueChange={handlePointsChange(id)} />
-          <Popover>
-            <PopoverTrigger>
-              <Badge variant="outline">{project}</Badge>
-            </PopoverTrigger>
-            <PopoverContent>Project</PopoverContent>
-          </Popover>
-          <Popover>
-            <PopoverTrigger>
-              <Badge variant="outline">{type}</Badge>
-            </PopoverTrigger>
-            <PopoverContent>Project</PopoverContent>
-          </Popover>
-          <Popover>
-            <PopoverTrigger>
-              <Badge variant="outline">{epic}</Badge>
-            </PopoverTrigger>
-            <PopoverContent>Project</PopoverContent>
-          </Popover>
+          <CardSelectOption value={project} items={projectItemList} handleValueChange={handleProjectChange(id)} />
+          <CardSelectOption value={type} items={typeItemList} handleValueChange={handleTypeChange(id)} />
+          <CardInputOption value={epic ?? ''} handleValueChange={handleEpicChange(id)} />
           <CardSelectOption value={dev} items={devItemList} handleValueChange={handleDevChange(id)} />
         </div>
       </CardHeader>
