@@ -4,9 +4,19 @@ import { jiraTasksToTasks, tasksToCommand } from '@/lib/converter.ts'
 import { State } from '@/types/tasks-store'
 
 const getLocalStorage = (key: string) => window.localStorage.getItem(key)
+
 const setLocalStorage = (key: string, value: string) => window.localStorage.setItem(key, value)
 
-export const useTasksStore = create<State>((set) => ({
+const updatePropTask = <T>(id: string, prop: string, value: T, tasks: Task[]): Task[] => {
+  const taskFound = tasks.find(({ id: taskId }) => taskId === id)
+  if (!taskFound) return []
+
+  const newTask: Task = { ...taskFound, [prop]: value }
+  const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
+  return [newTask, ...restTasks].sort((a: Task, b: Task) => parseInt(a.id) - parseInt(b.id))
+}
+
+const initialState = {
   devItemList: [
     { key: 'Backend', value: 'Backend' },
     { key: 'Frontend', value: 'Frontend' },
@@ -27,7 +37,11 @@ export const useTasksStore = create<State>((set) => ({
   content: null,
   tasks: [],
   tasksOptions: { dev: undefined, epic: undefined, project: undefined, type: undefined },
-  command: '',
+  command: ''
+}
+
+export const useTasksStore = create<State>((set) => ({
+  ...initialState,
 
   addToken: (token) =>
     set(({ tasks, domain }) => {
@@ -106,12 +120,7 @@ export const useTasksStore = create<State>((set) => ({
     }),
   setPointsTask: (id: string, points: number) => {
     set(({ tasks, token, domain }) => {
-      const taskFound = tasks.find(({ id: taskId }) => taskId === id)
-      if (!taskFound) return {}
-
-      const newTask: Task = { ...taskFound, points }
-      const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
-      const allTasks = [newTask, ...restTasks]
+      const allTasks = updatePropTask(id, 'points', points, tasks)
 
       return {
         tasks: allTasks,
@@ -121,12 +130,7 @@ export const useTasksStore = create<State>((set) => ({
   },
   setDevTask: (id: string, dev: string) => {
     set(({ tasks, token, domain }) => {
-      const taskFound = tasks.find(({ id: taskId }) => taskId === id)
-      if (!taskFound) return {}
-
-      const newTask: Task = { ...taskFound, dev }
-      const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
-      const allTasks = [newTask, ...restTasks]
+      const allTasks = updatePropTask(id, 'dev', dev, tasks)
 
       return {
         tasks: allTasks,
@@ -136,12 +140,7 @@ export const useTasksStore = create<State>((set) => ({
   },
   setProjectTask: (id: string, project: string) => {
     set(({ tasks, token, domain }) => {
-      const taskFound = tasks.find(({ id: taskId }) => taskId === id)
-      if (!taskFound) return {}
-
-      const newTask: Task = { ...taskFound, project }
-      const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
-      const allTasks = [newTask, ...restTasks]
+      const allTasks = updatePropTask(id, 'project', project, tasks)
 
       return {
         tasks: allTasks,
@@ -151,12 +150,7 @@ export const useTasksStore = create<State>((set) => ({
   },
   setTypeTask: (id: string, type: string) => {
     set(({ tasks, token, domain }) => {
-      const taskFound = tasks.find(({ id: taskId }) => taskId === id)
-      if (!taskFound) return {}
-
-      const newTask: Task = { ...taskFound, type }
-      const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
-      const allTasks = [newTask, ...restTasks]
+      const allTasks = updatePropTask(id, 'type', type, tasks)
 
       return {
         tasks: allTasks,
@@ -166,12 +160,7 @@ export const useTasksStore = create<State>((set) => ({
   },
   setEpicTask: (id: string, epic: string) => {
     set(({ tasks, token, domain }) => {
-      const taskFound = tasks.find(({ id: taskId }) => taskId === id)
-      if (!taskFound) return {}
-
-      const newTask: Task = { ...taskFound, epic }
-      const restTasks = tasks.filter(({ id: taskId }) => taskId !== id)
-      const allTasks = [newTask, ...restTasks]
+      const allTasks = updatePropTask(id, 'epic', epic, tasks)
 
       return {
         tasks: allTasks,
