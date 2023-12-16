@@ -20,7 +20,11 @@ function App() {
           <h3>https://xxx.atlassian.net/rest/api/3/issue/xxx</h3>
         </section>
         <section>
-          <Textarea onChange={handleOnChangeContent} placeholder="Type your message here." />
+          <Textarea
+            className="resize-none overflow-hidden"
+            onChange={handleOnChangeContent}
+            placeholder="Type your message here."
+          />
         </section>
         <section className="flex flex-col gap-5">
           <header>

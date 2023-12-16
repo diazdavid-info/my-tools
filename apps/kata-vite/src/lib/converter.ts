@@ -16,14 +16,18 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
       id: index.toString(),
       title,
       points,
-      content: JSON.stringify([{ type: 'bulletList', content: [listItem] }], null, 2)
+      content: JSON.stringify([{ type: 'bulletList', content: [listItem] }], null, 2),
+      disabled: false
     }
   })
 }
 
 export const tasksToCommand = ({ tasks, token, domain }: { tasks: Task[]; token: string; domain: string }): string => {
-  const commandList = tasks.map((task) => {
-    const { epic, type, dev, project, points, content, title } = task
+  const commandList = []
+
+  for (const task of tasks) {
+    const { epic, type, dev, project, points, content, title, disabled } = task
+    if (disabled) continue
     const body = {
       fields: {
         summary: title,
@@ -39,12 +43,12 @@ export const tasksToCommand = ({ tasks, token, domain }: { tasks: Task[]; token:
         }
       }
     }
-    return `
+    commandList.push(`
       curl -sX POST '${domain}/rest/api/3/issue' \\
       -H 'Content-Type: application/json' \\
       -H 'Authorization: Basic ${token}' \\
-      -d '${JSON.stringify({ ...body })}'`
-  })
+      -d '${JSON.stringify({ ...body })}'`)
+  }
 
   return commandList.join(';')
 }

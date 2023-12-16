@@ -38,4 +38,5 @@ type State = {
   setProjectTask: (id: string, dev: string) => void
   setTypeTask: (id: string, dev: string) => void
   setEpicTask: (id: string, dev: string) => void
+  setDisabledTask: (id: string, disabled: boolean) => void
 }

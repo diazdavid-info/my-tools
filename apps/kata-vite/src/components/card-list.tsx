@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.t
 import { useTasksStore } from '@/store/tasks-store.ts'
 import { CardInputOption } from '@/components/card-input-option.tsx'
 import { CardSelectOption } from '@/components/card-select-option.tsx'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx'
 
 type CardListProp = object
 
@@ -16,7 +17,8 @@ export const CardList: FC<CardListProp> = () => {
     setDevTask,
     setProjectTask,
     setTypeTask,
-    setEpicTask
+    setEpicTask,
+    setDisabledTask
   } = useTasksStore((state) => state)
 
   const handlePointsChange = (id: string) => {
@@ -50,9 +52,19 @@ export const CardList: FC<CardListProp> = () => {
     }
   }
 
-  return tasks.map(({ id, title, points, dev, epic, project, type, content }) => (
-    <Card key={id}>
+  const handleSkipChange = (id: string) => {
+    return (event: string) => {
+      setDisabledTask(id, event === 'skip')
+    }
+  }
+
+  return tasks.map(({ id, title, points, dev, epic, project, type, content, disabled }) => (
+    <Card key={id} className={`${disabled ? 'bg-gray-500' : ''}`}>
       <CardHeader>
+        <ToggleGroup onValueChange={handleSkipChange(id)} value={disabled ? 'skip' : ''} type="single">
+          <ToggleGroupItem value="skip">Omitir</ToggleGroupItem>
+          <ToggleGroupItem value="only">Sólo</ToggleGroupItem>
+        </ToggleGroup>
         <CardTitle className="text-base">{title}</CardTitle>
         <div className="text-sm text-muted-foreground">
           <CardInputOption value={points.toString()} handleValueChange={handlePointsChange(id)} />

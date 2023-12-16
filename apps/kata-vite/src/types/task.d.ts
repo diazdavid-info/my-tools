@@ -7,4 +7,5 @@ export type Task = {
   project?: string
   type?: string
   content: string
+  disabled: boolean
 }

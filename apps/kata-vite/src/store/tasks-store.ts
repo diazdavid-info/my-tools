@@ -167,5 +167,15 @@ export const useTasksStore = create<State>((set) => ({
         command: tasksToCommand({ tasks: allTasks, token, domain })
       }
     })
+  },
+  setDisabledTask: (id: string, disabled: boolean) => {
+    set(({ tasks, token, domain }) => {
+      const allTasks = updatePropTask(id, 'disabled', disabled, tasks)
+
+      return {
+        tasks: allTasks,
+        command: tasksToCommand({ tasks: allTasks, token, domain })
+      }
+    })
   }
 }))
