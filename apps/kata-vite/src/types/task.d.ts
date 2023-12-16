@@ -1,10 +1,3 @@
-type ContentText = {
-  type: 'text'
-  content: string
-}
-
-type Content = ContentText | { type: 'list'; content: Content[] }
-
 export type Task = {
   id: string
   title: string
@@ -14,4 +7,5 @@ export type Task = {
   project?: string
   type?: string
   content: string
+  disabled: boolean
 }

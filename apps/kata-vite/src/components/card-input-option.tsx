@@ -15,7 +15,7 @@ export const CardInputOption: FC<CardInputOptionProp> = ({ value, handleValueCha
         <Badge variant="outline">{value}</Badge>
       </PopoverTrigger>
       <PopoverContent>
-        <Input onChange={handleValueChange} value={value} type="text" placeholder="Puntos" />
+        <Input onChange={handleValueChange} value={value} type="text" placeholder="" />
       </PopoverContent>
     </Popover>
   )

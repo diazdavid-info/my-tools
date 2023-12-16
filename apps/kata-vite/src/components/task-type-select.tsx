@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
 import { PropsWithChildren } from 'react'
-import { useTasksStore } from '@/store/tasks.ts'
+import { useTasksStore } from '@/store/tasks-store.ts'
 
 type TaskTypeSelectProps = {
   className: string

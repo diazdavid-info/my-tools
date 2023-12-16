@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input.tsx'
 import { ChangeEvent, PropsWithChildren } from 'react'
-import { useTasksStore } from '@/store/tasks.ts'
+import { useTasksStore } from '@/store/tasks-store.ts'
 
 type EpicInput = {
   className: string
