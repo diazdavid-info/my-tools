@@ -199,6 +199,12 @@ importers:
         specifier: 2.0.0
         version: 2.0.0(@types/node@20.5.1)(typescript@5.2.2)
 
+  apps/node-server:
+    devDependencies:
+      eslint-config-mytools:
+        specifier: workspace:^
+        version: link:../../packages/eslint-config-mytools
+
   apps/tasks:
     devDependencies:
       '@types/jest':

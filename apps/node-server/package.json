@@ -1,0 +1,16 @@
+{
+  "name": "node-server",
+  "private": true,
+  "description": "Test node server",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch index.js"
+  },
+  "keywords": [],
+  "author": "David Diaz",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint-config-mytools": "workspace:^"
+  }
+}
