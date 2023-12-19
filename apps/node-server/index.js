@@ -1,12 +1,14 @@
 import { createServer } from 'node:http'
+import url from 'node:url'
 
 const server = createServer((req, res) => {
-  if (req.url === '/') {
+  if (req.url.match(/\/.*/)) {
     switch (req.method) {
       case 'GET': {
+        const parsedUrlQuery = url.parse(req.url, true).query
         res.statusCode = 200
         res.setHeader('Content-type', 'text/plain; charset=utf-8')
-        res.end('<h1>Hola, qué tal?? 😊</h1>')
+        res.end(`<h1>Hola, qué tal?? 😊</h1> ${JSON.stringify(parsedUrlQuery)}`)
         break
       }
       case 'POST': {
@@ -25,6 +27,6 @@ const server = createServer((req, res) => {
   }
 })
 
-server.listen(5000, () => {
+server.listen(6000, () => {
   console.log(`Server corriendo en  http://localhost:${server.address().port}`)
 })
