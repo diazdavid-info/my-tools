@@ -1,8 +1,21 @@
 # Pruebas de diferentes empaquetadores
 
-## esbuild + tsx
-En estas pruebas usamos tsx para el entorno de dev y esbuild para la build de pro
+## Empaquetadores para producción
+
+### tsc
 ```
-"build": "rimraf dist && esbuild app/server.js --color=true --bundle --minify --analyze --platform=node --format=esm --packages=external --outdir=dist",
-"dev": "tsx watch app/server.js",
+"build:tsc": "rimraf dist && tsc",
 ```
+
+### esbuild
+```
+"build:esbuild": "rimraf dist && esbuild app/**/*.js app/**/*.ts --color=true --bundle=true --splitting --minify=false --analyze --platform=node --format=esm --packages=external --outdir=dist",
+```
+
+### rollup
+```
+"build:rollup": "rimraf dist && rollup --config rollup.config.js",
+```
+
+## Referencias
+https://github.com/rollup/plugins
