@@ -19,3 +19,6 @@
 
 ## Referencias
 https://github.com/rollup/plugins
+https://esbuild.github.io/
+https://www.typescriptlang.org/tsconfig
+https://rollupjs.org/command-line-interface/
