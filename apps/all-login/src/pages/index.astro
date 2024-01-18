@@ -10,12 +10,13 @@ const session = await getSession(Astro.request)
     <main class="min-h-dvh flex flex-col items-center justify-center gap-6">
         <h1 class="font-bold text-3xl w-80 text-center">Log in to All Login</h1>
         <div class="w-80 shadow-2xl p-2 flex flex-col gap-2">
-            <SignIn class="w-full m-auto rounded bg-blue-400 p-1" options={{callbackUrl: '/test', redirect: false}} provider="github">Continue with Github</SignIn>
-            <SignIn class="w-full m-auto rounded bg-blue-400 p-1" options={{callbackUrl: '/'}} provider="atlassian">Continue with Atlassian</SignIn>
+            <SignIn class="w-full m-auto rounded bg-blue-400 p-1" provider="github">Continue with Github</SignIn>
+            <SignIn class="w-full m-auto rounded bg-blue-400 p-1" provider="atlassian">Continue with Atlassian</SignIn>
             <SignOut>LOOOOOOGOUT</SignOut>
-          {
-            session && <img class="rounded-full w-20" src={session.user.image} alt=`Avatar de ${session.user.name}`/>
-          }
         </div>
+        {
+          session &&
+            <img class="rounded-full w-20" src={session.user?.image} alt=`Avatar de ${session.user?.name}`/>
+        }
     </main>
 </Layout>
