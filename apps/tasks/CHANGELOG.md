@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.11.2
+
+### Patch Changes
+
+- update compile
+
 ## 0.11.1
 
 ### Patch Changes
