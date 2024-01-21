@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
+    "build": "rimraf dist && ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
     "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "ncc build ./index.ts -w -o dist/",
     "lint": "eslint index.ts",
@@ -32,6 +32,7 @@
     "node-fetch": "3.3.2",
     "picocolors": "1.0.0",
     "prompts": "2.4.2",
+    "rimraf": "5.0.5",
     "simple-git": "3.19.1",
     "ts-jest": "29.1.1"
   },
