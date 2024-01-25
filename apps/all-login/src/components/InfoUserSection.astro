@@ -1,11 +1,11 @@
 ---
 import {SignOut} from "auth-astro/components";
 interface Props {
-  image: string
-  name: string
+  image: string | null | undefined
+  name: string | null | undefined
 }
 
-const {image, name} = Astro.props
+const {image = '', name = ''} = Astro.props
 ---
 
 <section class="w-80 shadow-2xl p-2 flex flex-col items-center gap-2">
