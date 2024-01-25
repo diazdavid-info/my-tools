@@ -1,0 +1,23 @@
+---
+import {SignIn} from "auth-astro/components";
+import GithubIcon from "./icons/GithubIcon.astro";
+import AtlassianIcon from "./icons/AtlassianIcon.astro";
+import GoogleIcon from "./icons/GoogleIcon.astro";
+
+const providerList = [
+    {name: 'github', Icon: GithubIcon, text: 'Continue with Github'},
+    {name: 'atlassian', Icon: AtlassianIcon, text: 'Continue with Atlassian'},
+    {name: 'google', Icon: GoogleIcon, text: 'Continue with Google'},
+]
+---
+
+<section class="w-80 shadow-2xl p-10 flex flex-col gap-3">
+    {
+      providerList.map(({name, Icon, text}) => (
+        <SignIn class="w-full m-auto rounded bg-blue-400 p-2 flex items-center gap-2" provider={name}>
+            <Icon  class="size-6"/>
+            {text}
+        </SignIn>
+      ))
+    }
+</section>
