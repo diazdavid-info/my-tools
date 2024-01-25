@@ -12,7 +12,16 @@ export default defineConfig({
     Atlassian({
       clientId: import.meta.env.ATLASSIAN_CLIENT_ID,
       clientSecret: import.meta.env.ATLASSIAN_CLIENT_SECRET,
-      authorization: { params: { scope: "read:account" } },
+      authorization: { params: { scope: "read:me" } },
+      profile(profile) {
+        console.log(profile)
+        return {
+          id: profile.account_id,
+          name: profile.name,
+          image: profile.picture,
+          email: profile.email,
+        }
+      }
     }),
   ],
 });
