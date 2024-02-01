@@ -9,5 +9,6 @@ export default {
     preserveModules: true
   },
   // plugins: [typescript(), commonjs(), terser()]
+  external: ['node:http', 'express'],
   plugins: [typescript(), commonjs()]
 }
