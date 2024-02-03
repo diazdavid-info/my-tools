@@ -48,7 +48,7 @@ export default defineConfig({
     }),
   ],
   callbacks: {
-    async jwt({ token, account, user, session, profile }) {
+    async jwt({ token, user }) {
       if(user) {
         // @ts-ignore
         token.siteId = user.siteId
