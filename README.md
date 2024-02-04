@@ -1,3 +1,5 @@
+[![my-tools CI](https://github.com/diazdavid-info/my-tools/actions/workflows/github-actions.yml/badge.svg)](https://github.com/diazdavid-info/my-tools/actions/workflows/github-actions.yml)
+
 # Mis herramientas del día a día
 
 En este proyecto están las herramientas que uso y aprovecho para probar:
