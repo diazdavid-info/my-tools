@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.4.1",
-    "@astrojs/node": "^8.2.0",
     "@astrojs/react": "^3.0.9",
     "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/vercel": "^7.1.1",
     "@auth/core": "^0.18.6",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-select": "^2.0.0",

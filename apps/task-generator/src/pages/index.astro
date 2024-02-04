@@ -1,27 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import {SignIn, SignOut} from "auth-astro/components";
-import {getSession} from 'auth-astro/server';
 import {GeneralOptions} from "@/components/general-options.tsx";
 import {CardList} from "@/components/card-list.tsx";
 import {Command} from "@/components/command.tsx";
 import {TaskInput} from "@/components/task-input.tsx";
-
-const req = Astro.request
-const session = await getSession(req)
 ---
 
 <Layout title="Welcome to Astro.">
     <main class="w-full lg:w-3/4 m-auto p-5 flex flex-col gap-5">
-        <section>
-          {session && <img class="rounded-full w-8" src={session.user?.image}>}
-            {session && <h3>{session.user?.name}</h3>}
-            <SignIn class="w-full m-auto rounded bg-blue-400 p-2 flex items-center gap-2" provider='atlassian'>
-                Log In
-            </SignIn>
-            <SignOut class="w-full m-auto rounded bg-red-600 p-1">Log out</SignOut>
-            <h3>https://xxx.atlassian.net/rest/api/3/issue/xxx</h3>
-        </section>
         <section>
             <TaskInput client:idle/>
         </section>
