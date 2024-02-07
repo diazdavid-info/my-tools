@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import {GeneralOptions} from "@/components/general-options.tsx";
 import {CardList} from "@/components/card-list.tsx";
-import {Command} from "@/components/command.tsx";
 import {TaskInput} from "@/components/task-input.tsx";
 ---
 
@@ -18,9 +17,6 @@ import {TaskInput} from "@/components/task-input.tsx";
             <main class="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2">
                 <CardList client:idle/>
             </main>
-            <footer class="border-2 rounded">
-                <Command client:idle/>
-            </footer>
         </section>
     </main>
 </Layout>

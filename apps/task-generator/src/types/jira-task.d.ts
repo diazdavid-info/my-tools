@@ -4,6 +4,11 @@ export type JiraTask = {
 
 type Fields = {
   comment: FieldsComment
+  parent: Parent
+}
+
+type Parent = {
+  key: string
 }
 
 type FieldsComment = {

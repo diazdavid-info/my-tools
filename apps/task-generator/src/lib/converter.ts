@@ -6,6 +6,7 @@ const generateTitleAndPoints = (listItem: any) => {
   return [title.trim(), parseInt(points.trim())]
 }
 export const jiraTasksToTasks = (data: JiraTask): Task[] => {
+  const parent = data.fields.parent.key
   const content = data.fields.comment.comments[0].body.content
   const [firstElement] = content.filter((bodyContent) => ['bulletList', 'orderedList'].includes(bodyContent.type))
   const { content: bulletListContent } = firstElement
@@ -16,13 +17,14 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
       id: index.toString(),
       title,
       points,
+      epic: parent,
       content: JSON.stringify([{ type: 'bulletList', content: [listItem] }], null, 2),
       disabled: false
     }
   })
 }
 
-export const tasksToCommand = ({ tasks, token, domain }: { tasks: Task[]; token: string; domain: string }): string => {
+export const tasksToCommand = ({ tasks }: { tasks: Task[] }): string => {
   const commandList = []
 
   for (const task of tasks) {
@@ -44,9 +46,9 @@ export const tasksToCommand = ({ tasks, token, domain }: { tasks: Task[]; token:
       }
     }
     commandList.push(`
-      curl -sX POST '${domain}/rest/api/3/issue' \\
+      curl -sX POST 'null/rest/api/3/issue' \\
       -H 'Content-Type: application/json' \\
-      -H 'Authorization: Basic ${token}' \\
+      -H 'Authorization: Basic null' \\
       -d '${JSON.stringify({ ...body })}'`)
   }
 

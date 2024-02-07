@@ -58,7 +58,7 @@ export const CardList: FC<CardListProp> = () => {
     }
   }
 
-  return tasks.map(({ id, title, points, dev, epic, project, type, content, disabled }) => (
+  return tasks.map(({ id, title, points, dev, epic, project, type, disabled }) => (
     <Card key={id} className={`${disabled ? 'bg-gray-500' : ''}`}>
       <CardHeader>
         <ToggleGroup onValueChange={handleSkipChange(id)} value={disabled ? 'skip' : ''} type="single">
@@ -75,7 +75,6 @@ export const CardList: FC<CardListProp> = () => {
         </div>
       </CardHeader>
       <CardContent className="text-sm">
-        <code className="max-h-64 overflow-hidden block">{content}</code>
       </CardContent>
     </Card>
   ))
