@@ -7,10 +7,10 @@ type ProjectSelectProps = {
 }
 
 export const ProjectSelect = ({ className }: PropsWithChildren<ProjectSelectProps>) => {
-  const { setProject, projectItemList } = useTasksStore((state) => state)
-  const handleChange = (value: string) => {
-    setProject(value)
-  }
+  const setProject = useTasksStore((state) => state.setProject)
+  const projectItemList = useTasksStore((state) => state.projectItemList)
+
+  const handleChange = (value: string) => setProject(value)
 
   return (
     <Select onValueChange={handleChange}>
