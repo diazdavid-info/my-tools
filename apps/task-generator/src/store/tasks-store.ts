@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Task } from "@/types/task";
 import { jiraTasksToTasks } from "@/lib/converter.ts";
-import type { State } from "@/types/tasks-store";
+import type { ItemList, State } from "@/types/tasks-store";
 
 const updatePropTask = <T>(
   id: string,
@@ -90,6 +90,12 @@ export const useTasksStore = create<State>((set) => ({
       return {
         tasks: newTasks,
         tasksOptions: { ...tasksOptions, project: value },
+      };
+    }),
+  setProjectList: (itemList: ItemList[]) =>
+    set(() => {
+      return {
+        projectItemList: itemList,
       };
     }),
   setType: (value: string) =>
