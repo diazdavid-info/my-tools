@@ -1,8 +1,12 @@
 import { Input } from "@/components/ui/input.tsx";
-import type { ChangeEvent } from "react";
+import type {ChangeEvent, PropsWithChildren} from "react";
 import { useTasksStore } from "@/store/tasks-store.ts";
 
-export const TaskInput = () => {
+type TaskInputProps = {
+  className: string
+}
+
+export const TaskInput = ({ className }: PropsWithChildren<TaskInputProps>) => {
   const { createTask } = useTasksStore((state) => state);
 
   const handleOnBlur = (event: ChangeEvent<HTMLInputElement>) => {
@@ -15,6 +19,6 @@ export const TaskInput = () => {
   };
 
   return (
-    <Input onBlur={handleOnBlur} type="text" placeholder="Jira Analisis Task" />
+    <Input className={className} onBlur={handleOnBlur} type="text" placeholder="Jira Analisis Task" />
   );
 };

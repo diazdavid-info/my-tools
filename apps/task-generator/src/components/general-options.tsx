@@ -5,6 +5,7 @@ import { DevSelect } from "@/components/dev-select.tsx";
 import { useEffect } from "react";
 import { useTasksStore } from "@/store/tasks-store.ts";
 import { allProjects } from "@/services/project-service.ts";
+import {TaskInput} from "@/components/task-input.tsx";
 
 export const GeneralOptions = () => {
   const setProjectList = useTasksStore((state) => state.setProjectList);
@@ -15,6 +16,7 @@ export const GeneralOptions = () => {
 
   return (
     <div className="flex flex-row gap-2">
+      <TaskInput className="flex-1"/>
       <ProjectSelect className="flex-1" />
       <TaskTypeSelect className="flex-1" />
       <EpicInput className="flex-1" />
