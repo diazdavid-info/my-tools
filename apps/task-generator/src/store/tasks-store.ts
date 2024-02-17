@@ -4,7 +4,7 @@ import { jiraTasksToTasks } from "@/lib/converter.ts";
 import type { ItemList, State } from "@/types/tasks-store";
 
 const updatePropTask = <T>(
-  id: string,
+  id: number,
   prop: string,
   value: T,
   tasks: Task[],
@@ -15,7 +15,7 @@ const updatePropTask = <T>(
   const newTask: Task = { ...taskFound, [prop]: value };
   const restTasks = tasks.filter(({ id: taskId }) => taskId !== id);
   return [newTask, ...restTasks].sort(
-    (a: Task, b: Task) => parseInt(a.id) - parseInt(b.id),
+    (a: Task, b: Task) => a.id - b.id,
   );
 };
 
@@ -107,7 +107,7 @@ export const useTasksStore = create<State>((set) => ({
         tasksOptions: { ...tasksOptions, type: value },
       };
     }),
-  setPointsTask: (id: string, points: number) => {
+  setPointsTask: (id: number, points: number) => {
     set(({ tasks }) => {
       const allTasks = updatePropTask(id, "points", points, tasks);
 
@@ -116,7 +116,7 @@ export const useTasksStore = create<State>((set) => ({
       };
     });
   },
-  setDevTask: (id: string, dev: string) => {
+  setDevTask: (id: number, dev: string) => {
     set(({ tasks }) => {
       const allTasks = updatePropTask(id, "dev", dev, tasks);
 
@@ -125,7 +125,7 @@ export const useTasksStore = create<State>((set) => ({
       };
     });
   },
-  setProjectTask: (id: string, project: string) => {
+  setProjectTask: (id: number, project: string) => {
     set(({ tasks }) => {
       const allTasks = updatePropTask(id, "project", project, tasks);
 
@@ -134,7 +134,7 @@ export const useTasksStore = create<State>((set) => ({
       };
     });
   },
-  setTypeTask: (id: string, type: string) => {
+  setTypeTask: (id: number, type: string) => {
     set(({ tasks }) => {
       const allTasks = updatePropTask(id, "type", type, tasks);
 
@@ -143,7 +143,7 @@ export const useTasksStore = create<State>((set) => ({
       };
     });
   },
-  setEpicTask: (id: string, epic: string) => {
+  setEpicTask: (id: number, epic: string) => {
     set(({ tasks }) => {
       const allTasks = updatePropTask(id, "epic", epic, tasks);
 
@@ -152,7 +152,7 @@ export const useTasksStore = create<State>((set) => ({
       };
     });
   },
-  setDisabledTask: (id: string, disabled: boolean) => {
+  setDisabledTask: (id: number, disabled: boolean) => {
     set(({ tasks }) => {
       const allTasks = updatePropTask(id, "disabled", disabled, tasks);
 

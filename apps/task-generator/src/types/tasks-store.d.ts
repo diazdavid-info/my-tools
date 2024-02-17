@@ -29,10 +29,10 @@ type State = {
   setProjectList: (itemList: ItemList[]) => void;
   setType: (value: string) => void;
 
-  setPointsTask: (id: string, points: number) => void;
-  setDevTask: (id: string, dev: string) => void;
-  setProjectTask: (id: string, dev: string) => void;
-  setTypeTask: (id: string, dev: string) => void;
-  setEpicTask: (id: string, dev: string) => void;
-  setDisabledTask: (id: string, disabled: boolean) => void;
+  setPointsTask: (id: number, points: number) => void;
+  setDevTask: (id: number, dev: string) => void;
+  setProjectTask: (id: number, dev: string) => void;
+  setTypeTask: (id: number, dev: string) => void;
+  setEpicTask: (id: number, dev: string) => void;
+  setDisabledTask: (id: number, disabled: boolean) => void;
 };

@@ -21,38 +21,38 @@ export const CardList: FC<CardListProp> = () => {
     setDisabledTask
   } = useTasksStore((state) => state)
 
-  const handlePointsChange = (id: string) => {
+  const handlePointsChange = (id: number) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value === '' ? '0' : event.target.value
       setPointsTask(id, parseInt(value))
     }
   }
 
-  const handleDevChange = (id: string) => {
+  const handleDevChange = (id: number) => {
     return (event: string) => {
       setDevTask(id, event)
     }
   }
 
-  const handleProjectChange = (id: string) => {
+  const handleProjectChange = (id: number) => {
     return (event: string) => {
       setProjectTask(id, event)
     }
   }
 
-  const handleTypeChange = (id: string) => {
+  const handleTypeChange = (id: number) => {
     return (event: string) => {
       setTypeTask(id, event)
     }
   }
 
-  const handleEpicChange = (id: string) => {
+  const handleEpicChange = (id: number) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       setEpicTask(id, event.target.value)
     }
   }
 
-  const handleSkipChange = (id: string) => {
+  const handleSkipChange = (id: number) => {
     return (event: string) => {
       setDisabledTask(id, event === 'skip')
     }

@@ -14,7 +14,7 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
   return bulletListContent.map((listItem, index) => {
     const [title, points] = generateTitleAndPoints({ ...listItem })
     return {
-      id: index.toString(),
+      id: index,
       title,
       points,
       epic: parent,
