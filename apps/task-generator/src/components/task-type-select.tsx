@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
-import type { PropsWithChildren } from 'react'
+import {type PropsWithChildren, useEffect} from 'react'
 import { useTasksStore } from '@/store/tasks-store.ts'
 
 type TaskTypeSelectProps = {
@@ -8,6 +8,16 @@ type TaskTypeSelectProps = {
 
 export const TaskTypeSelect = ({ className }: PropsWithChildren<TaskTypeSelectProps>) => {
   const setType = useTasksStore((state) => state.setType)
+  const setTypeList = useTasksStore((state) => state.setTypeList)
+  const typeItemList = useTasksStore((state) => state.typeItemList)
+
+  useEffect(() => {
+    fetch('/api/tasks/types?projectId=10001')
+      .then(data => data.json())
+      .then(setTypeList)
+      .catch(console.error)
+  }, []);
+
   const handleChange = (value: string) => {
     setType(value)
   }
@@ -18,8 +28,11 @@ export const TaskTypeSelect = ({ className }: PropsWithChildren<TaskTypeSelectPr
         <SelectValue placeholder="Tipo de tarea" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="10002">Task</SelectItem>
-        <SelectItem value="10009">Spike</SelectItem>
+        {typeItemList.map(({ key, value }) => (
+          <SelectItem key={key} value={key}>
+            {value}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   )

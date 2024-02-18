@@ -7,7 +7,7 @@ type TaskInputProps = {
 }
 
 export const TaskInput = ({ className }: PropsWithChildren<TaskInputProps>) => {
-  const { createTask } = useTasksStore((state) => state);
+  const createTask = useTasksStore((state) => state.createTask);
 
   const handleOnBlur = (event: ChangeEvent<HTMLInputElement>) => {
     fetch(`/api/tasks/${event.target.value}`)

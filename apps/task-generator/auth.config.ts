@@ -1,28 +1,13 @@
 import Atlassian from "@auth/core/providers/atlassian";
 import { defineConfig } from "auth-astro";
 
-// import NextAuth from "next-auth"
-//
-// declare module "next-auth" {
-//   interface User {
-//     /** The user's postal address. */
-//     address: string
-//   }
-// }
-
-// declare module "auth-astro" {
-//   interface User {
-//     siteId: string
-//   }
-// }
-
 export default defineConfig({
   debug: false,
   providers: [
     Atlassian({
       clientId: import.meta.env.ATLASSIAN_CLIENT_ID,
       clientSecret: import.meta.env.ATLASSIAN_CLIENT_SECRET,
-      authorization: { params: { scope: "read:me read:account read:jira-work" } },
+      authorization: { params: { scope: "read:me read:account read:jira-work read:field.option:jira" } },
       async profile(profile, account) {
         const accessToken = account.access_token
         const data = await fetch('https://api.atlassian.com/oauth/token/accessible-resources', {

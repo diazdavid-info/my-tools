@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import {type PropsWithChildren, useEffect} from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
 import { useTasksStore } from '@/store/tasks-store.ts'
 
@@ -7,7 +7,17 @@ type DevSelectProps = {
 }
 
 export const DevSelect = ({ className }: PropsWithChildren<DevSelectProps>) => {
-  const { setDev, devItemList } = useTasksStore((state) => state)
+  const setDev = useTasksStore((state) => state.setDev)
+  const devItemList = useTasksStore((state) => state.devItemList)
+  const setDevList = useTasksStore((state) => state.setDevList)
+
+  useEffect(() => {
+    fetch('/api/fields/customfield_10030')
+      .then(data => data.json())
+      .then(setDevList)
+      .catch(console.error)
+  }, []);
+
   const handleChange = (value: string) => {
     setDev(value)
   }

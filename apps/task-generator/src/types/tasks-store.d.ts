@@ -24,10 +24,12 @@ type State = {
 
   createTask: (content: string) => void;
   setDev: (value: string) => void;
+  setDevList: (itemList: ItemList[]) => void;
   setEpic: (value: string) => void;
   setProject: (value: string) => void;
   setProjectList: (itemList: ItemList[]) => void;
   setType: (value: string) => void;
+  setTypeList: (itemList: ItemList[]) => void;
 
   setPointsTask: (id: number, points: number) => void;
   setDevTask: (id: number, dev: string) => void;

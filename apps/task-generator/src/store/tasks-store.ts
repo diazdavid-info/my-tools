@@ -20,20 +20,9 @@ const updatePropTask = <T>(
 };
 
 const initialState = {
-  devItemList: [
-    { key: "Backend", value: "Backend" },
-    { key: "Frontend", value: "Frontend" },
-    { key: "Tech", value: "Tech" },
-  ],
-  projectItemList: [
-    { key: "10000", value: "BookingApp (BOOK)" },
-    { key: "10001", value: "API (API)" },
-    { key: "10002", value: "Admin (ADM)" },
-  ],
-  typeItemList: [
-    { key: "10002", value: "Task" },
-    { key: "10009", value: "Spike" },
-  ],
+  devItemList: [],
+  projectItemList: [],
+  typeItemList: [],
 
   content: null,
   tasks: [],
@@ -74,6 +63,12 @@ export const useTasksStore = create<State>((set) => ({
         tasksOptions: { ...tasksOptions, dev: value },
       };
     }),
+  setDevList: (itemList: ItemList[]) =>
+    set(() => {
+      return {
+        devItemList: itemList,
+      };
+    }),
   setEpic: (value: string) =>
     set(({ tasks, tasksOptions }) => {
       const newTasks = tasks.map((task) => ({ ...task, epic: value }));
@@ -105,6 +100,12 @@ export const useTasksStore = create<State>((set) => ({
       return {
         tasks: newTasks,
         tasksOptions: { ...tasksOptions, type: value },
+      };
+    }),
+  setTypeList: (itemList: ItemList[]) =>
+    set(() => {
+      return {
+        typeItemList: itemList,
       };
     }),
   setPointsTask: (id: number, points: number) => {
