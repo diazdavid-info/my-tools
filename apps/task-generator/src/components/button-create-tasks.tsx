@@ -10,7 +10,15 @@ export const ButtonCreateTasks = ({ className }: PropsWithChildren<ButtonCreateT
   const tasks = useTasksStore((state) => state.tasks);
 
   const handlerCreateTask = () => {
-    console.log({...tasks})
+    for (const { disabled, ...task } of tasks) {
+      if (disabled) continue
+
+      const body = JSON.stringify(task)
+      fetch('/api/tasks', {method: 'POST', body})
+        .then(data => data.json())
+        .then(console.log)
+        .catch(console.error)
+    }
   }
 
   return (
