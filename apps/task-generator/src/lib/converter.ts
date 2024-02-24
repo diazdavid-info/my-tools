@@ -19,7 +19,9 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
       points,
       epic: parent,
       content: JSON.stringify([{ type: 'bulletList', content: [listItem] }], null, 2),
-      disabled: false
+      disabled: false,
+      url: '',
+      status: 'TO_DO'
     }
   })
 }

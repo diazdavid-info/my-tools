@@ -4,6 +4,7 @@ import { useTasksStore } from '@/store/tasks-store.ts'
 import { CardInputOption } from '@/components/card-input-option.tsx'
 import { CardSelectOption } from '@/components/card-select-option.tsx'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx'
+import type {TaskStatus} from "@/types/task";
 
 type CardListProp = object
 
@@ -58,8 +59,16 @@ export const CardList: FC<CardListProp> = () => {
     }
   }
 
-  return tasks.map(({ id, title, points, dev, epic, project, type, disabled }) => (
-    <Card key={id} className={`${disabled ? 'bg-gray-500' : ''}`}>
+  const colorStatus = (isDisabled: boolean, status: TaskStatus) => {
+    if(isDisabled) return 'bg-gray-500'
+    if(status === 'IN_PROGRESS') return 'bg-gray-300 opacity-20'
+    if(status === 'CREATED') return 'bg-blue-200'
+
+    return ''
+  }
+
+  return tasks.map(({ id, title, points, dev, epic, project, type, disabled, status }) => (
+    <Card key={id} className={`${colorStatus(disabled, status)}`}>
       <CardHeader>
         <ToggleGroup onValueChange={handleSkipChange(id)} value={disabled ? 'skip' : ''} type="single">
           <ToggleGroupItem value="skip">Omitir</ToggleGroupItem>

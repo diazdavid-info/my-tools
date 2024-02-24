@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Task } from "@/types/task";
+import type {Task, TaskStatus} from "@/types/task";
 import { jiraTasksToTasks } from "@/lib/converter.ts";
 import type { ItemList, State } from "@/types/tasks-store";
 
@@ -156,6 +156,24 @@ export const useTasksStore = create<State>((set) => ({
   setDisabledTask: (id: number, disabled: boolean) => {
     set(({ tasks }) => {
       const allTasks = updatePropTask(id, "disabled", disabled, tasks);
+
+      return {
+        tasks: allTasks,
+      };
+    });
+  },
+  setStatusTask: (id: number, status: TaskStatus) => {
+    set(({ tasks }) => {
+      const allTasks = updatePropTask(id, "status", status, tasks);
+
+      return {
+        tasks: allTasks,
+      };
+    });
+  },
+  setUrlTask: (id: number, url: string) => {
+    set(({ tasks }) => {
+      const allTasks = updatePropTask(id, "url", url, tasks);
 
       return {
         tasks: allTasks,

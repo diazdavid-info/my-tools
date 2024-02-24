@@ -1,4 +1,4 @@
-import { Task } from "@/types/task";
+import {Task, TASK_STATUS} from "@/types/task";
 import { JiraTask } from "@/lib/__tests__/fixture.ts";
 
 type TaskOptions = {
@@ -37,4 +37,6 @@ type State = {
   setTypeTask: (id: number, dev: string) => void;
   setEpicTask: (id: number, dev: string) => void;
   setDisabledTask: (id: number, disabled: boolean) => void;
+  setStatusTask: (id: number, status: TASK_STATUS) => void;
+  setUrlTask: (id: number, url: string) => void;
 };
