@@ -16,7 +16,7 @@ export const GeneralOptions = () => {
   }, []);
 
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-col md:flex-row gap-2">
       <TaskInput className="flex-1"/>
       <ProjectSelect className="flex-1" />
       <TaskTypeSelect className="flex-1" />
