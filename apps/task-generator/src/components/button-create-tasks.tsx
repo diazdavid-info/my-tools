@@ -29,6 +29,6 @@ export const ButtonCreateTasks = ({ className }: PropsWithChildren<ButtonCreateT
   }
 
   return (
-    <Button onClick={handlerCreateTask} className="flex-1 bg-blue-500 hover:bg-blue-800 hover:shadow">Create Tasks</Button>
+    <Button onClick={handlerCreateTask} className={`${className} bg-blue-500 hover:bg-blue-800 hover:shadow`}>Create Tasks</Button>
   )
 }
