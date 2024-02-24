@@ -25,7 +25,7 @@ export const TaskTypeSelect = ({ className }: PropsWithChildren<TaskTypeSelectPr
   return (
     <Select onValueChange={handleChange}>
       <SelectTrigger className={className}>
-        <SelectValue placeholder="Tipo de tarea" />
+        <SelectValue placeholder="Task type" />
       </SelectTrigger>
       <SelectContent>
         {typeItemList.map(({ key, value }) => (

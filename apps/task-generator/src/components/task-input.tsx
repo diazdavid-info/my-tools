@@ -19,6 +19,6 @@ export const TaskInput = ({ className }: PropsWithChildren<TaskInputProps>) => {
   };
 
   return (
-    <Input className={className} onBlur={handleOnBlur} type="text" placeholder="Jira Analisis Task" />
+    <Input className={className} onBlur={handleOnBlur} type="text" placeholder="Key Jira Task" />
   );
 };

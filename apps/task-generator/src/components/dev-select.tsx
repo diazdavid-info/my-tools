@@ -25,7 +25,7 @@ export const DevSelect = ({ className }: PropsWithChildren<DevSelectProps>) => {
   return (
     <Select onValueChange={handleChange}>
       <SelectTrigger className={className}>
-        <SelectValue placeholder="Equipo" />
+        <SelectValue placeholder="Team" />
       </SelectTrigger>
       <SelectContent>
         {devItemList.map(({ key, value }) => (

@@ -15,7 +15,7 @@ export const ProjectSelect = ({ className }: PropsWithChildren<ProjectSelectProp
   return (
     <Select onValueChange={handleChange}>
       <SelectTrigger className={className}>
-        <SelectValue placeholder="Projecto" />
+        <SelectValue placeholder="Project" />
       </SelectTrigger>
       <SelectContent>
         {projectItemList.map(({ key, value }) => (
