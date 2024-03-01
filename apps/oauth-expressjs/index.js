@@ -1,0 +1,42 @@
+import express from 'express'
+
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.get('/login/callback', async (req, res) => {
+  const { state, code, hd } = req.query
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    body: JSON.stringify({
+      code,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      grant_type: 'authorization_code',
+      redirect_uri: 'http://localhost:3000/login/callback'
+    }),
+    headers: { 'Content-Type': 'Application/json' }
+  })
+  const json = await response.json()
+  res.json(json)
+})
+
+app.get('/login', (req, res) => {
+  const queryParams = new URLSearchParams({
+    scope: 'https://www.googleapis.com/auth/userinfo.profile',
+    include_granted_scopes: true,
+    response_type: 'code',
+    access_type: 'offline',
+    state: 'state_parameter_passthrough_value',
+    redirect_uri: 'http://localhost:3000/login/callback',
+    client_id: process.env.GOOGLE_CLIENT_ID
+  })
+  res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${queryParams.toString()}`)
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
