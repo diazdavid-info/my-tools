@@ -39,6 +39,31 @@ app.get('/login', (req, res) => {
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${queryParams.toString()}`)
 })
 
+app.get('/sdk/login', (req, res) => {
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    'http://localhost:3000/sdk/login/callback'
+  )
+  const authorizationUrl = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: ['https://www.googleapis.com/auth/userinfo.profile'],
+    include_granted_scopes: true
+  })
+  res.redirect(authorizationUrl)
+})
+
+app.get('/sdk/login/callback', async (req, res) => {
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    'http://localhost:3000/sdk/login/callback'
+  )
+  const { tokens } = await oauth2Client.getToken(req.query.code)
+
+  res.json(tokens)
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
