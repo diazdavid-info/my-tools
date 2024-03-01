@@ -1,7 +1,9 @@
 import express from 'express'
+import { google } from 'googleapis'
 
 const app = express()
 const port = 3000
+const REDIRECT_URL = 'http://localhost:3000/login/callback'
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -16,7 +18,7 @@ app.get('/login/callback', async (req, res) => {
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
       grant_type: 'authorization_code',
-      redirect_uri: 'http://localhost:3000/login/callback'
+      redirect_uri: REDIRECT_URL
     }),
     headers: { 'Content-Type': 'Application/json' }
   })
@@ -31,7 +33,7 @@ app.get('/login', (req, res) => {
     response_type: 'code',
     access_type: 'offline',
     state: 'state_parameter_passthrough_value',
-    redirect_uri: 'http://localhost:3000/login/callback',
+    redirect_uri: REDIRECT_URL,
     client_id: process.env.GOOGLE_CLIENT_ID
   })
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${queryParams.toString()}`)

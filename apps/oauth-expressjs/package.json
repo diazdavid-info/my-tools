@@ -11,7 +11,8 @@
   "author": "David Diaz",
   "license": "ISC",
   "dependencies": {
-    "express": "4.18.2"
+    "express": "4.18.2",
+    "googleapis": "^133.0.0"
   },
   "devDependencies": {
     "eslint-config-mytools": "workspace:^"
