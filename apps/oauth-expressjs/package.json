@@ -11,8 +11,11 @@
   "author": "David Diaz",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "4.18.2",
-    "googleapis": "^133.0.0"
+    "googleapis": "^133.0.0",
+    "knex": "2.5.1",
+    "mysql2": "^3.9.2"
   },
   "devDependencies": {
     "eslint-config-mytools": "workspace:^"
