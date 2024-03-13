@@ -122,6 +122,7 @@ app.get('/me/:email', async (req, res) => {
     process.env.GOOGLE_CLIENT_SECRET,
     'http://localhost:3000/sdk/login/callback'
   )
+
   oauth2Client.on('tokens', (tokens) => {
     console.log(tokens)
     if (tokens.refresh_token) {
