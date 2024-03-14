@@ -2,9 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Welcome to Astro.">
-	<main>
-		<section class="w-[1120px] mx-auto mt-20">
+<Layout title="Pon a prueba tu velocidad con el teclado">
+	<main class="pt-20">
+		<h1 class="w-[1120px] mx-auto text-6xl font-bold">Pon a prueba tu velocidad con el teclado</h1>
+		<section class="w-[1120px] mx-auto mt-32">
 			<header class="flex justify-center gap-10 mb-10">
 				<div class="flex flex-col items-center">
 					<p id="counter-characters-minute" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
@@ -23,11 +24,15 @@ import Layout from '../layouts/Layout.astro';
 					<p class="font-extralight">Wrong</p>
 				</div>
 			</header>
-			<p id="read-text" class="text-3xl font-open-sans tracking-widest leading-normal text-pretty lowercase font-medium">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout</p>
+			<div class="bg-white rounded-xl p-4 shadow shadow-black/10">
+				<p id="read-text" class="text-3xl font-open-sans tracking-widest leading-normal text-pretty lowercase font-medium">
+					It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout
+				</p>
+			</div>
 		</section>
 	</main>
 	<label class="absolute">
-		<input id="input-text" class="opacity-0" type="text" autocomplete="off"/>
+		<input id="input-text" type="text" aria-label="Text" autocomplete="off" autocapitalize="off" inputmode="text" autocorrect="off" spellcheck="false"  class="opacity-0"/>
 	</label>
 </Layout>
 
@@ -59,29 +64,36 @@ import Layout from '../layouts/Layout.astro';
 
 	inputText.addEventListener('keyup', (event) => {
 		if(startWithWrongCharacter(event.key)) return
-
 		if(isFirstCharacter()) startCurrentTime = new Date().valueOf()
+		if(!ensureValidCharacter(event.key)) return
 
 		if (isRightTyping(event.key)) {
-			spanElements[countCharacters].classList.add('bg-blue-200')
+			spanElements[countCharacters].classList.remove('bg-red-500')
+			spanElements[countCharacters].classList.add('text-green-400')
 			rightCharacters += 1
+			countCharacters += 1
 			charactersMinute = Math.round(60000 * rightCharacters / (new Date().valueOf() - startCurrentTime))
 
 			counterCharactersMinute.innerText = isValidNumber(charactersMinute) ? charactersMinute.toString() : '0'
 			counterRightCharacters.innerText = rightCharacters.toString()
+			counterWriteCharacters.innerText = countCharacters.toString()
 		} else {
-			spanElements[countCharacters].classList.add('bg-red-200')
+			spanElements[countCharacters].classList.add('bg-red-500', 'transition', 'duration-200')
+			setTimeout(() => {
+				spanElements[countCharacters].classList.remove('bg-red-500')
+			}, 200);
 			wrongCharacters += 1
 
 			counterWrongCharacters.innerText = wrongCharacters.toString()
 		}
-
-		countCharacters += 1
-		counterWriteCharacters.innerText = countCharacters.toString()
 	});
 
 	function isFirstCharacter(): boolean {
 		return countCharacters === 0
+	}
+
+	function ensureValidCharacter(key: string): boolean {
+		return key.length === 1
 	}
 
 	function isRightTyping(key: string): boolean {
