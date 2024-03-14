@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<section class="w-[1120px] mx-auto mt-20">
+			<header class="flex justify-center gap-10 mb-10">
+				<div class="flex flex-col items-center">
+					<p id="counter-characters-minute" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+					<p class="font-extralight">Chars/min</p>
+				</div>
+				<div class="flex flex-col items-center">
+					<p id="counter-write-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+					<p class="font-extralight">Write</p>
+				</div>
+				<div class="flex flex-col items-center">
+					<p id="counter-right-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+					<p class="font-extralight">Right</p>
+				</div>
+				<div class="flex flex-col items-center">
+					<p id="counter-wrong-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+					<p class="font-extralight">Wrong</p>
+				</div>
+			</header>
+			<p id="read-text" class="text-3xl font-open-sans tracking-widest leading-normal text-pretty lowercase font-medium">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout</p>
+		</section>
+	</main>
+	<label class="absolute">
+		<input id="input-text" class="opacity-0" type="text" autocomplete="off"/>
+	</label>
+</Layout>
+
+<script>
+	let startCurrentTime = 0
+	let countCharacters = 0
+	let rightCharacters = 0
+	let wrongCharacters = 0
+	let charactersMinute = 0
+	const txt = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout'.toLowerCase()
+
+	const spanElements = Array.from(txt).map((character) => {
+		const element = document.createElement('span')
+		element.innerText = character
+		return element
+	})
+
+	const inputText = document.getElementById('input-text') as HTMLElement
+	const readText = document.getElementById('read-text') as HTMLElement
+	const counterCharactersMinute = document.getElementById('counter-characters-minute') as HTMLElement
+	const counterWriteCharacters = document.getElementById('counter-write-characters') as HTMLElement
+	const counterRightCharacters = document.getElementById('counter-right-characters') as HTMLElement
+	const counterWrongCharacters = document.getElementById('counter-wrong-characters') as HTMLElement
+
+	readText.innerHTML = ''
+	readText.append(...spanElements)
+
+	inputText.focus()
+
+	inputText.addEventListener('keyup', (event) => {
+		if(startWithWrongCharacter(event.key)) return
+
+		if(isFirstCharacter()) startCurrentTime = new Date().valueOf()
+
+		if (isRightTyping(event.key)) {
+			spanElements[countCharacters].classList.add('bg-blue-200')
+			rightCharacters += 1
+			charactersMinute = Math.round(60000 * rightCharacters / (new Date().valueOf() - startCurrentTime))
+
+			counterCharactersMinute.innerText = isValidNumber(charactersMinute) ? charactersMinute.toString() : '0'
+			counterRightCharacters.innerText = rightCharacters.toString()
+		} else {
+			spanElements[countCharacters].classList.add('bg-red-200')
+			wrongCharacters += 1
+
+			counterWrongCharacters.innerText = wrongCharacters.toString()
+		}
+
+		countCharacters += 1
+		counterWriteCharacters.innerText = countCharacters.toString()
+	});
+
+	function isFirstCharacter(): boolean {
+		return countCharacters === 0
+	}
+
+	function isRightTyping(key: string): boolean {
+		return key === spanElements[countCharacters].innerText
+	}
+
+	function startWithWrongCharacter(key: string): boolean {
+		return isFirstCharacter() && key !== spanElements[countCharacters].innerText
+	}
+
+	function isValidNumber(number: number): boolean {
+		return typeof number === 'number' && number !== Infinity
+	}
+</script>
+
