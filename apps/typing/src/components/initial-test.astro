@@ -1,0 +1,120 @@
+<section class="relative max-w-[1120px] mx-auto mt-28">
+    <header class="flex flex-wrap justify-center gap-10 mb-10 pt-2">
+        <div class="flex flex-col items-center">
+            <p id="counter-characters-minute" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+            <p class="font-extralight">Chars/min</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <p id="counter-words-minute" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+            <p class="font-extralight">Words/min</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <p id="counter-write-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+            <p class="font-extralight">Write</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <p id="counter-right-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+            <p class="font-extralight">Right</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <p id="counter-wrong-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
+            <p class="font-extralight">Wrong</p>
+        </div>
+    </header>
+    <div class="bg-white rounded-xl p-4 shadow shadow-black/10">
+        <p id="read-text" class="text-3xl font-open-sans tracking-widest leading-normal text-pretty font-medium">
+            La mecanografía es una habilidad fundamental en el mundo digital actual. Dominar la técnica de escribir con rapidez y precisión puede marcar la diferencia en tu productividad y eficiencia.
+        </p>
+    </div>
+    <div id="blur-layer" class="absolute inset-0 w-full h-full flex justify-center items-center backdrop-blur-sm">
+        <button id="initial-test" class="bg-violet-500 text-2xl px-4 py-2 rounded shadow shadow-violet-500/90 hover:scale-105 transition text-black font-semibold">Iniciar prueba</button>
+    </div>
+    <label class="absolute">
+        <input id="input-text" type="text" aria-label="Text" autocomplete="off" autocapitalize="off" inputmode="text" autocorrect="off" spellcheck="false"  class="opacity-0"/>
+    </label>
+</section>
+
+<script>
+  let startCurrentTime = 0
+  let countCharacters = 0
+  let countWords = 0
+  let rightCharacters = 0
+  let wrongCharacters = 0
+  let charactersMinute = 0
+  let wordsMinute = 0
+  const buttonInitialTest = document.getElementById('initial-test') as HTMLElement
+  buttonInitialTest.addEventListener('click', runTest)
+
+  const txt = 'La mecanografía es una habilidad fundamental en el mundo digital actual. Dominar la técnica de escribir con rapidez y precisión puede marcar la diferencia en tu productividad y eficiencia.'
+  const spanElements = Array.from(txt).map((character) => {
+    const element = document.createElement('span')
+    element.innerText = character
+    return element
+  })
+
+  function runTest(): void {
+    const blurLayer = document.getElementById('blur-layer') as HTMLElement
+    const inputText = document.getElementById('input-text') as HTMLElement
+    const readText = document.getElementById('read-text') as HTMLElement
+    const counterCharactersMinute = document.getElementById('counter-characters-minute') as HTMLElement
+    const counterWordsMinute = document.getElementById('counter-words-minute') as HTMLElement
+    const counterWriteCharacters = document.getElementById('counter-write-characters') as HTMLElement
+    const counterRightCharacters = document.getElementById('counter-right-characters') as HTMLElement
+    const counterWrongCharacters = document.getElementById('counter-wrong-characters') as HTMLElement
+
+    readText.innerHTML = ''
+    readText.append(...spanElements)
+    inputText.focus()
+    blurLayer.style.display = 'none'
+
+    inputText.addEventListener('keydown', (event) => {
+      if(startWithWrongCharacter(event.key)) return
+      if(isFirstCharacter()) startCurrentTime = new Date().valueOf() / 1000
+      if(!ensureValidCharacter(event.key)) return
+
+      if (isRightTyping(event.key)) {
+        spanElements[countCharacters].classList.remove('bg-red-500')
+        spanElements[countCharacters].classList.add('text-violet-600')
+        rightCharacters += 1
+        countCharacters += 1
+        if(event.key === ' ') countWords += 1
+        charactersMinute = Math.round(60 * rightCharacters / (new Date().valueOf() / 1000 - startCurrentTime))
+        wordsMinute = Math.round(60 * countWords / (new Date().valueOf() / 1000 - startCurrentTime))
+
+
+        counterCharactersMinute.innerText = isValidNumber(charactersMinute) ? charactersMinute.toString() : '0'
+        counterWordsMinute.innerText = isValidNumber(wordsMinute) ? wordsMinute.toString() : '0'
+        counterRightCharacters.innerText = rightCharacters.toString()
+        counterWriteCharacters.innerText = countCharacters.toString()
+      } else {
+        spanElements[countCharacters].classList.add('bg-red-500', 'transition', 'duration-200')
+        setTimeout(() => {
+          spanElements[countCharacters].classList.remove('bg-red-500')
+        }, 200);
+        wrongCharacters += 1
+
+        counterWrongCharacters.innerText = wrongCharacters.toString()
+      }
+    })
+  }
+
+  function isFirstCharacter(): boolean {
+    return countCharacters === 0
+  }
+
+  function ensureValidCharacter(key: string): boolean {
+    return key.length === 1
+  }
+
+  function isRightTyping(key: string): boolean {
+    return key === spanElements[countCharacters].innerText
+  }
+
+  function startWithWrongCharacter(key: string): boolean {
+    return isFirstCharacter() && key !== spanElements[countCharacters].innerText
+  }
+
+  function isValidNumber(number: number): boolean {
+    return typeof number === 'number' && number !== Infinity
+  }
+</script>
