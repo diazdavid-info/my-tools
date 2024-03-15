@@ -1,25 +1,17 @@
+---
+import Counter from '@/components/counter.astro'
+import Star from '@/components/icons/star.astro'
+import MultiStar from '@/components/icons/multi-star.astro'
+import Bolt from '@/components/icons/bolt.astro'
+---
+
 <section class="relative max-w-[1120px] mx-auto mt-28">
   <header class="flex flex-wrap justify-center gap-10 mb-10 pt-2">
-    <div class="flex flex-col items-center">
-      <p id="counter-characters-minute" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
-      <p class="font-extralight">Chars/min</p>
-    </div>
-    <div class="flex flex-col items-center">
-      <p id="counter-words-minute" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
-      <p class="font-extralight">Words/min</p>
-    </div>
-    <div class="flex flex-col items-center">
-      <p id="counter-write-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
-      <p class="font-extralight">Write</p>
-    </div>
-    <div class="flex flex-col items-center">
-      <p id="counter-right-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
-      <p class="font-extralight">Right</p>
-    </div>
-    <div class="flex flex-col items-center">
-      <p id="counter-wrong-characters" class="rounded-xl bg-white text-4xl py-6 px-8 shadow shadow-black/10">0</p>
-      <p class="font-extralight">Wrong</p>
-    </div>
+    <Counter id="counter-characters-minute" text="Chars/min" />
+    <Counter id="counter-words-minute" text="Words/min" />
+    <Counter id="counter-write-characters" text="Write" />
+    <Counter id="counter-right-characters" text="Right" />
+    <Counter id="counter-wrong-characters" text="Wrong" />
   </header>
   <div class="bg-white rounded-xl p-4 shadow shadow-black/10">
     <p id="read-text" class="text-3xl font-open-sans tracking-widest leading-normal text-pretty font-medium">
@@ -32,6 +24,31 @@
       id="initial-test"
       class="bg-violet-500 text-2xl px-4 py-2 rounded shadow shadow-violet-500/90 hover:scale-105 transition text-black font-semibold"
       >Iniciar prueba</button
+    >
+  </div>
+  <div
+    id="result-layer"
+    class="absolute inset-0 w-full h-full backdrop-blur-md hidden flex-col justify-center items-center gap-6"
+  >
+    <p class="text-5xl font-bold">Ejercicio finalizado</p>
+    <div class="flex justify-center items-start gap-12 text-center">
+      <div class="text-yellow-300 w-36">
+        <Star class="w-full" />
+        <p class="text-violet-500 font-bold">Menos de 2 errores</p>
+      </div>
+      <div class="text-gray-400 w-36">
+        <MultiStar class="w-full" />
+        <p>Test Sin errores</p>
+      </div>
+      <div class="text-gray-400 w-36">
+        <Bolt class="w-full" />
+        <p>La velocidad con 21 PPM</p>
+      </div>
+    </div>
+    <button
+      id="reset-test"
+      class="bg-violet-500 text-2xl px-4 py-2 rounded shadow shadow-violet-500/90 hover:scale-105 transition text-black font-semibold"
+      >Repetir prueba</button
     >
   </div>
   <label class="absolute">
@@ -61,6 +78,7 @@
 
   const buttonInitialTest = document.getElementById('initial-test') as HTMLElement
   const blurLayer = document.getElementById('blur-layer') as HTMLElement
+  const resultLayer = document.getElementById('result-layer') as HTMLElement
   const inputText = document.getElementById('input-text') as HTMLElement
   const counterCharactersMinute = document.getElementById('counter-characters-minute') as HTMLElement
   const counterWordsMinute = document.getElementById('counter-words-minute') as HTMLElement
@@ -78,7 +96,7 @@
     initialGame()
     updateScore()
 
-    const keyDownListener = (event) => {
+    const keyDownListener = (event: KeyboardEvent) => {
       if (startWithWrongCharacter(event.key)) return
       if (isFirstCharacter()) startCurrentTime = new Date().valueOf() / 1000
       if (!ensureValidCharacter(event.key)) return
@@ -103,7 +121,7 @@
 
       if (spanElements.length === countCharacters) {
         inputText.blur()
-        blurLayer.style.display = 'flex'
+        resultLayer.style.display = 'flex'
         inputText.removeEventListener('keydown', keyDownListener)
       }
     }
