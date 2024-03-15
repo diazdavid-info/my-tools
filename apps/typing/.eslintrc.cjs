@@ -1,6 +1,6 @@
 module.exports = {
   extends: [
-    "plugin:astro/recommended",
+    "plugin:astro/recommended", "eslint-config-prettier"
   ],
   overrides: [
     {
