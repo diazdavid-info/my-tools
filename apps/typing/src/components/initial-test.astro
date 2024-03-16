@@ -32,17 +32,17 @@ import Bolt from '@/components/icons/bolt.astro'
   >
     <p class="text-5xl font-bold">Ejercicio finalizado</p>
     <div class="flex justify-center items-start gap-12 text-center">
-      <div class="text-yellow-300 w-36">
+      <div id="first-star" class="text-gray-400 w-36">
         <Star class="w-full" />
-        <p class="text-violet-500 font-bold">Menos de 2 errores</p>
+        <p class="font-bold">Menos de 2 errores</p>
       </div>
-      <div class="text-gray-400 w-36">
+      <div id="second-star" class="text-gray-400 w-36">
         <MultiStar class="w-full" />
-        <p>Test Sin errores</p>
+        <p class="font-bold">Test Sin errores</p>
       </div>
-      <div class="text-gray-400 w-36">
+      <div id="third-star" class="text-gray-400 w-36">
         <Bolt class="w-full" />
-        <p>La velocidad con 21 PPM</p>
+        <p class="font-bold">La velocidad con 21 PPM</p>
       </div>
     </div>
     <button
@@ -66,6 +66,15 @@ import Bolt from '@/components/icons/bolt.astro'
   </label>
 </section>
 
+<style>
+  #result-layer .star {
+    color: rgb(253 224 71);
+    & p {
+      color: rgb(139 92 246);
+    }
+  }
+</style>
+
 <script>
   let startCurrentTime = 0
   let countCharacters = 0
@@ -77,6 +86,7 @@ import Bolt from '@/components/icons/bolt.astro'
   let spanElements: HTMLSpanElement[] = []
 
   const buttonInitialTest = document.getElementById('initial-test') as HTMLElement
+  const buttonResetTest = document.getElementById('reset-test') as HTMLElement
   const blurLayer = document.getElementById('blur-layer') as HTMLElement
   const resultLayer = document.getElementById('result-layer') as HTMLElement
   const inputText = document.getElementById('input-text') as HTMLElement
@@ -85,8 +95,12 @@ import Bolt from '@/components/icons/bolt.astro'
   const counterWriteCharacters = document.getElementById('counter-write-characters') as HTMLElement
   const counterRightCharacters = document.getElementById('counter-right-characters') as HTMLElement
   const counterWrongCharacters = document.getElementById('counter-wrong-characters') as HTMLElement
+  const resultFirstStar = document.getElementById('first-star') as HTMLElement
+  const resultSecondStar = document.getElementById('second-star') as HTMLElement
+  const resultThirdStar = document.getElementById('third-star') as HTMLElement
 
   buttonInitialTest.addEventListener('click', runTest)
+  buttonResetTest.addEventListener('click', runTest)
 
   const txt =
     'La mecanografía es una habilidad fundamental en el mundo digital actual. Dominar la técnica de escribir con rapidez y precisión puede marcar la diferencia en tu productividad y eficiencia.'
@@ -95,38 +109,6 @@ import Bolt from '@/components/icons/bolt.astro'
   function runTest(): void {
     initialGame()
     updateScore()
-
-    const keyDownListener = (event: KeyboardEvent) => {
-      if (startWithWrongCharacter(event.key)) return
-      if (isFirstCharacter()) startCurrentTime = new Date().valueOf() / 1000
-      if (!ensureValidCharacter(event.key)) return
-
-      if (isRightTyping(event.key)) {
-        spanElements[countCharacters].classList.remove('bg-red-500')
-        spanElements[countCharacters].classList.add('text-violet-600')
-        rightCharacters += 1
-        countCharacters += 1
-        if (wasCompletedWord(event.key)) countWords += 1
-        charactersMinute = Math.round((60 * rightCharacters) / (new Date().valueOf() / 1000 - startCurrentTime))
-        wordsMinute = Math.round((60 * countWords) / (new Date().valueOf() / 1000 - startCurrentTime))
-      } else {
-        spanElements[countCharacters].classList.add('bg-red-500', 'transition', 'duration-200')
-        setTimeout(() => {
-          spanElements[countCharacters].classList.remove('bg-red-500')
-        }, 200)
-        wrongCharacters += 1
-      }
-
-      updateScore()
-
-      if (spanElements.length === countCharacters) {
-        inputText.blur()
-        resultLayer.style.display = 'flex'
-        inputText.removeEventListener('keydown', keyDownListener)
-      }
-    }
-
-    inputText.addEventListener('keydown', keyDownListener)
   }
 
   function initialGame(): void {
@@ -148,6 +130,44 @@ import Bolt from '@/components/icons/bolt.astro'
     readText.append(...spanElements)
     inputText.focus()
     blurLayer.style.display = 'none'
+    resultLayer.style.display = 'none'
+    inputText.addEventListener('keydown', keyDownListener)
+  }
+
+  function keyDownListener(event: KeyboardEvent): void {
+    if (startWithWrongCharacter(event.key)) return
+    if (isFirstCharacter()) startCurrentTime = new Date().valueOf() / 1000
+    if (!ensureValidCharacter(event.key)) return
+
+    if (isRightTyping(event.key)) {
+      spanElements[countCharacters].classList.remove('bg-red-500')
+      spanElements[countCharacters].classList.add('text-violet-600')
+      rightCharacters += 1
+      countCharacters += 1
+      if (wasCompletedWord(event.key)) countWords += 1
+      charactersMinute = Math.round((60 * rightCharacters) / (new Date().valueOf() / 1000 - startCurrentTime))
+      wordsMinute = Math.round((60 * countWords) / (new Date().valueOf() / 1000 - startCurrentTime))
+    } else {
+      spanElements[countCharacters].classList.add('bg-red-500', 'transition', 'duration-200')
+      setTimeout(() => {
+        spanElements[countCharacters].classList.remove('bg-red-500')
+      }, 200)
+      wrongCharacters += 1
+    }
+
+    updateScore()
+
+    if (spanElements.length === countCharacters) finishGame()
+  }
+
+  function finishGame(): void {
+    wrongCharacters <= 2 ? resultFirstStar.classList.add('star') : resultFirstStar.classList.remove('star')
+    wrongCharacters === 0 ? resultSecondStar.classList.add('star') : resultSecondStar.classList.remove('star')
+    wordsMinute > 21 ? resultThirdStar.classList.add('star') : resultThirdStar.classList.remove('star')
+
+    inputText.blur()
+    resultLayer.style.display = 'flex'
+    inputText.removeEventListener('keydown', keyDownListener)
   }
 
   function updateScore() {
