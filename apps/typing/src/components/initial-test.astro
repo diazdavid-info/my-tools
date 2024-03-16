@@ -135,6 +135,7 @@ import Bolt from '@/components/icons/bolt.astro'
   }
 
   function keyDownListener(event: KeyboardEvent): void {
+    console.log(event.key)
     if (startWithWrongCharacter(event.key)) return
     if (isFirstCharacter()) startCurrentTime = new Date().valueOf() / 1000
     if (!ensureValidCharacter(event.key)) return
