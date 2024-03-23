@@ -55,14 +55,14 @@ const characterList = text.split('')
 <script>
   import { typing } from '../../lib/typing.mjs'
 
-  const buttonInitialTest = document.getElementById('initial-test')
-  const blurLayer = document.getElementById('blur-layer')
+  const buttonInitialTest = document.getElementById('initial-test') as HTMLElement
+  const blurLayer = document.getElementById('blur-layer') as HTMLElement
 
   buttonInitialTest.addEventListener('click', function () {
     blurLayer.style.display = 'none'
 
     typing({
-      readElement: document.getElementById('read-text'),
+      readElement: document.getElementById('read-text') as HTMLElement,
       finishCallback: () => console.log('finish')
     })
   })
