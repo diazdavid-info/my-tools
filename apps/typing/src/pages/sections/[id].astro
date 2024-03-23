@@ -1,0 +1,71 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { sections } from '../../config/sections.mjs'
+import Star from '../../components/icons/star.astro'
+
+export function getStaticPaths() {
+  return Object.keys(sections).map((key) => ({ params: { id: key } }))
+}
+
+const { id } = Astro.params
+const { text } = sections[id]
+const characterList = text.split('')
+---
+
+<Layout title="Curso de mecanografía">
+  <main class="pt-20 p-4">
+    <h1 class="max-w-[1120px] mx-auto text-6xl font-bold text-balance text-center">
+      Lección <span class="text-violet-600">{id}</span>
+    </h1>
+    <section class="relative max-w-[1120px] mx-auto mt-28">
+      <header class="flex flex-wrap justify-center gap-10 mb-10 pt-2">
+          <div id="first-star" class="text-gray-400 w-24">
+              <Star class="size-24" />
+              <p class="font-bold text-center">Menos de 2 errores</p>
+          </div>
+          <div id="second-star" class="text-gray-400 w-24">
+              <Star class="size-24" />
+              <p class="font-bold text-center">Test Sin errores</p>
+          </div>
+          <div id="third-star" class="text-gray-400 w-24">
+              <Star class="size-24" />
+              <p class="font-bold text-center">Velocidad 21 PPM</p>
+          </div>
+      </header>
+      <div class="bg-white rounded-xl p-4 shadow shadow-black/10 flex justify-center">
+        <p
+          id="read-text"
+          data-text={text}
+          class="text-3xl font-open-sans tracking-widest leading-normal text-pretty font-medium inline"
+        >
+          {characterList.map((character) => <span data-right-char={character}>{character}</span>)}
+        </p>
+      </div>
+      <div id="blur-layer" class="absolute inset-0 w-full h-full flex justify-center items-center backdrop-blur-sm">
+        <button
+          id="initial-test"
+          class="bg-violet-500 text-2xl px-4 py-2 rounded shadow shadow-violet-500/90 hover:scale-105 transition text-black font-semibold"
+          >Iniciar prueba
+        </button>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { typing } from '../../lib/typing.mjs'
+
+  const buttonInitialTest = document.getElementById('initial-test')
+  const blurLayer = document.getElementById('blur-layer')
+
+  buttonInitialTest.addEventListener('click', function () {
+    blurLayer.style.display = 'none'
+
+    typing({
+      readElement: document.getElementById('read-text'),
+      finishCallback: () => console.log('finish')
+    })
+  })
+
+
+</script>

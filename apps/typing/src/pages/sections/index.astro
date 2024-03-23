@@ -1,0 +1,36 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import Star from '../../components/icons/star.astro'
+import { sections } from '../../config/sections.mjs'
+
+const entries = Object.entries(sections)
+---
+
+<Layout title="Curso de mecanografía">
+  <main class="pt-20 p-4">
+    <h1 class="max-w-[1120px] mx-auto text-6xl font-bold text-balance text-center">
+      Tú ruta de <span class="text-violet-600">aprendizaje</span>
+    </h1>
+    <section class="max-w-[1120px] mx-auto grid grid-cols-4 gap-8 mt-28">
+      {
+        entries.map(([key, value]) => (
+          <a href=`/sections/${key}`>
+            <article class="flex flex-col justify-around bg-white/80 p-2 border rounded shadow hover:scale-105 transition cursor-pointer">
+              <header>
+                <p class="text-2xl font-bold text-violet-600">{key}</p>
+              </header>
+              <div class="flex justify-center items-center mt-4">
+                <Star class="size-12" />
+                <Star class="size-12" />
+                <Star class="size-12" />
+              </div>
+              <footer class="border-t-2 mt-8">
+                <p>{value.text.slice(0, 20)}</p>
+              </footer>
+            </article>
+          </a>
+        ))
+      }
+    </section>
+  </main>
+</Layout>

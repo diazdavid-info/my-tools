@@ -9,4 +9,5 @@ export default {
 		},
 	},
 	plugins: [],
+	safelist: ['text-violet-600', 'text-red-500', 'opacity-0']
 }
