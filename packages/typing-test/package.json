@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "lint": "eslint './**/*.{js,ts}'",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [],
   "author": "David Diaz",
