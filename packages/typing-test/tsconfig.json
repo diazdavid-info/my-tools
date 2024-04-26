@@ -3,6 +3,7 @@
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
+    "lib": ["es5", "es6", "dom"],
     "declaration": false,
     "declarationMap": false
   }

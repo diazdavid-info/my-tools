@@ -7,19 +7,26 @@
   "scripts": {
     "lint": "eslint './**/*.{js,ts}'",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build": "rimraf dist && ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
+    "dev:example": "npm run build && http-server -o examples/index.html"
   },
   "keywords": [],
   "author": "David Diaz",
   "license": "ISC",
   "devDependencies": {
+    "@testing-library/dom": "^9.3.4",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@vercel/ncc": "0.38.1",
     "eslint": "^8.56.0",
     "eslint-config-mytools": "workspace:^",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "happy-dom": "^13.2.0",
+    "http-server": "^14.1.1",
     "mytools-tsconfig": "workspace:^",
     "prettier": "^3.2.5",
+    "rimraf": "5.0.5",
     "typescript": "^5.4.3",
     "vitest": "^1.2.1"
   }

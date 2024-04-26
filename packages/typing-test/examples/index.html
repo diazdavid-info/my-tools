@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Example typing</title>
+    <style>
+        main {
+            width: 600px;
+            margin: auto;
+        }
+        p {
+            font-size: 32px;
+        }
+        .correct {
+            color: green
+        }
+
+        .incorrect {
+            color: red
+        }
+    </style>
+</head>
+<body>
+<main>
+    <p data-text="foo" id="element">
+        <span data-right-char="b">b</span>
+        <span data-right-char="a">a</span>
+        <span data-right-char="r">r</span>
+    </p>
+    <code>
+
+    </code>
+</main>
+<script type="module">
+  import {typing} from "../dist/index.js";
+
+  typing({
+    readElement: document.querySelector('#element'),
+    rightClass: 'correct',
+    wrongClass: 'incorrect',
+    finishCallback: (resume) => document.querySelector('code').innerText = JSON.stringify(resume, null, 2)
+  })
+</script>
+</body>
+</html>
