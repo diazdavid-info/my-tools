@@ -1,0 +1,26 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Tu area personal. Aquí puedes gestionar tus Bookmark" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title}</title>
+	</head>
+	<body>
+		<main class="max-w-5xl mx-auto">
+			<slot />
+		</main>
+	</body>
+</html>
+<style is:global>
+
+</style>
