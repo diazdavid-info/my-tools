@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
+    "@astrojs/cloudflare": "^10.2.4",
     "@astrojs/tailwind": "^5.1.0",
     "astro": "^4.7.0",
+    "open-graph-scraper": "^6.5.1",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5"
   }
