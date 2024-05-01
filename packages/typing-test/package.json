@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "lint": "eslint './**/*.{js,ts}'",
     "test": "vitest run",
@@ -13,7 +14,6 @@
   },
   "keywords": [],
   "author": "David Diaz",
-  "license": "ISC",
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
