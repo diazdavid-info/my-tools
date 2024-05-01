@@ -1,10 +1,20 @@
 {
-  "name": "typing-test",
-  "version": "0.0.0",
+  "name": "typing-testing",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "type": "module",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "author": {
+    "name": "David Díaz",
+    "email": "diazdavid.info@gmail.com"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "lint": "eslint './**/*.{js,ts}'",
     "test": "vitest run",
@@ -13,7 +23,6 @@
     "dev:example": "npm run build && http-server -o examples/index.html"
   },
   "keywords": [],
-  "author": "David Diaz",
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
