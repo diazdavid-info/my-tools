@@ -397,6 +397,9 @@ importers:
       typescript:
         specifier: ^5.4.2
         version: 5.4.2
+      typing-testing:
+        specifier: workspace:*
+        version: link:../../packages/typing-test
     devDependencies:
       '@typescript-eslint/parser':
         specifier: ^7.2.0

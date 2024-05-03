@@ -6,6 +6,9 @@ export type Sections = {
 
 export const sections: Sections = {
   '1' : {
-    text: 'dfd ffd ddf ffd dfd fdd fdf ddd ddf ffd fdfdfd dffddf dfdfd'
+    text: 'dfd ffd ddf ffd dfd fdd fdf ddd fdfdfd dffddf dfdfd'
+  },
+  '2': {
+    text: 'jkj jkk kkk jjk kkj jkj kk jjkk jkkk jkjkjkj kkkjjj'
   }
 }

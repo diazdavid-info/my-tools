@@ -1,7 +1,7 @@
 ---
-import Layout from '../../layouts/Layout.astro'
-import { sections } from '../../config/sections.mjs'
-import Star from '../../components/icons/star.astro'
+import Layout from '@/layouts/Layout.astro'
+import { sections } from '@/config/sections.mjs'
+import Star from '@/components/icons/star.astro'
 
 export function getStaticPaths() {
   return Object.keys(sections).map((key) => ({ params: { id: key } }))
@@ -19,18 +19,18 @@ const characterList = text.split('')
     </h1>
     <section class="relative max-w-[1120px] mx-auto mt-28">
       <header class="flex flex-wrap justify-center gap-10 mb-10 pt-2">
-          <div id="first-star" class="text-gray-400 w-24">
-              <Star class="size-24" />
-              <p class="font-bold text-center">Menos de 2 errores</p>
-          </div>
-          <div id="second-star" class="text-gray-400 w-24">
-              <Star class="size-24" />
-              <p class="font-bold text-center">Test Sin errores</p>
-          </div>
-          <div id="third-star" class="text-gray-400 w-24">
-              <Star class="size-24" />
-              <p class="font-bold text-center">Velocidad 21 PPM</p>
-          </div>
+        <div id="first-star" class="text-gray-400 w-24">
+          <Star class="size-24" />
+          <p class="font-bold text-center">Menos de 2 errores</p>
+        </div>
+        <div id="second-star" class="text-gray-400 w-24">
+          <Star class="size-24" />
+          <p class="font-bold text-center">Test Sin errores</p>
+        </div>
+        <div id="third-star" class="text-gray-400 w-24">
+          <Star class="size-24" />
+          <p class="font-bold text-center">Velocidad 21 PPM</p>
+        </div>
       </header>
       <div class="bg-white rounded-xl p-4 shadow shadow-black/10 flex justify-center">
         <p
@@ -53,7 +53,7 @@ const characterList = text.split('')
 </Layout>
 
 <script>
-  import { typing } from '../../lib/typing.mjs'
+  import { type OptionsTyping, typing } from 'typing-testing'
 
   const buttonInitialTest = document.getElementById('initial-test') as HTMLElement
   const blurLayer = document.getElementById('blur-layer') as HTMLElement
@@ -61,11 +61,13 @@ const characterList = text.split('')
   buttonInitialTest.addEventListener('click', function () {
     blurLayer.style.display = 'none'
 
-    typing({
+    const options: OptionsTyping = {
       readElement: document.getElementById('read-text') as HTMLElement,
-      finishCallback: () => console.log('finish')
-    })
+      rightClass: 'text-violet-600',
+      wrongClass: 'text-red-500',
+      finishCallback: (resume) => console.log(resume)
+    }
+
+    typing(options)
   })
-
-
 </script>
