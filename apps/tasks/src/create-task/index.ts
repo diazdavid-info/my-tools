@@ -2,9 +2,10 @@ import { cyan, green, yellow } from 'picocolors'
 import { simpleGit } from 'simple-git'
 import prompts from 'prompts'
 import { formatBranchName } from './format-branch-name'
-import { addCurrentProject, addTask, isJiraConfigured } from '../shared/config'
-import { TaskOwnership, searchInProgressTasks } from '../shared/jira-provider'
+import {addCurrentProject, addTask, getInProgressTasks, isJiraConfigured, removeTask} from '../shared/config'
+import {TaskOwnership, searchInProgressTasks, findTask} from '../shared/jira-provider'
 import { Task } from '../shared/task'
+import {ConfigTaskStatus} from "../shared/config-template";
 
 async function gitFetch() {
   console.log(`🐷  ${cyan('info')} making a git fetch...`)
@@ -78,6 +79,21 @@ const addTaskToFileConfig = async (task: Task) => {
   await addTask(task)
 }
 
+const cleanFileConfig = async () => {
+  console.log(`🐷  ${cyan('info')} auto clean tasks`)
+  const tasks = await getInProgressTasks()
+
+  for (const task of tasks) {
+    const taskFound = await findTask(task.jiraId)
+
+    if (taskFound === null) continue
+
+    const { status } = taskFound
+
+    if (status === ConfigTaskStatus.DONE) await removeTask(taskFound)
+  }
+}
+
 const run = async () => {
   await addCurrentProject()
   await ensureEnvs()
@@ -95,6 +111,7 @@ const run = async () => {
   await checkoutBranch(branchName)
 
   await addTaskToFileConfig(task)
+  await cleanFileConfig()
 }
 
 export default run

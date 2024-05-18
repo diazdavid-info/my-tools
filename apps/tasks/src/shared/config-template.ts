@@ -21,7 +21,8 @@ export type GeneralTools = {
 }
 
 export enum ConfigTaskStatus {
-  IN_PROGRESS = 'In Progress'
+  IN_PROGRESS = 'In Progress',
+  DONE = 'Done'
 }
 
 export type ConfigTask = {
