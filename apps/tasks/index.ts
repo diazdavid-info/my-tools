@@ -4,7 +4,7 @@ import prompts from 'prompts'
 import { green, red } from 'picocolors'
 import createTask from './src/create-task'
 import createPullRequest from './src/create-pull-request'
-import { init as configInit, ensureFormatConfigFile, isExperimentalMode, getInProgressTasks } from './src/shared/config'
+import { init as configInit, ensureFormatConfigFile, isExperimentalMode, getInProgressTasks, isNewVersion, updateVersion } from './src/shared/config'
 import checkInProgressTasks from './src/check-in-progress-tasks'
 
 const handleSigTerm = () => process.exit(0)
@@ -12,9 +12,15 @@ const handleSigTerm = () => process.exit(0)
 process.on('SIGINT', handleSigTerm)
 process.on('SIGTERM', handleSigTerm)
 
+const NEW_VERSION = '0.12.0'
+
 const install = async () => {
   await configInit()
   await ensureFormatConfigFile()
+  if(await isNewVersion(NEW_VERSION)) {
+    console.log(`🐷  ${green('success')} new version detected`)
+    await updateVersion(NEW_VERSION)
+  }
 }
 
 const assUserByOption = async (): Promise<string> => {

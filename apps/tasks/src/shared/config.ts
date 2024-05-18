@@ -106,6 +106,19 @@ export const getInProgressTasks = async () => {
   return project.tasks
 }
 
+export const isNewVersion = async (newVersion: string) => {
+  const [newMajor, newMinor, newPatch] = newVersion.split('.').map((v) => parseInt(v))
+  const { version } = await readConfig()
+  const [currentMajor, currentMinor, currentPatch] = version.split('.').map((v) => parseInt(v))
+
+  return newMajor > currentMajor || newMinor > currentMinor || newPatch > currentPatch
+}
+
+export const updateVersion = async (newVersion: string) => {
+  const config = await readConfig()
+  await writeConfig({ ...config, version: newVersion })
+}
+
 const readConfig = async () => {
   const fileContent = await readFile(`${homeDir()}/.mytools/config`)
   return JSON.parse(fileContent) as Config
