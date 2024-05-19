@@ -3,6 +3,10 @@ import { Config, ConfigTaskStatus, contentConfig } from './config-template'
 import { base64Encode } from './encoder'
 import { Task } from './task'
 
+export const hasConfig = () => {
+  return pathExists(`${homeDir()}/.mytools/config`)
+}
+
 export const init = async () => {
   if (pathExists(`${homeDir()}/.mytools/config`)) return
 
