@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.12.1
+
+### Patch Changes
+
+- add version at file config
+
 ## 0.12.0
 
 ### Minor Changes
