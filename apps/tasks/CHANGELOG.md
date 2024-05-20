@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.12.2
+
+### Patch Changes
+
+- new version
+
 ## 0.12.1
 
 ### Patch Changes
