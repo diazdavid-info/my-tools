@@ -20,7 +20,7 @@ const handleSigTerm = () => process.exit(0);
 process.on("SIGINT", handleSigTerm);
 process.on("SIGTERM", handleSigTerm);
 
-const NEW_VERSION = "0.12.1";
+const NEW_VERSION = "0.12.2";
 
 const install = async () => {
   if (hasConfig() && !(await isNewVersion(NEW_VERSION))) return;
