@@ -41,7 +41,12 @@ export const processor = async ({ data, route, host, port }: ProcessorRequest) =
   const res = handler({ request })
   const { status, headers } = res
 
+  let headersString = ''
+  for (const [key, value] of headers.entries()) {
+    headersString += `${key}: ${value}\r\n`
+  }
+
   const body = await res.text()
 
-  return Buffer.from(`HTTP/1.1 ${status}\r\nContent-Type: text/plain\r\nContent-Length: ${body.length}\r\n\r\n${body}`)
+  return Buffer.from(`HTTP/1.1 ${status}\r\n${headersString}Content-Length: ${body.length}\r\n\r\n${body}`)
 }
