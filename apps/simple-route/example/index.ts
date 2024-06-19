@@ -18,6 +18,10 @@ app.add('GET', '/', ({ request }): Response => {
   )
 })
 
+app.add('GET', '/text', (): Response => {
+  return new Response('Hello World')
+})
+
 app.add('GET', '/home', (): Response => {
   return Response.json({ status: 'ok' })
 })

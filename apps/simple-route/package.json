@@ -5,6 +5,7 @@
   "description": "Basic framework for your API in Node.js",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "dev": "nodemon",
     "dev:example": "ts-node example/index.ts",
     "lint": "eslint . --fix"
