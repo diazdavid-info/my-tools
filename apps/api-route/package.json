@@ -1,5 +1,5 @@
 {
-  "name": "simple-route",
+  "name": "api-route",
   "version": "0.0.0",
   "private": true,
   "description": "Basic framework for your API in Node.js",
