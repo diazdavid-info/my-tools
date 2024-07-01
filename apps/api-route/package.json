@@ -2,7 +2,7 @@
   "name": "api-route",
   "version": "0.0.1",
   "description": "Basic framework for your API in Node.js",
-  "main": "index.js",
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],
