@@ -1,12 +1,13 @@
 {
   "extends": "./node_modules/mytools-tsconfig/node.json",
-  "include": ["."],
+  "include": ["src"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "commonjs",
     "declaration": false,
-    "declarationMap": false
+    "declarationMap": false,
+    "outDir": "./dist"
   }
 }
 
