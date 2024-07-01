@@ -1,6 +1,6 @@
 import { HTTPParser } from 'http-parser-js'
 
-export const parseHttpRequest = ({ data, host, port }: { data: Buffer; host: string; port: number }) => {
+export const parseHttpRequest = ({ data, host, port }: { data: Buffer; host: string; port: number }): Request => {
   const parser = new HTTPParser(HTTPParser.REQUEST)
   const request = {
     method: '',
