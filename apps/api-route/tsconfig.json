@@ -5,7 +5,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "commonjs",
-    "declaration": false,
+    "declaration": true,
     "declarationMap": false,
     "outDir": "./dist"
   }
