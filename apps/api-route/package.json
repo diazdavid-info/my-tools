@@ -1,9 +1,9 @@
 {
   "name": "api-route",
   "version": "0.0.0",
-  "private": true,
   "description": "Basic framework for your API in Node.js",
   "main": "index.js",
+  "files": ["dist"],
   "scripts": {
     "build": "tsc",
     "dev": "nodemon",
