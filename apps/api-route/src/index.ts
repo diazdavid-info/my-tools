@@ -10,7 +10,7 @@ type ApiRoute = {
   run: (port: number, callback: () => void) => void
 }
 
-export default function (): ApiRoute {
+const apiRouter = (): ApiRoute => {
   const route = new Route()
   const host = 'localhost'
 
@@ -30,3 +30,5 @@ export default function (): ApiRoute {
     }
   }
 }
+
+export default apiRouter
