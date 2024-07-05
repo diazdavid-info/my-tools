@@ -1,5 +1,11 @@
 # api-route
 
+## 0.0.5
+
+### Patch Changes
+
+- change main fn
+
 ## 0.0.4
 
 ### Patch Changes
