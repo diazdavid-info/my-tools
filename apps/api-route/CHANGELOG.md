@@ -1,5 +1,11 @@
 # api-route
 
+## 0.0.4
+
+### Patch Changes
+
+- change type
+
 ## 0.0.3
 
 ### Patch Changes
