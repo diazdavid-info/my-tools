@@ -5,12 +5,12 @@ import Route from './route'
 export type Method = 'GET' | 'POST'
 
 export type Handler = ({ request }: { request: Request }) => Response
-type SimpleRoute = {
+type ApiRoute = {
   add: (method: Method, path: string, handler: Handler) => void
   run: (port: number, callback: () => void) => void
 }
 
-export default function (): SimpleRoute {
+export default function (): ApiRoute {
   const route = new Route()
   const host = 'localhost'
 
