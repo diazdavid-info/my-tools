@@ -3,10 +3,14 @@
   "include": ["src"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "es2016",
     "module": "commonjs",
     "declaration": true,
     "declarationMap": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
     "outDir": "./dist"
   }
 }
