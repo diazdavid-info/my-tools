@@ -1,8 +1,8 @@
-import simpleRoute from '../src'
+import apiRoute from '../index'
 
 const port = 4221 || process.env.PORT
 
-const app = simpleRoute()
+const app = apiRoute()
 
 app.add('GET', '/', ({ request }): Response => {
   return new Response(

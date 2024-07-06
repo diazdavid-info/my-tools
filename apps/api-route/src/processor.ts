@@ -1,5 +1,5 @@
 import { parseHttpRequest } from './parser'
-import { Method } from './index'
+import { Method } from './apiRoute'
 import { match } from 'path-to-regexp'
 import Route from './route'
 

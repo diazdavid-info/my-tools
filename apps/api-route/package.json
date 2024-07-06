@@ -1,11 +1,12 @@
 {
   "name": "api-route",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Basic framework for your API in Node.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "scripts": {
     "build": "rimraf dist && tsc",

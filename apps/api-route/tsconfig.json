@@ -1,6 +1,6 @@
 {
   "extends": "./node_modules/mytools-tsconfig/node.json",
-  "include": ["src"],
+  "include": ["src", "index.ts"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "target": "es2016",

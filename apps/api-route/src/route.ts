@@ -1,4 +1,4 @@
-import { Handler } from './index'
+import { Handler } from './apiRoute'
 
 export default class Route {
   private readonly route: Record<string, Record<string, Handler>>
