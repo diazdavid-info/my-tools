@@ -1,8 +1,8 @@
-import apiRoute from '../index'
+import { apiRouter } from '../index'
 
 const port = 4221 || process.env.PORT
 
-const app = apiRoute()
+const app = apiRouter()
 
 app.add('GET', '/', ({ request }): Response => {
   return new Response(
