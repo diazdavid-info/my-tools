@@ -14,9 +14,9 @@ npm install simple-route
 
 ## Uso
 ```typescript
-import simpleRoute from 'simple-route'
+import { apiRouter } from 'api-route'
 
-const app = simpleRoute()
+const app = apiRouter()
 
 app.add('GET', '/', (): Response => {
   return new Response('Hello World')
