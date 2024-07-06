@@ -1,3 +1,1 @@
-import apiRouter from './src/apiRoute'
-
-export default apiRouter
+export { apiRouter } from './src/apiRoute'
