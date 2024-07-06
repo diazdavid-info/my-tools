@@ -1,5 +1,11 @@
 # api-route
 
+## 0.0.10
+
+### Patch Changes
+
+- change publish
+
 ## 0.0.9
 
 ### Patch Changes
