@@ -1,1 +1,1 @@
-export { apiRouter } from './src/apiRoute'
+export * from './src/apiRoute'

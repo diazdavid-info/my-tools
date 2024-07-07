@@ -14,7 +14,7 @@ const searchPathname = (pathname: string, method: Method, route: Route) => {
   const pathList = route.getByMethod(method)
 
   for (const key of Object.keys(pathList)) {
-    const urlMatch = match(key, {
+    const urlMatch = match<Record<string, string>>(key, {
       decode: decodeURIComponent
     })
     const matched = urlMatch(pathname)
@@ -32,13 +32,13 @@ export const processor = async ({ data, route, host, port }: ProcessorRequest) =
   const method = request.method as Method
   const url = new URL(request.url)
 
-  const { pathnameRoute } = searchPathname(url.pathname, method, route)
+  const { pathnameRoute, params } = searchPathname(url.pathname, method, route)
 
   const handler = route.getHandler(method, pathnameRoute)
 
   if (!handler) return Buffer.from(`HTTP/1.1 404\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n`)
 
-  const res = handler({ request })
+  const res = await handler({ request, params })
   const { status, headers } = res
 
   let headersString = ''

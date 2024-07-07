@@ -4,7 +4,13 @@ import Route from './route'
 
 export type Method = 'GET' | 'POST'
 
-export type Handler = ({ request }: { request: Request }) => Response
+export type Handler = ({
+  request,
+  params
+}: {
+  request: Request
+  params: Record<string, string>
+}) => Response | Promise<Response>
 type ApiRoute = {
   add: (method: Method, path: string, handler: Handler) => void
   run: (port: number, callback: () => void) => void
@@ -23,7 +29,6 @@ export const apiRouter = (): ApiRoute => {
         socket.on('data', (data) =>
           processor({ data, route, host, port }).then((buffer) => {
             socket.write(buffer)
-            // socket.end()
           })
         )
       ).listen(port, host, () => callback())
