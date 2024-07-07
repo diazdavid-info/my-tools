@@ -1,5 +1,11 @@
 # api-route
 
+## 0.0.11
+
+### Patch Changes
+
+- add params
+
 ## 0.0.10
 
 ### Patch Changes
