@@ -22,6 +22,16 @@ app.add('GET', '/', (): Response => {
   return new Response('Hello World')
 })
 
+app.add('GET', '/user/:id', ({ params }): Response => {
+  const { id } = params
+  return Response.json({ status: 'ok', id })
+})
+
+app.add('POST', '/user', async ({ request }): Promise<Response> => {
+  const json = await request.json()
+  return Response.json({ status: 'ok', body: json })
+})
+
 app.run(4221, () => {
   console.log(`🫶 Server is running on http://localhost:4221`)
 })
