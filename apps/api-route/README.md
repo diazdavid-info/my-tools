@@ -9,7 +9,7 @@
 
 ## Instalación
 ```bash
-npm install simple-route
+npm install api-route
 ```
 
 ## Uso
