@@ -1,5 +1,11 @@
 # api-route
 
+## 0.0.13
+
+### Patch Changes
+
+- Change docs
+
 ## 0.0.12
 
 ### Patch Changes
