@@ -1,0 +1,30 @@
+{
+  "name": "clean-pc",
+  "version": "0.0.0",
+  "type": "module",
+  "author": {
+    "name": "David Díaz",
+    "email": "diazdavid.info@gmail.com"
+  },
+  "license": "MIT",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "clean-pc": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "rimraf dist && ncc build ./index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
+    "clean": "rimraf node_modules && rimraf dist",
+    "dev": "ncc build ./index.ts -w -o dist/",
+    "lint": "eslint index.ts"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@vercel/ncc": "0.38.1",
+    "eslint-config-mytools": "^0.0.7",
+    "mytools-tsconfig": "^0.1.0",
+    "rimraf": "5.0.5",
+    "typescript": "^5.5.3"
+  }
+}
