@@ -2,8 +2,53 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Monaco Editor">
 	<main>
 		<h1>Monaco Editor</h1>
+		<div id="container"></div>
 	</main>
 </Layout>
+
+<style>
+	#container {
+		height: 100vh;
+		width: 100vw;
+	}
+</style>
+
+<script>
+	import * as monaco from 'monaco-editor';
+	import TypescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+
+	const containerElement = document.getElementById('container') as HTMLElement;
+
+	window.MonacoEnvironment = {
+		getWorker: () => new TypescriptWorker()
+	};
+
+	monaco.editor.create(containerElement, {
+		value: 'console.log("Hello world!");',
+		language: 'typescript',
+		theme: 'vs-dark',
+		minimap: {
+			enabled: true
+		},
+		scrollbar: {
+			verticalScrollbarSize: 0,
+			horizontalScrollbarSize: 0
+		},
+		automaticLayout: true,
+		fontSize: 16,
+		lineNumbers: 'on',
+		wordWrap: 'on',
+		renderLineHighlight: 'none',
+		glyphMargin: true,
+		folding: true,
+		lineDecorationsWidth: 0,
+		lineNumbersMinChars: 0,
+		overviewRulerBorder: true,
+		overviewRulerLanes: 0,
+		hideCursorInOverviewRuler: true,
+		scrollBeyondLastLine: false,
+	});
+</script>
