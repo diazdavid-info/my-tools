@@ -1,15 +1,18 @@
 {
+  "name": "my-tools",
   "private": true,
+  "packageManager": "pnpm@9.6.0",
   "scripts": {
-    "format": "prettier --write \"**/*.{ts,tsx,js}\"",
     "build": "turbo build",
+    "dev": "turbo dev",
+    "format": "prettier --write \"**/*.{ts,tsx,js}\"",
     "test": "turbo test"
   },
   "devDependencies": {
     "@changesets/cli": "2.27.1",
     "eslint": "8.56.0",
     "prettier": "3.2.4",
-    "turbo": "1.11.3",
+    "turbo": "2.0.11",
     "typescript": "5.3.3"
   }
 }
