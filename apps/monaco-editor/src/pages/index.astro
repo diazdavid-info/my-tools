@@ -81,9 +81,9 @@ import Layout from '../layouts/Layout.astro';
 
 	editor.onDidChangeModelContent(codeExecutor)
 
-	function debounce(func, wait) {
-		let timeout;
-		return function(...args) {
+	function debounce(func: any, wait: number) {
+		let timeout: any;
+		return function(...args: any[]) {
 			clearTimeout(timeout);
 			timeout = setTimeout(() => func(...args), wait);
 		};
