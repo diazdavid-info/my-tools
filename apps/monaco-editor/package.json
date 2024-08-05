@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.1",
+    "@astrojs/cloudflare": "^11.0.3",
     "astro": "^4.13.1",
     "monaco-editor": "^0.50.0",
     "typescript": "^5.5.4"

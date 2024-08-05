@@ -5,28 +5,51 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Monaco Editor">
 	<main>
 		<h1>Monaco Editor</h1>
-		<div id="container"></div>
+		<article>
+			<section>
+				<div id="container"></div>
+			</section>
+			<section>
+				<pre id="response"></pre>
+			</section>
+		</article>
 	</main>
 </Layout>
 
 <style>
+	h1 {
+		text-align: center;
+	}
+	article {
+		display: flex;
+	}
+	section {
+		width: 100%;
+	}
 	#container {
-		height: 100vh;
-		width: 100vw;
+		height: 100dvh;
+	}
+	#response {
+		height: 100dvh;
+		background-color: #282A36;
+		margin: 0;
+		font-size: 16px;
 	}
 </style>
 
 <script>
+	import {execute} from '../services/codeExecutor';
 	import * as monaco from 'monaco-editor';
 	import TypescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 
 	const containerElement = document.getElementById('container') as HTMLElement;
+	const responseElement = document.getElementById('response') as HTMLElement;
 
 	window.MonacoEnvironment = {
 		getWorker: () => new TypescriptWorker()
 	};
 
-	monaco.editor.create(containerElement, {
+	const editor = monaco.editor.create(containerElement, {
 		value: 'console.log("Hello world!");',
 		language: 'typescript',
 		theme: 'vs-dark',
@@ -51,4 +74,19 @@ import Layout from '../layouts/Layout.astro';
 		hideCursorInOverviewRuler: true,
 		scrollBeyondLastLine: false,
 	});
+
+	const codeExecutor = debounce(() => {
+		execute(editor.getValue()).then(output => responseElement.innerHTML = output)
+	}, 1000);
+
+	editor.onDidChangeModelContent(codeExecutor)
+
+	function debounce(func, wait) {
+		let timeout;
+		return function(...args) {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => func(...args), wait);
+		};
+	}
+
 </script>
