@@ -8,16 +8,9 @@ import LineDashed from "../components/icon/LineDashed.astro";
 		<section id="editor-section" class="flex flex-col gap-y-4 p-8 h-screen overflow-hidden">
 			<header class="flex flex-row justify-between items-center">
 				<h1 class="text-2xl font-bold">Code Editor</h1>
-				<div>
-					<select class="bg-primary rounded border border-secondary w-44 p-2">
-						<option>JavaScript</option>
-						<option>TypeScript</option>
-						<option>JSON</option>
-						<option>HTML</option>
-						<option>CSS</option>
-						<option>Markdown</option>
-					</select>
-					<select class="bg-primary rounded border border-secondary w-44 p-2">
+				<div class="flex flex-row gap-2 justify-end flex-wrap">
+					<input id="editor-font" type="number" class="bg-primary rounded border border-secondary w-44 p-2 text-sm" placeholder="Size font" value="16" />
+					<select class="bg-primary rounded border border-secondary w-44 p-2 text-sm">
 						<option>JavaScript</option>
 						<option>TypeScript</option>
 						<option>JSON</option>
@@ -62,6 +55,7 @@ import LineDashed from "../components/icon/LineDashed.astro";
 
 	const containerElement = document.getElementById('container') as HTMLElement;
 	const responseElement = document.getElementById('response') as HTMLElement;
+	const editorFontElement = document.getElementById('editor-font') as HTMLInputElement;
 
 	window.MonacoEnvironment = {
 		getWorker: () => new TypescriptWorker()
@@ -101,13 +95,15 @@ import LineDashed from "../components/icon/LineDashed.astro";
 		}],
 	})
 
+	editorFontElement.addEventListener('change', (event) => {
+		editor.updateOptions({fontSize: Number((event.target as HTMLInputElement).value)})
+	})
+
 	const codeExecutor = debounce(() => {
 		execute(editor.getValue()).then(output => responseElement.innerHTML = output)
 	}, 2000);
 
 	editor.onDidChangeModelContent(codeExecutor)
-	// setTimeout(() => editor.updateOptions({fontSize: 32}), 10000)
-
 
 	function debounce(func: any, wait: number) {
 		let timeout: any;
