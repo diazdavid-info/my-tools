@@ -4,52 +4,53 @@ import LineDashed from "../components/icon/LineDashed.astro";
 ---
 
 <Layout title="Monaco Editor">
-	<main>
-		<h1>Monaco Editor</h1>
-		<article>
-			<section id="column-1">
-				<div id="container"></div>
-			</section>
-			<section id="column-2">
-				<pre id="response">Hello world!</pre>
-			</section>
-			<div class="vertical-gutter">
-				<LineDashed />
-			</div>
-		</article>
-	</main>
+	<article class="grid h-full">
+		<section id="editor-section" class="flex flex-col gap-y-4 p-8 h-screen overflow-hidden">
+			<header class="flex flex-row justify-between items-center">
+				<h1 class="text-2xl font-bold">Code Editor</h1>
+				<div>
+					<select class="bg-primary rounded border border-secondary w-44 p-2">
+						<option>JavaScript</option>
+						<option>TypeScript</option>
+						<option>JSON</option>
+						<option>HTML</option>
+						<option>CSS</option>
+						<option>Markdown</option>
+					</select>
+					<select class="bg-primary rounded border border-secondary w-44 p-2">
+						<option>JavaScript</option>
+						<option>TypeScript</option>
+						<option>JSON</option>
+						<option>HTML</option>
+						<option>CSS</option>
+						<option>Markdown</option>
+					</select>
+				</div>
+			</header>
+			<div id="container" class="h-full rounded py-2 overflow-hidden border border-secondary"></div>
+		</section>
+		<section id="preview-seaction" class="bg-secondary p-8 h-screen overflow-hidden">
+			<pre id="response" class="bg-primary h-full rounded p-2">Hello world!</pre>
+		</section>
+		<div id="split" class="vertical-gutter bg-accent/20 hover:bg-accent/80 transition-colors flex flex-col justify-center items-center cursor-col-resize">
+			<LineDashed />
+		</div>
+	</article>
 </Layout>
 
 <style>
-	h1 {
-		text-align: center;
-	}
-	article {
-		display: grid;
+	.grid {
 		grid-template-columns: 1fr 16px 1fr;
-		height: 100%;
+		grid-template-areas: "editor split preview";
 	}
-	section {
-		overflow: hidden;
+	#editor-section {
+		grid-area: editor;
 	}
-	#container {
-		height: 100%;
+	#preview-seaction {
+		grid-area: preview;
 	}
-	#response {
-		height: 100dvh;
-		background-color: #282A36;
-		margin: 0;
-		font-size: 16px;
-	}
-	.vertical-gutter {
-		grid-area: 1 / 2 / 4 / 2;
-		border: solid 1px red;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
-		width: 100%;
-		cursor: col-resize;
+	#split {
+		grid-area: split;
 	}
 </style>
 
@@ -69,7 +70,7 @@ import LineDashed from "../components/icon/LineDashed.astro";
 	const editor = monaco.editor.create(containerElement, {
 		value: 'console.log("Hello world!");',
 		language: 'typescript',
-		theme: 'vs-dark',
+		theme: 'vs-light',
 		minimap: {
 			enabled: true
 		},
@@ -102,7 +103,7 @@ import LineDashed from "../components/icon/LineDashed.astro";
 
 	const codeExecutor = debounce(() => {
 		execute(editor.getValue()).then(output => responseElement.innerHTML = output)
-	}, 1000);
+	}, 2000);
 
 	editor.onDidChangeModelContent(codeExecutor)
 	// setTimeout(() => editor.updateOptions({fontSize: 32}), 10000)
