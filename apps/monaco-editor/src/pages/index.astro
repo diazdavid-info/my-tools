@@ -62,20 +62,6 @@ import LineDashed from "../components/icon/LineDashed.astro";
 	const containerElement = document.getElementById('container') as HTMLElement;
 	const responseElement = document.getElementById('response') as HTMLElement;
 
-
-	containerElement.onresize = () => {
-		editor.layout({width: 0, height: 0});
-		console.log('containerElement.onresize');
-	}
-	responseElement.onresize = () => {
-		editor.layout({width: 0, height: 0});
-		console.log('responseElement.onresize');
-	}
-	window.onresize = () => {
-		console.log('window.onresize');
-		editor.layout({width: 0, height: 0});
-	}
-
 	window.MonacoEnvironment = {
 		getWorker: () => new TypescriptWorker()
 	};
