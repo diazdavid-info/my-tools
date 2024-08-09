@@ -1,17 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import LineDashed from "../components/icon/LineDashed.astro";
 ---
 
 <Layout title="Monaco Editor">
 	<main>
 		<h1>Monaco Editor</h1>
 		<article>
-			<section>
+			<section id="column-1">
 				<div id="container"></div>
 			</section>
-			<section>
+			<section id="column-2">
 				<pre id="response">Hello world!</pre>
 			</section>
+			<div class="vertical-gutter">
+				<LineDashed />
+			</div>
 		</article>
 	</main>
 </Layout>
@@ -21,13 +25,16 @@ import Layout from '../layouts/Layout.astro';
 		text-align: center;
 	}
 	article {
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr 16px 1fr;
+		height: 100%;
 	}
 	section {
-		width: 100%;
+		//width: 100%;
+		overflow: hidden;
 	}
 	#container {
-		height: 100dvh;
+		height: 100%;
 	}
 	#response {
 		height: 100dvh;
@@ -35,15 +42,40 @@ import Layout from '../layouts/Layout.astro';
 		margin: 0;
 		font-size: 16px;
 	}
+	.vertical-gutter {
+		grid-area: 1 / 2 / 4 / 2;
+		border: solid 1px red;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		width: 100%;
+		cursor: col-resize;
+	}
 </style>
 
 <script>
 	import {execute} from '../services/codeExecutor';
 	import * as monaco from 'monaco-editor';
 	import TypescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+	import Split from 'split-grid'
 
 	const containerElement = document.getElementById('container') as HTMLElement;
 	const responseElement = document.getElementById('response') as HTMLElement;
+
+
+	containerElement.onresize = () => {
+		editor.layout({width: 0, height: 0});
+		console.log('containerElement.onresize');
+	}
+	responseElement.onresize = () => {
+		editor.layout({width: 0, height: 0});
+		console.log('responseElement.onresize');
+	}
+	window.onresize = () => {
+		console.log('window.onresize');
+		editor.layout({width: 0, height: 0});
+	}
 
 	window.MonacoEnvironment = {
 		getWorker: () => new TypescriptWorker()
@@ -73,13 +105,23 @@ import Layout from '../layouts/Layout.astro';
 		overviewRulerLanes: 0,
 		hideCursorInOverviewRuler: true,
 		scrollBeyondLastLine: false,
+		fixedOverflowWidgets: true,
 	});
+
+	Split({
+		columnGutters: [{
+			track: 1,
+			element: document.querySelector('.vertical-gutter') as HTMLElement,
+		}],
+	})
 
 	const codeExecutor = debounce(() => {
 		execute(editor.getValue()).then(output => responseElement.innerHTML = output)
 	}, 1000);
 
 	editor.onDidChangeModelContent(codeExecutor)
+	// setTimeout(() => editor.updateOptions({fontSize: 32}), 10000)
+
 
 	function debounce(func: any, wait: number) {
 		let timeout: any;
