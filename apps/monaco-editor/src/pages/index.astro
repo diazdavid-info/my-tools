@@ -7,23 +7,19 @@ import LineDashed from "../components/icon/LineDashed.astro";
 	<article class="grid h-full">
 		<section id="editor-section" class="flex flex-col gap-y-4 p-8 h-screen overflow-hidden">
 			<header class="flex flex-row justify-between items-center">
-				<h1 class="text-2xl font-bold">Code Editor</h1>
+				<h1 class="text-2xl font-bold dark:text-white">Code Editor</h1>
 				<div class="flex flex-row gap-2 justify-end flex-wrap">
-					<input id="editor-font" type="number" class="bg-primary rounded border border-secondary w-44 p-2 text-sm" placeholder="Size font" value="16" />
-					<select class="bg-primary rounded border border-secondary w-44 p-2 text-sm">
-						<option>JavaScript</option>
-						<option>TypeScript</option>
-						<option>JSON</option>
-						<option>HTML</option>
-						<option>CSS</option>
-						<option>Markdown</option>
+					<input id="editor-font" type="number" class="bg-primary dark:bg-primary-dark dark:text-white rounded border border-secondary w-44 p-2 text-sm" placeholder="Size font" value="16" />
+					<select id="mode-theme" class="bg-primary dark:bg-primary-dark dark:text-white rounded border border-secondary w-44 p-2 text-sm">
+						<option value="light">Light</option>
+						<option value="dark">Dark</option>
 					</select>
 				</div>
 			</header>
 			<div id="container" class="h-full rounded py-2 overflow-hidden border border-secondary"></div>
 		</section>
-		<section id="preview-seaction" class="bg-secondary p-8 h-screen overflow-hidden">
-			<pre id="response" class="bg-primary h-full rounded p-2 overflow-y-auto">Hello world!</pre>
+		<section id="preview-seaction" class="bg-secondary dark:bg-secondary-dark p-8 h-screen overflow-hidden">
+			<pre id="response" class="bg-primary dark:bg-primary-dark h-full rounded p-2 overflow-y-auto dark:text-white">Hello world!</pre>
 		</section>
 		<div id="split" class="vertical-gutter bg-accent/20 hover:bg-accent/80 transition-colors flex flex-col justify-center items-center cursor-col-resize">
 			<LineDashed />
@@ -56,6 +52,7 @@ import LineDashed from "../components/icon/LineDashed.astro";
 	const containerElement = document.getElementById('container') as HTMLElement;
 	const responseElement = document.getElementById('response') as HTMLElement;
 	const editorFontElement = document.getElementById('editor-font') as HTMLInputElement;
+	const modeThemeElement = document.getElementById('mode-theme') as HTMLInputElement;
 
 	window.MonacoEnvironment = {
 		getWorker: () => new TypescriptWorker()
@@ -97,6 +94,20 @@ import LineDashed from "../components/icon/LineDashed.astro";
 
 	editorFontElement.addEventListener('change', (event) => {
 		editor.updateOptions({fontSize: Number((event.target as HTMLInputElement).value)})
+	})
+
+	modeThemeElement.addEventListener('change', (event) => {
+		const theme = (event.target as HTMLInputElement).value
+
+		const isDark = theme === 'dark';
+		document.documentElement.classList.toggle('dark', isDark);
+
+		if(isDark) {
+			editor.updateOptions({theme: 'vs-dark'})
+		} else {
+			editor.updateOptions({theme: 'vs-light'})
+		}
+
 	})
 
 	const codeExecutor = debounce(() => {
