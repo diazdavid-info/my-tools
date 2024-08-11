@@ -41,6 +41,9 @@ import LineDashed from "../components/icon/LineDashed.astro";
 	#split {
 		grid-area: split;
 	}
+	pre{
+		font-size: 16px;
+	}
 </style>
 
 <script>
@@ -94,6 +97,7 @@ import LineDashed from "../components/icon/LineDashed.astro";
 
 	editorFontElement.addEventListener('change', (event) => {
 		editor.updateOptions({fontSize: Number((event.target as HTMLInputElement).value)})
+		responseElement.style.fontSize = `${Number((event.target as HTMLInputElement).value)}px`
 	})
 
 	modeThemeElement.addEventListener('change', (event) => {
