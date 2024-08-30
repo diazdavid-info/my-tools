@@ -1,0 +1,175 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import LineDashed from "../../components/icon/LineDashed.astro";
+---
+
+<Layout title="Monaco Editor">
+	<article class="grid h-full">
+		<section id="editor-section" class="flex flex-col gap-y-4 p-8 h-screen overflow-hidden">
+			<header class="flex flex-row justify-between items-center">
+				<h1 class="text-2xl font-bold dark:text-white">Code Editor</h1>
+				<div class="flex flex-row gap-2 justify-end flex-wrap">
+					<input id="editor-font" type="number" class="bg-primary dark:bg-primary-dark dark:text-white rounded border border-secondary w-44 p-2 text-sm" placeholder="Size font" value="16" />
+					<select id="mode-theme" class="bg-primary dark:bg-primary-dark dark:text-white rounded border border-secondary w-44 p-2 text-sm">
+						<option value="light">Light</option>
+						<option value="dark">Dark</option>
+					</select>
+				</div>
+			</header>
+			<div id="container" class="h-full rounded py-2 overflow-hidden border border-secondary"></div>
+		</section>
+		<section id="preview-seaction" class="bg-secondary dark:bg-secondary-dark p-8 h-screen overflow-hidden">
+			<ul id="console" class="bg-primary dark:bg-primary-dark h-full rounded p-2 overflow-y-auto dark:text-white">
+				<li>Hello world!</li>
+			</ul>
+		</section>
+		<div id="split" class="vertical-gutter bg-accent/20 hover:bg-accent/80 transition-colors flex flex-col justify-center items-center cursor-col-resize">
+			<LineDashed />
+		</div>
+	</article>
+	<iframe class="bg-primary dark:bg-primary-dark rounded p-2 overflow-y-auto dark:text-white" id="iframe" />
+</Layout>
+
+<style>
+	.grid {
+		grid-template-columns: 1fr 16px 1fr;
+		grid-template-areas: "editor split preview";
+	}
+	#editor-section {
+		grid-area: editor;
+	}
+	#preview-seaction {
+		grid-area: preview;
+	}
+	#split {
+		grid-area: split;
+	}
+	pre{
+		font-size: 16px;
+	}
+</style>
+
+<script>
+	import * as monaco from 'monaco-editor';
+	import TypescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+	import Split from 'split-grid'
+	import {createHtml} from "../../utils/createHTML";
+
+	const containerElement = document.getElementById('container') as HTMLElement;
+	const editorFontElement = document.getElementById('editor-font') as HTMLInputElement;
+	const modeThemeElement = document.getElementById('mode-theme') as HTMLInputElement;
+	const iframeElement = document.getElementById('iframe') as HTMLIFrameElement;
+	const consoleElement = document.getElementById('console') as HTMLIFrameElement;
+
+	window.MonacoEnvironment = {
+		getWorker: () => new TypescriptWorker()
+	};
+
+	const editor = monaco.editor.create(containerElement, {
+		value: 'console.log("Hello world!");',
+		language: 'typescript',
+		theme: 'vs-light',
+		minimap: {
+			enabled: true
+		},
+		scrollbar: {
+			verticalScrollbarSize: 0,
+			horizontalScrollbarSize: 0
+		},
+		automaticLayout: true,
+		fontSize: 16,
+		lineNumbers: 'on',
+		wordWrap: 'on',
+		renderLineHighlight: 'none',
+		glyphMargin: true,
+		folding: true,
+		lineDecorationsWidth: 0,
+		lineNumbersMinChars: 0,
+		overviewRulerBorder: true,
+		overviewRulerLanes: 0,
+		hideCursorInOverviewRuler: true,
+		scrollBeyondLastLine: false,
+		fixedOverflowWidgets: true,
+	});
+
+	Split({
+		columnGutters: [{
+			track: 1,
+			element: document.querySelector('.vertical-gutter') as HTMLElement,
+		}],
+	})
+
+	editorFontElement.addEventListener('change', (event) => {
+		editor.updateOptions({fontSize: Number((event.target as HTMLInputElement).value)})
+		consoleElement.querySelectorAll('li').forEach(li => li.style.fontSize = `${Number((event.target as HTMLInputElement).value)}px`)
+	})
+
+	modeThemeElement.addEventListener('change', (event) => {
+		const theme = (event.target as HTMLInputElement).value
+
+		const isDark = theme === 'dark';
+		document.documentElement.classList.toggle('dark', isDark);
+
+		if(isDark) {
+			editor.updateOptions({theme: 'vs-dark'})
+		} else {
+			editor.updateOptions({theme: 'vs-light'})
+		}
+
+	})
+
+	let url: string = ''
+	editor.onDidChangeModelContent(() => {
+		if(url) URL.revokeObjectURL(url)
+
+		const js = editor.getValue()
+		const htmlRender = createHtml({ js })
+
+		const blob = new window.Blob([htmlRender], { type: 'text/html' })
+		url = URL.createObjectURL(blob)
+
+		iframeElement.src = url
+	})
+
+	window.addEventListener('message', (ev) => {
+		const { console: consoleData } = ev.data
+
+		const payload = consoleData?.payload
+		const type = consoleData?.type
+
+		if(!type) return
+
+		if(type === 'system' && payload === 'clear') {
+			consoleElement.innerHTML = ''
+			return
+		}
+
+		if(type === 'error') {
+			consoleElement.innerHTML = `error`
+
+			const htmlLiElement = document.createElement('li')
+			const htmlSpanElement = document.createElement('span')
+			htmlLiElement.appendChild(htmlSpanElement)
+			htmlSpanElement.innerHTML = `${payload.line}:${payload.column} ${payload.message}`
+			consoleElement.appendChild(htmlLiElement)
+
+			return
+		}
+
+		if(type === 'log:log') {
+			const htmlLiElement = document.createElement('li')
+			const htmlSpanElement = document.createElement('span')
+			htmlLiElement.appendChild(htmlSpanElement)
+			htmlSpanElement.innerHTML = payload
+			consoleElement.appendChild(htmlLiElement)
+			return
+		}
+
+		const htmlLiElement = document.createElement('li')
+		const htmlSpanElement = document.createElement('span')
+		htmlLiElement.appendChild(htmlSpanElement)
+		htmlSpanElement.innerHTML = `${type} ${payload}`
+		consoleElement.appendChild(htmlLiElement)
+	})
+
+</script>
