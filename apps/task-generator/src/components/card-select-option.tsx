@@ -10,10 +10,11 @@ type CardSelectOptionProps = {
 }
 
 export const CardSelectOption: FC<CardSelectOptionProps> = ({ value, items, handleValueChange }) => {
-  return (
+    const label = items.find(({key}) => key === value)?.value
+    return (
     <Popover>
       <PopoverTrigger>
-        <Badge variant="outline">{value}</Badge>
+        <Badge variant="outline">{label}</Badge>
       </PopoverTrigger>
       <PopoverContent>
         <Select onValueChange={handleValueChange} value={value}>
