@@ -6,6 +6,7 @@ export type Task = {
   points: number
   dev?: string
   epic?: string
+  epicSummary?: string
   project?: string
   type?: string
   url?: string

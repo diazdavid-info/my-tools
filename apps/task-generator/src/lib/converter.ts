@@ -7,6 +7,7 @@ const generateTitleAndPoints = (listItem: any) => {
 }
 export const jiraTasksToTasks = (data: JiraTask): Task[] => {
   const parent = data.fields.parent.key
+  const parentName = data.fields.parent.fields.summary
   const content = data.fields.comment.comments[0].body.content
   const [firstElement] = content.filter((bodyContent) => ['bulletList', 'orderedList'].includes(bodyContent.type))
   const { content: bulletListContent } = firstElement
@@ -18,6 +19,7 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
       title,
       points,
       epic: parent,
+      epicSummary: parentName,
       content: JSON.stringify([{ type: 'bulletList', content: [listItem] }], null, 2),
       disabled: false,
       url: '',
