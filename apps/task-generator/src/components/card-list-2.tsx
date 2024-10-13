@@ -38,8 +38,6 @@ export const CardList2 = () => {
     }
   }
 
-  console.log(tasks)
-
   return tasks.map((task) => (
     <article key={task.id} className="border rounded-lg shadow-sm py-4 px-3 flex flex-col gap-4 justify-between bg-white">
       <header className="flex flex-col h-full justify-between">
