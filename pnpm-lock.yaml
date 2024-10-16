@@ -110,79 +110,79 @@ importers:
   apps/task-generator:
     dependencies:
       '@astrojs/check':
-        specifier: ^0.9.4
-        version: 0.9.4(prettier@3.2.4)(typescript@5.6.3)
+        specifier: ^0.4.1
+        version: 0.4.1(prettier@3.2.4)(typescript@5.6.3)
       '@astrojs/react':
-        specifier: ^3.6.2
+        specifier: ^3.0.9
         version: 3.6.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)(vite@5.4.9)
       '@astrojs/tailwind':
-        specifier: ^5.1.2
+        specifier: ^5.1.0
         version: 5.1.2(astro@4.16.1)(tailwindcss@3.4.13)
       '@astrojs/vercel':
-        specifier: ^7.8.1
+        specifier: ^7.1.1
         version: 7.8.1(astro@4.16.1)(next@14.2.15)(react@18.3.1)
       '@auth/core':
-        specifier: 0.18.6
+        specifier: ^0.18.6
         version: 0.18.6
       '@radix-ui/react-popover':
-        specifier: ^1.1.2
+        specifier: ^1.0.7
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/react-select':
-        specifier: ^2.1.2
+        specifier: ^2.0.0
         version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/react-slot':
-        specifier: ^1.1.0
+        specifier: ^1.0.2
         version: 1.1.0(@types/react@18.3.11)(react@18.3.1)
       '@radix-ui/react-toast':
-        specifier: ^1.2.2
+        specifier: ^1.1.5
         version: 1.2.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/react-toggle':
-        specifier: ^1.1.0
+        specifier: ^1.0.3
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
       '@radix-ui/react-toggle-group':
-        specifier: ^1.1.0
+        specifier: ^1.0.4
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
       '@types/react':
-        specifier: ^18.3.11
+        specifier: ^18.2.52
         version: 18.3.11
       '@types/react-dom':
-        specifier: ^18.3.1
+        specifier: ^18.2.18
         version: 18.3.1
       astro:
-        specifier: ^4.16.1
+        specifier: ^4.3.2
         version: 4.16.1(typescript@5.6.3)
       auth-astro:
-        specifier: 4.1.1
+        specifier: ^4.1.1
         version: 4.1.1(@auth/core@0.18.6)(astro@4.16.1)(next@14.2.15)(react-dom@18.3.1)(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
       clsx:
-        specifier: ^2.1.1
+        specifier: ^2.1.0
         version: 2.1.1
       lucide-react:
-        specifier: ^0.452.0
-        version: 0.452.0(react@18.3.1)
+        specifier: ^0.321.0
+        version: 0.321.0(react@18.3.1)
       react:
-        specifier: ^18.3.1
+        specifier: ^18.2.0
         version: 18.3.1
       react-dom:
-        specifier: ^18.3.1
+        specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       tailwind-merge:
-        specifier: ^2.5.3
+        specifier: ^2.2.1
         version: 2.5.3
       tailwindcss:
-        specifier: ^3.4.13
+        specifier: ^3.4.1
         version: 3.4.13
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.13)
       typescript:
-        specifier: ^5.6.3
+        specifier: ^5.3.3
         version: 5.6.3
       zustand:
-        specifier: ^4.5.5
+        specifier: ^4.5.0
         version: 4.5.5(@types/react@18.3.11)(react@18.3.1)
 
   apps/tasks:
@@ -376,6 +376,23 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
+
+  /@astrojs/check@0.4.1(prettier@3.2.4)(typescript@5.6.3):
+    resolution: {integrity: sha512-XEsuU4TlWkgcsvdeessq5mXLXV1fejtxIioCPv/FfhTzb1bDYe2BtLiSBK+rFTyD9Hl686YOas9AGNMJcpoRsw==}
+    hasBin: true
+    peerDependencies:
+      typescript: ^5.0.0
+    dependencies:
+      '@astrojs/language-server': 2.15.0(prettier@3.2.4)(typescript@5.6.3)
+      chokidar: 3.6.0
+      fast-glob: 3.3.2
+      kleur: 4.1.5
+      typescript: 5.6.3
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - prettier
+      - prettier-plugin-astro
+    dev: false
 
   /@astrojs/check@0.5.9(prettier-plugin-astro@0.13.0)(prettier@3.2.5)(typescript@5.6.3):
     resolution: {integrity: sha512-+QsQMtYq4oso+gmilJC9HLmdi0glZ+04V/VyyTTPry7n21jqjX9SfgDpLGxMk5cwPC/vwZMkn6ORGPnkZS/L5w==}
@@ -7882,10 +7899,10 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /lucide-react@0.452.0(react@18.3.1):
-    resolution: {integrity: sha512-kNefjOUOGm+Mu3KDiryONyPba9r+nhcrz5oJs3N6JDzGboQNEXw5GB3yB8rnV9/FA4bPyggNU6CRSihZm9MvSw==}
+  /lucide-react@0.321.0(react@18.3.1):
+    resolution: {integrity: sha512-Fi9VahIna6642U+2nAGSjnXwUBV3WyfFFPQq4yi3w30jtqxDLfSyiYCtCYCYQZ2KWNZc1MDI+rcsa0t+ChdYpw==}
     peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.3.1
     dev: false
