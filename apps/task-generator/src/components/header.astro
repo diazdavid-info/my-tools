@@ -9,7 +9,7 @@ const session = await getSession(req)
 <header class="w-full bg-black/80">
     <nav class="w-full lg:w-3/4 m-auto px-5 py-2 flex gap-2 items-center justify-end">
         {!session &&
-            <SignIn class="w-20 rounded bg-blue-400 p-2" provider='atlassian' options={{callbackUrl: 'https://taskgenerator.diazdavid.es'}}>
+            <SignIn class="w-20 rounded bg-blue-400 p-2" provider='atlassian'>
                 Log In
             </SignIn>
         }
