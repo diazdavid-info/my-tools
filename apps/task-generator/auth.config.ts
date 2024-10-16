@@ -7,7 +7,7 @@ export default defineConfig({
     Atlassian({
       clientId: import.meta.env.ATLASSIAN_CLIENT_ID,
       clientSecret: import.meta.env.ATLASSIAN_CLIENT_SECRET,
-      authorization: { params: { scope: "read:me read:account read:jira-work write:jira-work read:field.option:jira", redirect_uri: 'https://taskgenerator.diazdavid.es/api/auth/callback/atlassian' } },
+      authorization: { params: { scope: "read:me read:account read:jira-work write:jira-work read:field.option:jira" } },
       async profile(profile, account) {
         const accessToken = account.access_token
         const data = await fetch('https://api.atlassian.com/oauth/token/accessible-resources', {
