@@ -32,6 +32,7 @@
 		"pre-commit": "lint-staged"
 	},
 	"dependencies": {
+		"@astrojs/cloudflare": "^11.2.0",
 		"@astrojs/rss": "4.0.9",
 		"astro": "4.16.14",
 		"astro-font": "^0.1.81"
