@@ -25,6 +25,7 @@ export async function getStaticPaths({ paginate }: any) {
 		})
 	})
 }
+export const prerender = true
 const params = Astro.params
 const { page } = Astro.props
 
