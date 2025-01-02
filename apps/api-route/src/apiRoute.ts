@@ -13,21 +13,21 @@ export type Handler = ({
 }) => Response | Promise<Response>
 type ApiRoute = {
   add: (method: Method, path: string, handler: Handler) => void
-  run: (port: number, callback: () => void) => void
+  run: (port: number, host?: string, callback?: () => void) => void
 }
 
 export const apiRouter = (): ApiRoute => {
   const route = new Route()
-  const host = '0.0.0.0'
+  const defaultHost = 'localhost'
 
   return {
     add: function (method, path, handler) {
       route.add(method, path, handler)
     },
-    run: function (port, callback) {
+    run: function (port, host, callback = () => {}) {
       createServer((socket) =>
         socket.on('data', (data) =>
-          processor({ data, route, host, port }).then((buffer) => {
+          processor({ data, route, host: host || defaultHost, port }).then((buffer) => {
             socket.write(buffer)
           })
         )

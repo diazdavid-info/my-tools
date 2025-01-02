@@ -44,6 +44,6 @@ app.add('POST', '/user', async ({ request }): Promise<Response> => {
   return Response.json({ status: 'ok', body: json })
 })
 
-app.run(parseInt(port), () => {
+app.run(parseInt(port), '127.0.0.1', () => {
   console.log(`🫶 Server is running on http://localhost:${port}`)
 })

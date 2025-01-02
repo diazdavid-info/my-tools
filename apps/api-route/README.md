@@ -32,7 +32,7 @@ app.add('POST', '/user', async ({ request }): Promise<Response> => {
   return Response.json({ status: 'ok', body: json })
 })
 
-app.run(4221, () => {
+app.run(4221, 'localhost', () => {
   console.log(`🫶 Server is running on http://localhost:4221`)
 })
 ```
