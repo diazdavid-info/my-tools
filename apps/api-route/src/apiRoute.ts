@@ -18,7 +18,7 @@ type ApiRoute = {
 
 export const apiRouter = (): ApiRoute => {
   const route = new Route()
-  const host = 'localhost'
+  const host = '0.0.0.0'
 
   return {
     add: function (method, path, handler) {

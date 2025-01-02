@@ -1,6 +1,6 @@
 import { apiRouter } from '../index'
 
-const port = '4221' || process.env.PORT
+const port = process.env.PORT || '4221'
 
 const app = apiRouter()
 
