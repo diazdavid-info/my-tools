@@ -13,7 +13,7 @@ export const CardSelectOption: FC<CardSelectOptionProps> = ({ value, items, hand
     const label = items.find(({key}) => key === value)?.value
     return (
     <Popover>
-      <PopoverTrigger className="flex items-center flex-row justify-end gap-2">
+      <PopoverTrigger className="flex items-center flex-row justify-end gap-2 cursor-pointer">
         {label} {label && <Pencil className="size-3 inline" strokeWidth="1" />}
       </PopoverTrigger>
       <PopoverContent>

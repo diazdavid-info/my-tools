@@ -11,7 +11,7 @@ type CardInputOptionProp = {
 export const CardInputOption: FC<CardInputOptionProp> = ({ value, handleValueChange }) => {
   return (
     <Popover>
-      <PopoverTrigger className="flex items-center flex-row justify-end gap-2">
+      <PopoverTrigger className="flex items-center flex-row justify-end gap-2 cursor-pointer">
         {value} <Pencil className="size-3 inline" strokeWidth="1" />
       </PopoverTrigger>
       <PopoverContent>
