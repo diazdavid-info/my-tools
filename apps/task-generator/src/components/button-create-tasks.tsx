@@ -13,7 +13,7 @@ export const ButtonCreateTasks = ({ className }: PropsWithChildren<ButtonCreateT
 
   const handlerCreateTask = () => {
     for (const { disabled, ...task } of tasks) {
-      if (disabled) continue
+      if(disabled || ['CREATED', 'IN_PROGRESS'].includes(task.status)) continue
 
       setStatusTask(task.id, 'IN_PROGRESS')
 
@@ -24,7 +24,10 @@ export const ButtonCreateTasks = ({ className }: PropsWithChildren<ButtonCreateT
           setUrlTask(id, url)
           setStatusTask(id, 'CREATED')
         })
-        .catch(console.error)
+        .catch((error) => {
+          console.error(error)
+          setStatusTask(task.id, 'TO_DO')
+        })
     }
   }
 
