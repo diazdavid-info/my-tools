@@ -2,9 +2,8 @@ import {useTasksStore} from "@/store/tasks-store.ts";
 import {CardSelectOption} from "@/components/card-select-option-2.tsx";
 import {CardInputOption} from "@/components/card-input-option-2.tsx";
 import type {ChangeEvent} from "react";
-import {ExternalLink, Pencil, Power, PowerOff} from "lucide-react";
+import {ExternalLink, Power, PowerOff} from "lucide-react";
 import type {TaskStatus} from "@/types/task";
-import { Button } from "./ui/button";
 
 export const CardList2 = () => {
   const tasks = useTasksStore((state) => state.tasks)
