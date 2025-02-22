@@ -2,7 +2,7 @@ import {useTasksStore} from "@/store/tasks-store.ts";
 import {CardSelectOption} from "@/components/card-select-option-2.tsx";
 import {CardInputOption} from "@/components/card-input-option-2.tsx";
 import type {ChangeEvent} from "react";
-import {Pencil, Power, PowerOff} from "lucide-react";
+import {ExternalLink, Pencil, Power, PowerOff} from "lucide-react";
 import type {TaskStatus} from "@/types/task";
 import { Button } from "./ui/button";
 
@@ -59,13 +59,16 @@ export const CardList2 = () => {
   return tasks.map((task) => (
     <article key={task.id} className={`${colorStatus(task.disabled, task.status)} border rounded-lg shadow-sm py-4 px-3 flex flex-col gap-4 justify-between`}>
       <header className="flex flex-col h-full justify-between gap-2">
-        <div className="flex flex-col items-end">
-          <Button variant="ghost" className="px-0 py-0 gap-0 cursor-pointer hover:bg-transparent" onClick={handleSkipChange(task.id, task.disabled)}>
+        <div className="flex justify-end gap-x-2">
+          <button className="flex items-center justify-center cursor-pointer" onClick={handleSkipChange(task.id, task.disabled)}>
             {task.disabled ?
               <PowerOff className="size-5 inline text-white" strokeWidth="1.5" /> :
               <Power className="size-5 inline" strokeWidth="1.5" />
             }
-          </Button>
+          </button>
+          <a href={task.url} target="_blank" rel="noreferrer" className={`${task.url === '' ? 'opacity-50 cursor-not-allowed' : ''} flex items-center justify-center`}>
+            <ExternalLink className="size-5 inline" strokeWidth="1.5" />
+          </a>
         </div>
         <h2 className="font-semibold truncate" title={task.title}>{task.title}</h2>
         <div className="flex flex-col items-start gap-2 text-sm font-light">
