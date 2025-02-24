@@ -7,9 +7,11 @@ const handleSigTerm = () => process.exit(0)
 process.on('SIGINT', handleSigTerm)
 process.on('SIGTERM', handleSigTerm)
 
-const [path] = process.argv.slice(2)
+const [path, limitSize = '10'] = process.argv.slice(2)
 
-const readDir = async (path: string) => {
+const ONE_GB = 1_073_741_824
+
+const readDir = async (path: string, limitSize: number) => {
   let size = 0
   const files = await fs.readdir(path)
   for (const file of files) {
@@ -17,7 +19,7 @@ const readDir = async (path: string) => {
     try {
       const stat = await fs.lstat(filePath)
       if (stat.isDirectory()) {
-        size += await readDir(`${filePath}/`)
+        size += await readDir(`${filePath}/`, limitSize)
       }
       if (stat.isFile()) {
         size += stat.size
@@ -25,13 +27,13 @@ const readDir = async (path: string) => {
     } catch (e) {}
   }
 
-  if (size > 10485760000) console.log(`${size}B\t${(size / 1073741824).toFixed(1)}GB\t${path}`)
+  if (size >= limitSize) console.log(`${size}B\t${(size / ONE_GB).toFixed(1)}GB\t${path}`)
 
   return size
 }
 
 const main = async (path: string) => {
-  await readDir(path)
+  await readDir(path, parseInt(limitSize) * ONE_GB)
 }
 
 main(path).catch(console.error)
