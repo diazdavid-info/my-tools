@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.13.0
+
+### Minor Changes
+
+- Add AI option
+
 ## 0.12.2
 
 ### Patch Changes
