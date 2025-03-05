@@ -15,6 +15,7 @@ import {
 } from './src/shared/config'
 import checkInProgressTasks from './src/check-in-progress-tasks'
 import runServer from './src/run-server'
+import runIA from './src/ia'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -50,6 +51,11 @@ const assUserByOption = async (): Promise<string> => {
         title: `Run server`,
         description: '',
         value: 'Run server'
+      },
+      {
+        title: `IA`,
+        description: '',
+        value: 'IA'
       }
     )
   }
@@ -73,6 +79,7 @@ const run = async (): Promise<void> => {
   if (task === 'Create PR') await createPullRequest()
   if (task === 'Check in progress tasks') await checkInProgressTasks()
   if (task === 'Run server') await runServer()
+  if (task === 'IA') await runIA()
 }
 
 run()

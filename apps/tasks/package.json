@@ -39,5 +39,9 @@
   },
   "engines": {
     "node": ">=18.16.0"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.1.14",
+    "ai": "^4.1.46"
   }
 }
