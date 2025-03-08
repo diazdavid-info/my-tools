@@ -25,11 +25,11 @@ pnpm i
 ## Qué hay dentro del este proyecto
 
 1. packages
-  1. eslint-config-mytools -> mi configuración de eslint y pritter que será compartida para todas las herramientas del
-     monorepo
-  2. mytools-tsconfig -> mi configuraciones de typescript que será compartida para todas las herramientas del monorepo
-  3. mytools-components -> un listado de componentes que estarán disponibles para posibles proyectos de front alojados
-     en este monorepo
+   1. eslint-config-mytools -> mi configuración de eslint y pritter que será compartida para todas las herramientas del
+      monorepo
+   2. mytools-tsconfig -> mi configuraciones de typescript que será compartida para todas las herramientas del monorepo
+   3. mytools-components -> un listado de componentes que estarán disponibles para posibles proyectos de front alojados
+      en este monorepo
 
 ## Cómo inicializar nueva app o nuevo package
 
