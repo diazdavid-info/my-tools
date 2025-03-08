@@ -2,29 +2,36 @@ import { generateText } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { simpleGit } from 'simple-git'
 
-const generateDiff = async () => {
-  return simpleGit().diff()
+const generateDiff = async (): Promise<(string | null)[]> => {
+  const diff = await simpleGit().diff()
+  return diff
+    .split('\n')
+    .filter((line) => line.startsWith('+') && line.includes('it('))
+    .map((line) => {
+      const match = line.match(/it\(\s*'([^']+)'\s*,/)
+      return match ? match[1] : null
+    })
+    .filter(Boolean)
 }
 
-const callAI = async (diff: string) => {
+const callAI = async (diff: (string | null)[]) => {
   const { text } = await generateText({
     model: openai('gpt-4o-mini'),
-    system:
-      'Eres un experto en programacion de javascript y sobre todo en testing. Response siempre en español. La respuesta siempre va a ser impresa en consola, formatea el texto para que se entienda en una consola.',
+    system: `Eres un experto en gramática y redacción en inglés. Tu tarea es revisar los nombres de tests unitarios de un 
+    proyecto y corregirlos si tienen errores gramaticales o de estilo. Siempre debes responder con una lista numerada en 
+    el siguiente formato:
+        1. **Nombre original:** \`<nombre_original>\`
+        **Nombre corregido:** \`<nombre_corregido>\`
+        **Razón del cambio:** \`<explicación en español de por qué el cambio es necesario>\`
+    Si el nombre del test es correcto, responde con el mismo nombre en "Nombre corregido" y una explicación indicando que 
+    no requiere cambios. Mantén la estructura de los nombres de test y evita modificar la semántica de la prueba.`,
     messages: [
       {
         role: 'user',
-        content:
-          'Te paso el diff de git del código que he modificado. Centrate en el nombre de los test y dime si gramaticamente están bien dicho o se puede modificar.'
-      },
-      {
-        role: 'user',
-        content:
-          'Dame siempre el nombre de todos los test que encuentres y siempre con las keys actual, nuevo y una explicación de porque esta mal.'
-      },
-      {
-        role: 'user',
-        content: `'''\n${diff}\n'''`
+        content: `Aquí tienes una lista de nombres de tests unitarios extraídos de un proyecto. Revisa su gramática y 
+        corrige cualquier error si es necesario, siguiendo el formato indicado:
+        ${diff.join('\n')}
+        Por favor, proporciona la lista con las correcciones y explicaciones en español.`
       }
     ],
     temperature: 0.8,
