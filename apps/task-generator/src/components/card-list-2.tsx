@@ -56,7 +56,7 @@ export const CardList2 = () => {
   }
 
   return tasks.map((task) => (
-    <article key={task.id} className={`${colorStatus(task.disabled, task.status)} border rounded-lg shadow-sm py-4 px-3 flex flex-col gap-4 justify-between`}>
+    <article key={task.id} className={`${colorStatus(task.disabled, task.status)} border rounded shadow-sm py-4 px-3 flex flex-col gap-4 justify-between`}>
       <header className="flex flex-col h-full justify-between gap-2">
         <div className="flex justify-end gap-x-2">
           <button className="flex items-center justify-center cursor-pointer" onClick={handleSkipChange(task.id, task.disabled)}>
@@ -71,7 +71,7 @@ export const CardList2 = () => {
         </div>
         <h2 className="font-semibold truncate" title={task.title}>{task.title}</h2>
         <div className="flex flex-col items-start gap-2 text-sm font-light">
-          <p className="rounded w-full bg-green-300 py-0.5 px-1 overflow-hidden text-nowrap truncate">{task.epicSummary}</p>
+          <p className="rounded-xs w-full bg-green-300 py-0.5 px-1 overflow-hidden text-nowrap truncate">{task.epicSummary}</p>
         </div>
       </header>
       <footer className="flex flex-col gap-2 text-sm font-light">

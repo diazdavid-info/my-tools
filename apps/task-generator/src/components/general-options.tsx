@@ -17,12 +17,12 @@ export const GeneralOptions = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
-      <TaskInput className="flex-1"/>
-      <ProjectSelect className="flex-1" />
-      <TaskTypeSelect className="flex-1" />
-      <EpicInput className="flex-1" />
-      <DevSelect className="flex-1" />
-      <ButtonCreateTasks className="flex-1" />
+      <TaskInput className="flex-1 rounded-xs cursor-pointer"/>
+      <ProjectSelect className="flex-1 rounded-xs cursor-pointer" />
+      <TaskTypeSelect className="flex-1 rounded-xs cursor-pointer" />
+      <EpicInput className="flex-1 rounded-xs cursor-pointer" />
+      <DevSelect className="flex-1 rounded-xs cursor-pointer" />
+      <ButtonCreateTasks className="flex-1 rounded-xs h-auto cursor-pointer" />
     </div>
   );
 };

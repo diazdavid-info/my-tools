@@ -9,13 +9,13 @@ const session = await getSession(req)
 <header class="w-full bg-black/80">
     <nav class="w-full lg:w-3/4 m-auto px-5 py-2 flex gap-2 items-center justify-end">
         {!session &&
-            <SignIn class="w-20 rounded bg-blue-400 p-2" provider='atlassian'>
+            <SignIn class="rounded-xs bg-blue-400 px-4 py-1 cursor-pointer" provider='atlassian'>
                 Log In
             </SignIn>
         }
         {session &&
           <div class="flex gap-2 items-center">
-              <SignOut class="w-20 rounded bg-red-600 p-2">Log out</SignOut>
+              <SignOut class="rounded-xs bg-red-600 px-4 py-1 cursor-pointer">Log out</SignOut>
               <img class="rounded-full w-8" src={session.user?.image}>
           </div>
         }
