@@ -57,13 +57,12 @@ const getQuery = (ownership: TaskOwnership): string => {
 }
 
 export const searchInProgressTasks = async (ownership: TaskOwnership): Promise<Task[]> => {
-  const url = `${process.env.JIRA_DOMAIN}/rest/api/3/search`
+  const url = `${process.env.JIRA_DOMAIN}/rest/api/3/search/jql`
   const body = {
-    expand: ['names'],
+    expand: 'names',
     maxResults: 50,
     fieldsByKeys: false,
     fields: ['summary', 'issuetype', 'status'],
-    startAt: 0,
     jql: getQuery(ownership)
   }
 
@@ -107,6 +106,8 @@ export const findTask = async (taskId: string): Promise<Task | null> => {
       Authorization: `Basic ${process.env.JIRA_AUTHORIZATION}`
     }
   })
+
+  console.log(JSON.stringify(response, null, 2))
 
   if (!response.ok) return null
 
