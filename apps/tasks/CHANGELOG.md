@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.16.0
+
+### Minor Changes
+
+- remove console.log and save task
+
 ## 0.15.0
 
 ### Minor Changes
