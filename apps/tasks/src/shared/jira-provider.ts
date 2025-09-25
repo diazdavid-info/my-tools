@@ -107,8 +107,6 @@ export const findTask = async (taskId: string): Promise<Task | null> => {
     }
   })
 
-  console.log(JSON.stringify(response, null, 2))
-
   if (!response.ok) return null
 
   const issue = (await response.json()) as Issue

@@ -97,7 +97,7 @@ const cleanFileConfig = async () => {
 }
 
 const run = async () => {
-  await addCurrentProject()
+  // await addCurrentProject()
   await ensureEnvs()
   await gitFetch()
   await gitPull()
@@ -112,8 +112,8 @@ const run = async () => {
 
   await checkoutBranch(branchName)
 
-  await addTaskToFileConfig(task)
-  await cleanFileConfig()
+  // await addTaskToFileConfig(task)
+  // await cleanFileConfig()
 }
 
 export default run
