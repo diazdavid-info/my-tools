@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.16.1
+
+### Patch Changes
+
+- Fix build
+
 ## 0.16.0
 
 ### Minor Changes
