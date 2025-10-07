@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.0
+
+### Minor Changes
+
+- add commit option
+
 ## 0.16.1
 
 ### Patch Changes
