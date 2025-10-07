@@ -16,6 +16,7 @@ import {
 import checkInProgressTasks from './src/check-in-progress-tasks'
 import runServer from './src/run-server'
 import runIA from './src/ia'
+import runCommit from './src/commit'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -56,6 +57,11 @@ const assUserByOption = async (): Promise<string> => {
         title: `IA`,
         description: '',
         value: 'IA'
+      },
+      {
+        title: `Commit`,
+        description: '',
+        value: 'Commit'
       }
     )
   }
@@ -80,6 +86,7 @@ const run = async (): Promise<void> => {
   if (task === 'Check in progress tasks') await checkInProgressTasks()
   if (task === 'Run server') await runServer()
   if (task === 'IA') await runIA()
+  if (task === 'Commit') await runCommit()
 }
 
 run()
