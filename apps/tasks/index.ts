@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import prompts from 'prompts'
-import { green, red } from 'picocolors'
 import createTask from './src/create-task'
 import createPullRequest from './src/create-pull-request'
 import {
@@ -14,6 +13,7 @@ import {
 } from './src/shared/config'
 import runIA from './src/ia'
 import runCommit from './src/commit'
+import { log, logError } from './src/shared/logs'
 
 const handleSigTerm = () => process.exit(0)
 
@@ -54,7 +54,7 @@ const install = async () => {
   if (hasConfig() && !(await isNewVersion(NEW_VERSION))) return
   await configInit()
   await ensureFormatConfigFile()
-  console.log(`🐷  ${green('success')} new version detected`)
+  log(`new version detected`)
   await updateVersion(NEW_VERSION)
 }
 
@@ -89,13 +89,13 @@ const run = async (): Promise<void> => {
 
 run()
   .then(() => {
-    console.log(`🐷  ${green('success')} process completed`)
+    log(`process completed`)
 
     process.exit()
   })
   .catch((reason) => {
-    console.log(`🐷  ${red('error')} aborting`)
-    console.log(`🐷  ${red('error')} ${reason}`)
+    logError(`aborting`)
+    logError(`${reason}`)
 
     process.exit(1)
   })

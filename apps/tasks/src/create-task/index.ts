@@ -1,25 +1,26 @@
-import { cyan, green, yellow } from 'picocolors'
+import { cyan, yellow } from 'picocolors'
 import { simpleGit } from 'simple-git'
 import prompts from 'prompts'
 import { formatBranchName } from './format-branch-name'
 import { isJiraConfigured } from '../shared/config'
 import { TaskOwnership, searchInProgressTasks } from '../shared/jira-provider'
 import { Task } from '../shared/task'
+import { log, logInfo } from '../shared/logs'
 
 async function gitFetch() {
-  console.log(`🐷  ${cyan('info')} making a git fetch...`)
+  logInfo('making a git fetch...')
   await simpleGit().fetch()
-  console.log(`🐷  ${green('success')} git fetch completed`)
+  log('git fetch completed')
 }
 
 async function gitPull() {
-  console.log(`🐷  ${cyan('info')} pulling branches...`)
+  logInfo('pulling branches...')
   await simpleGit().pull()
-  console.log(`🐷  ${green('success')} pull branches completed`)
+  log('pull branches completed')
 }
 
 async function searchTasks(ownership: TaskOwnership) {
-  console.log(`🐷  ${cyan('info')} requesting task in progress...`)
+  logInfo('requesting task in progress...')
   return await searchInProgressTasks(ownership)
 }
 
@@ -66,7 +67,7 @@ async function askUserByFormatBranch(
 }
 
 async function checkoutBranch(branchName: string) {
-  console.log(`🐷  ${cyan('info')} creating new branch ${yellow(branchName)}`)
+  logInfo(`creating new branch ${yellow(branchName)}`)
   await simpleGit().checkoutLocalBranch(branchName)
 }
 

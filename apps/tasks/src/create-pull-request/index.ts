@@ -1,16 +1,16 @@
 import prompts from 'prompts'
-import { cyan, green } from 'picocolors'
 import { simpleGit } from 'simple-git'
 import {
   getProjectList,
   Project,
   createPullRequest as githubCreatePullRequest,
 } from './github-provider'
+import { log, logInfo } from '../shared/logs'
 
 async function gitFetch() {
-  console.log(`🐷  ${cyan('info')} making a git fetch...`)
+  logInfo('making a git fetch...')
   await simpleGit().fetch()
-  console.log(`🐷  ${green('success')} git fetch completed`)
+  log('git fetch completed')
 }
 
 const askUserByBaseBranch = async (branchList: string[]) => {
@@ -58,7 +58,7 @@ const createPullRequest = async (
     repo: projectSelected,
   })
 
-  console.log(`🐷  ${green('success')} ${url}`)
+  log(url)
 }
 
 function excludeLocalBranches(allBranch: string[]) {
