@@ -6,9 +6,8 @@ import {
   readFile,
   writeFile,
 } from './file-system'
-import { Config, ConfigTaskStatus, contentConfig } from './config-template'
+import { Config, contentConfig } from './config-template'
 import { base64Encode } from './encoder'
-import { Task } from './task'
 
 export const hasConfig = () => {
   return pathExists(`${homeDir()}/.mytools/config`)
@@ -42,85 +41,9 @@ export const isJiraConfigured = async () => {
   return generalConfig.domain && generalConfig.authorization
 }
 
-export const addCurrentProject = async () => {
-  const projectName = base64Encode(processDir())
-
-  const config = await readConfig()
-
-  const project = config.projects[projectName]
-
-  if (!project) {
-    const date = new Date()
-    config.projects[projectName] = {
-      tasks: [],
-      createdAt: date.valueOf(),
-      updatedAt: date.valueOf(),
-      tools: {},
-    }
-    await writeConfig(config)
-  }
-}
-
-export const addTask = async (task: Task) => {
-  await addCurrentProject()
-
-  const projectName = base64Encode(processDir())
-
-  const config = await readConfig()
-
-  const project = config.projects[projectName]
-
-  const date = new Date()
-
-  project.tasks.push({
-    jiraId: task.id,
-    jiraName: task.name,
-    jiraType: task.type,
-    jiraUrl: task.url,
-    status: ConfigTaskStatus.IN_PROGRESS,
-    createdAt: date.valueOf(),
-    updatedAt: date.valueOf(),
-  })
-
-  await writeConfig(config)
-}
-
-export const removeTask = async (task: Task) => {
-  await addCurrentProject()
-
-  const projectName = base64Encode(processDir())
-
-  const config = await readConfig()
-
-  const project = config.projects[projectName]
-
-  const tasks = project.tasks
-
-  project.tasks = tasks.filter((t) => t.jiraId !== task.id)
-
-  await writeConfig(config)
-}
-
-export const isDebugMode = async () => {
-  const { debug } = await readConfig()
-  return debug
-}
-
 export const isExperimentalMode = async () => {
   const { experimental } = await readConfig()
   return experimental
-}
-
-export const getInProgressTasks = async () => {
-  const projectName = base64Encode(processDir())
-
-  const config = await readConfig()
-
-  const project = config.projects[projectName]
-
-  if (!project) return []
-
-  return project.tasks
 }
 
 export const isNewVersion = async (newVersion: string) => {

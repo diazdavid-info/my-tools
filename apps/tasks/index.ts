@@ -8,13 +8,10 @@ import {
   init as configInit,
   ensureFormatConfigFile,
   isExperimentalMode,
-  getInProgressTasks,
   isNewVersion,
   updateVersion,
   hasConfig,
 } from './src/shared/config'
-import checkInProgressTasks from './src/check-in-progress-tasks'
-import runServer from './src/run-server'
 import runIA from './src/ia'
 import runCommit from './src/commit'
 
@@ -25,6 +22,34 @@ process.on('SIGTERM', handleSigTerm)
 
 const NEW_VERSION = '0.12.2'
 
+const options = [
+  {
+    title: 'Create branch',
+    value: 'create-branch',
+    isExperimental: false,
+    fn: createTask,
+  },
+  {
+    title: 'Create PR',
+    value: 'create-pull-request',
+    isExperimental: false,
+    fn: createPullRequest,
+  },
+  {
+    title: '[IA] Check name test',
+    value: 'ia-check-name-test',
+    isExperimental: true,
+    fn: runIA,
+  },
+  {
+    title: '[IA] Generate title commit',
+    value: 'ia-generate-title-commit',
+    isExperimental: true,
+    fn: runCommit,
+  },
+  { title: 'Exit', value: 'exit', isExperimental: false, fn: async () => {} },
+] as const
+
 const install = async () => {
   if (hasConfig() && !(await isNewVersion(NEW_VERSION))) return
   await configInit()
@@ -34,37 +59,10 @@ const install = async () => {
 }
 
 const assUserByOption = async (): Promise<string> => {
-  const choices = [
-    { title: 'Create branch', description: '', value: 'Create branch' },
-    { title: 'Create PR', description: '', value: 'Create PR' },
-    { title: 'Exit', description: '', value: 'Exit' },
-  ]
-
-  if (await isExperimentalMode()) {
-    const lengthInProgressTasks = (await getInProgressTasks()).length
-    choices.push(
-      {
-        title: `Check ${lengthInProgressTasks} in progress tasks`,
-        description: '',
-        value: 'Check in progress tasks',
-      },
-      {
-        title: `Run server`,
-        description: '',
-        value: 'Run server',
-      },
-      {
-        title: `IA`,
-        description: '',
-        value: 'IA',
-      },
-      {
-        title: `Commit`,
-        description: '',
-        value: 'Commit',
-      }
-    )
-  }
+  const isEnabledExperimental = await isExperimentalMode()
+  const choices = options
+    .filter(({ isExperimental }) => isEnabledExperimental || !isExperimental)
+    .map(({ title, value }) => ({ title, description: '', value }))
 
   const { task } = await prompts({
     type: 'select',
@@ -77,16 +75,16 @@ const assUserByOption = async (): Promise<string> => {
   return task
 }
 
+const executeOption = async (task: string) => {
+  const option = options.find(({ value }) => value === task)
+  if (!option) throw new Error(`Unknown task: ${task}`)
+  await option.fn()
+}
+
 const run = async (): Promise<void> => {
   await install()
   const task = await assUserByOption()
-
-  if (task === 'Create branch') await createTask()
-  if (task === 'Create PR') await createPullRequest()
-  if (task === 'Check in progress tasks') await checkInProgressTasks()
-  if (task === 'Run server') await runServer()
-  if (task === 'IA') await runIA()
-  if (task === 'Commit') await runCommit()
+  await executeOption(task)
 }
 
 run()
