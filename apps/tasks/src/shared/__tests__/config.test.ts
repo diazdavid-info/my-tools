@@ -5,12 +5,16 @@ import { contentConfig } from '../config-template'
 
 describe('config', () => {
   const createDirSpy = jest.spyOn(fileSystem, 'createDir').mockResolvedValue()
-  const pathExistSpy = jest.spyOn(fileSystem, 'pathExists').mockReturnValue(false)
+  const pathExistSpy = jest
+    .spyOn(fileSystem, 'pathExists')
+    .mockReturnValue(false)
   const homeDirSpy = jest.spyOn(fileSystem, 'homeDir').mockReturnValue('')
   const writeFileSpy = jest.spyOn(fileSystem, 'writeFile').mockResolvedValue()
   const processDirSpy = jest.spyOn(fileSystem, 'processDir').mockReturnValue('')
   const readFileSpy = jest.spyOn(fileSystem, 'readFile').mockResolvedValue('')
-  const base64EncodeSpy = jest.spyOn(encoder, 'base64Encode').mockReturnValue('')
+  const base64EncodeSpy = jest
+    .spyOn(encoder, 'base64Encode')
+    .mockReturnValue('')
 
   afterEach(() => {
     jest.clearAllMocks()
@@ -26,7 +30,10 @@ describe('config', () => {
       expect(createDirSpy).toBeCalledWith('/homeFake/.mytools')
       expect(pathExistSpy).toBeCalledWith('/homeFake/.mytools/config')
       expect(pathExistSpy).toBeCalledWith('/homeFake/.mytools')
-      expect(writeFileSpy).toBeCalledWith('/homeFake/.mytools/config', JSON.stringify(contentConfig, null, 2))
+      expect(writeFileSpy).toBeCalledWith(
+        '/homeFake/.mytools/config',
+        JSON.stringify(contentConfig, null, 2)
+      )
     })
     it('Should not init config when exist', async () => {
       pathExistSpy.mockReturnValue(true)
@@ -60,8 +67,8 @@ describe('config', () => {
           tools: { jira: { domain: 'fakeDomain', authorization: 'key' } },
           createdAt: 1697575949,
           updatedAt: 1697575949,
-          tasks: []
-        }
+          tasks: [],
+        },
       }
       processDirSpy.mockReturnValue('/fakeDir')
       base64EncodeSpy.mockReturnValue('base64fake')

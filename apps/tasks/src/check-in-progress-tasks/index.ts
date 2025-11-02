@@ -16,7 +16,7 @@ const run = async () => {
     const { confirmed } = await prompts({
       type: 'confirm',
       name: 'confirmed',
-      message: `Do you want to close task "${name}" with status "${status}" and with id "${id}"?`
+      message: `Do you want to close task "${name}" with status "${status}" and with id "${id}"?`,
     })
 
     console.log(confirmed)

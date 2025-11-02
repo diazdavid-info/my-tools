@@ -214,39 +214,39 @@ type Assignee = {
 enum EventsURL {
   HTTPSAPIGithubCOMUsersHubotEventsPrivacy = 'https://api.github.com/users/hubot/events{/privacy}',
   HTTPSAPIGithubCOMUsersOctocatEventsPrivacy = 'https://api.github.com/users/octocat/events{/privacy}',
-  HTTPSAPIGithubCOMUsersOtherUserEventsPrivacy = 'https://api.github.com/users/other_user/events{/privacy}'
+  HTTPSAPIGithubCOMUsersOtherUserEventsPrivacy = 'https://api.github.com/users/other_user/events{/privacy}',
 }
 
 enum FollowingURL {
   HTTPSAPIGithubCOMUsersHubotFollowingOtherUser = 'https://api.github.com/users/hubot/following{/other_user}',
   HTTPSAPIGithubCOMUsersOctocatFollowingOtherUser = 'https://api.github.com/users/octocat/following{/other_user}',
-  HTTPSAPIGithubCOMUsersOtherUserFollowingOtherUser = 'https://api.github.com/users/other_user/following{/other_user}'
+  HTTPSAPIGithubCOMUsersOtherUserFollowingOtherUser = 'https://api.github.com/users/other_user/following{/other_user}',
 }
 
 enum GistsURL {
   HTTPSAPIGithubCOMUsersHubotGistsGistID = 'https://api.github.com/users/hubot/gists{/gist_id}',
   HTTPSAPIGithubCOMUsersOctocatGistsGistID = 'https://api.github.com/users/octocat/gists{/gist_id}',
-  HTTPSAPIGithubCOMUsersOtherUserGistsGistID = 'https://api.github.com/users/other_user/gists{/gist_id}'
+  HTTPSAPIGithubCOMUsersOtherUserGistsGistID = 'https://api.github.com/users/other_user/gists{/gist_id}',
 }
 
 enum Login {
   Hubot = 'hubot',
   Octocat = 'octocat',
-  OtherUser = 'other_user'
+  OtherUser = 'other_user',
 }
 
 enum NodeID {
-  MDQ6VXNlcjE = 'MDQ6VXNlcjE='
+  MDQ6VXNlcjE = 'MDQ6VXNlcjE=',
 }
 
 enum StarredURL {
   HTTPSAPIGithubCOMUsersHubotStarredOwnerRepo = 'https://api.github.com/users/hubot/starred{/owner}{/repo}',
   HTTPSAPIGithubCOMUsersOctocatStarredOwnerRepo = 'https://api.github.com/users/octocat/starred{/owner}{/repo}',
-  HTTPSAPIGithubCOMUsersOtherUserStarredOwnerRepo = 'https://api.github.com/users/other_user/starred{/owner}{/repo}'
+  HTTPSAPIGithubCOMUsersOtherUserStarredOwnerRepo = 'https://api.github.com/users/other_user/starred{/owner}{/repo}',
 }
 
 enum Type {
-  User = 'User'
+  User = 'User',
 }
 
 type Base = {
@@ -416,14 +416,16 @@ export const getProjectList = async (): Promise<Project[]> => {
       headers: {
         Accept: 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
-      }
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      },
     }
   )
 
   if (!response.ok) {
     const { message } = (await response.json()) as { message: string }
-    return Promise.reject(`Fail to find projects in github -> ${response.statusText}: ${message}`)
+    return Promise.reject(
+      `Fail to find projects in github -> ${response.statusText}: ${message}`
+    )
   }
 
   const githubProjects = (await response.json()) as GithubProject[]
@@ -431,7 +433,9 @@ export const getProjectList = async (): Promise<Project[]> => {
   return githubProjects.map(({ id, name }) => ({ id, name }))
 }
 
-export const createPullRequest = async (pullRequestCreate: PullRequestCreate): Promise<PullRequest> => {
+export const createPullRequest = async (
+  pullRequestCreate: PullRequestCreate
+): Promise<PullRequest> => {
   const response = await fetch(
     `https://api.github.com/repos/${process.env.GITHUB_ORGANIZATION}/${pullRequestCreate.repo}/pulls`,
     {
@@ -441,19 +445,21 @@ export const createPullRequest = async (pullRequestCreate: PullRequestCreate): P
         body: pullRequestCreate.body,
         head: pullRequestCreate.head,
         base: pullRequestCreate.base,
-        draft: true
+        draft: true,
       }),
       headers: {
         Accept: 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
-      }
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      },
     }
   )
 
   if (!response.ok) {
     const { message } = (await response.json()) as { message: string }
-    return Promise.reject(`Fail to create PR in github -> ${response.statusText}: ${message}`)
+    return Promise.reject(
+      `Fail to create PR in github -> ${response.statusText}: ${message}`
+    )
   }
 
   const githubPullRequest = (await response.json()) as GithubPullRequest
@@ -467,6 +473,6 @@ export const createPullRequest = async (pullRequestCreate: PullRequestCreate): P
     body: githubPullRequest.body,
     head: githubPullRequest.head.ref,
     base: githubPullRequest.base.ref,
-    repo: githubPullRequest.base.repo.name
+    repo: githubPullRequest.base.repo.name,
   }
 }

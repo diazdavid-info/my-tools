@@ -31,11 +31,11 @@ const callAI = async (diff: (string | null)[]) => {
         content: `Aquí tienes una lista de nombres de tests unitarios extraídos de un proyecto. Revisa su gramática y 
         corrige cualquier error si es necesario, siguiendo el formato indicado:
         ${diff.join('\n')}
-        Por favor, proporciona la lista con las correcciones y explicaciones en español.`
-      }
+        Por favor, proporciona la lista con las correcciones y explicaciones en español.`,
+      },
     ],
     temperature: 0.8,
-    maxTokens: 4096
+    maxTokens: 4096,
   })
 
   return text

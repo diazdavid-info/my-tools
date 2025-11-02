@@ -46,24 +46,27 @@ type Status = {
 
 export enum TaskOwnership {
   MY_TASKS = 1,
-  ALL = 2
+  ALL = 2,
 }
 
 const getQuery = (ownership: TaskOwnership): string => {
   const inProgress = 'status = "In Progress"'
-  if (ownership === TaskOwnership.MY_TASKS) return `${inProgress} AND assignee = currentUser()`
+  if (ownership === TaskOwnership.MY_TASKS)
+    return `${inProgress} AND assignee = currentUser()`
 
   return inProgress
 }
 
-export const searchInProgressTasks = async (ownership: TaskOwnership): Promise<Task[]> => {
+export const searchInProgressTasks = async (
+  ownership: TaskOwnership
+): Promise<Task[]> => {
   const url = `${process.env.JIRA_DOMAIN}/rest/api/3/search/jql`
   const body = {
     expand: 'names',
     maxResults: 50,
     fieldsByKeys: false,
     fields: ['summary', 'issuetype', 'status'],
-    jql: getQuery(ownership)
+    jql: getQuery(ownership),
   }
 
   const response = await fetch(url, {
@@ -72,8 +75,8 @@ export const searchInProgressTasks = async (ownership: TaskOwnership): Promise<T
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Basic ${process.env.JIRA_AUTHORIZATION}`
-    }
+      Authorization: `Basic ${process.env.JIRA_AUTHORIZATION}`,
+    },
   })
 
   if (!response.ok) return []
@@ -86,12 +89,18 @@ export const searchInProgressTasks = async (ownership: TaskOwnership): Promise<T
       fields: {
         summary,
         issuetype: { name },
-        status: { name: statusName }
+        status: { name: statusName },
       },
       key,
-      self
+      self,
     } = issue
-    return { id: key.trim(), name: summary.trim(), type: name.trim(), url: self.trim(), status: statusName }
+    return {
+      id: key.trim(),
+      name: summary.trim(),
+      type: name.trim(),
+      url: self.trim(),
+      status: statusName,
+    }
   })
 }
 
@@ -103,8 +112,8 @@ export const findTask = async (taskId: string): Promise<Task | null> => {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Basic ${process.env.JIRA_AUTHORIZATION}`
-    }
+      Authorization: `Basic ${process.env.JIRA_AUTHORIZATION}`,
+    },
   })
 
   if (!response.ok) return null
@@ -115,11 +124,17 @@ export const findTask = async (taskId: string): Promise<Task | null> => {
     fields: {
       summary,
       issuetype: { name },
-      status: { name: statusName }
+      status: { name: statusName },
     },
     key,
-    self
+    self,
   } = issue
 
-  return { id: key.trim(), name: summary.trim(), type: name.trim(), url: self.trim(), status: statusName }
+  return {
+    id: key.trim(),
+    name: summary.trim(),
+    type: name.trim(),
+    url: self.trim(),
+    status: statusName,
+  }
 }

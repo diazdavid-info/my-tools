@@ -1,5 +1,9 @@
 import os from 'node:os'
-import { mkdir, writeFile as fsWriteFile, readFile as fsReadFile } from 'node:fs/promises'
+import {
+  mkdir,
+  writeFile as fsWriteFile,
+  readFile as fsReadFile,
+} from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 
 export const homeDir = (): string => {

@@ -22,7 +22,7 @@ export type GeneralTools = {
 
 export enum ConfigTaskStatus {
   IN_PROGRESS = 'In Progress',
-  DONE = 'Done'
+  DONE = 'Done',
 }
 
 export type ConfigTask = {
@@ -55,16 +55,16 @@ export const contentConfig: Config = {
   tools: {
     jira: {
       domain: process.env.JIRA_DOMAIN ?? '',
-      authorization: process.env.JIRA_AUTHORIZATION ?? ''
+      authorization: process.env.JIRA_AUTHORIZATION ?? '',
     },
     github: {
       token: process.env.GITHUB_TOKEN ?? '',
-      organization: process.env.GITHUB_ORGANIZATION ?? ''
-    }
+      organization: process.env.GITHUB_ORGANIZATION ?? '',
+    },
   },
   projects: {},
   advanced: false,
   debug: false,
   experimental: false,
-  version: '0.0.0'
+  version: '0.0.0',
 }

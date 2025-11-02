@@ -19,11 +19,11 @@ const callAI = async (diff: string | null) => {
     messages: [
       {
         role: 'user',
-        content: `Analiza este diff y genera un mensaje de commit breve y claro:\n\n${diff}`
-      }
+        content: `Analiza este diff y genera un mensaje de commit breve y claro:\n\n${diff}`,
+      },
     ],
     temperature: 0.8,
-    maxTokens: 500
+    maxTokens: 500,
   })
 
   return text

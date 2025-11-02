@@ -5,72 +5,72 @@ import {
   processDir,
   readFile,
   writeFile,
-} from "./file-system";
-import { Config, ConfigTaskStatus, contentConfig } from "./config-template";
-import { base64Encode } from "./encoder";
-import { Task } from "./task";
+} from './file-system'
+import { Config, ConfigTaskStatus, contentConfig } from './config-template'
+import { base64Encode } from './encoder'
+import { Task } from './task'
 
 export const hasConfig = () => {
-  return pathExists(`${homeDir()}/.mytools/config`);
-};
+  return pathExists(`${homeDir()}/.mytools/config`)
+}
 
 export const init = async () => {
-  if (pathExists(`${homeDir()}/.mytools/config`)) return;
+  if (pathExists(`${homeDir()}/.mytools/config`)) return
 
   if (!pathExists(`${homeDir()}/.mytools`))
-    await createDir(`${homeDir()}/.mytools`);
+    await createDir(`${homeDir()}/.mytools`)
 
-  await writeConfig(contentConfig);
-};
+  await writeConfig(contentConfig)
+}
 
 export const ensureFormatConfigFile = async () => {
-  const config = await readConfig();
+  const config = await readConfig()
 
-  await writeConfig({ ...contentConfig, ...config });
-};
+  await writeConfig({ ...contentConfig, ...config })
+}
 
 export const isJiraConfigured = async () => {
-  const projectName = base64Encode(processDir());
+  const projectName = base64Encode(processDir())
 
-  const config = await readConfig();
+  const config = await readConfig()
 
-  const generalConfig = config.tools.jira;
-  const projectConfig = config.projects[projectName]?.tools.jira;
+  const generalConfig = config.tools.jira
+  const projectConfig = config.projects[projectName]?.tools.jira
 
-  if (projectConfig) return projectConfig.domain && projectConfig.authorization;
+  if (projectConfig) return projectConfig.domain && projectConfig.authorization
 
-  return generalConfig.domain && generalConfig.authorization;
-};
+  return generalConfig.domain && generalConfig.authorization
+}
 
 export const addCurrentProject = async () => {
-  const projectName = base64Encode(processDir());
+  const projectName = base64Encode(processDir())
 
-  const config = await readConfig();
+  const config = await readConfig()
 
-  const project = config.projects[projectName];
+  const project = config.projects[projectName]
 
   if (!project) {
-    const date = new Date();
+    const date = new Date()
     config.projects[projectName] = {
       tasks: [],
       createdAt: date.valueOf(),
       updatedAt: date.valueOf(),
       tools: {},
-    };
-    await writeConfig(config);
+    }
+    await writeConfig(config)
   }
-};
+}
 
 export const addTask = async (task: Task) => {
-  await addCurrentProject();
+  await addCurrentProject()
 
-  const projectName = base64Encode(processDir());
+  const projectName = base64Encode(processDir())
 
-  const config = await readConfig();
+  const config = await readConfig()
 
-  const project = config.projects[projectName];
+  const project = config.projects[projectName]
 
-  const date = new Date();
+  const date = new Date()
 
   project.tasks.push({
     jiraId: task.id,
@@ -80,77 +80,77 @@ export const addTask = async (task: Task) => {
     status: ConfigTaskStatus.IN_PROGRESS,
     createdAt: date.valueOf(),
     updatedAt: date.valueOf(),
-  });
+  })
 
-  await writeConfig(config);
-};
+  await writeConfig(config)
+}
 
 export const removeTask = async (task: Task) => {
-  await addCurrentProject();
+  await addCurrentProject()
 
-  const projectName = base64Encode(processDir());
+  const projectName = base64Encode(processDir())
 
-  const config = await readConfig();
+  const config = await readConfig()
 
-  const project = config.projects[projectName];
+  const project = config.projects[projectName]
 
-  const tasks = project.tasks;
+  const tasks = project.tasks
 
-  project.tasks = tasks.filter((t) => t.jiraId !== task.id);
+  project.tasks = tasks.filter((t) => t.jiraId !== task.id)
 
-  await writeConfig(config);
-};
+  await writeConfig(config)
+}
 
 export const isDebugMode = async () => {
-  const { debug } = await readConfig();
-  return debug;
-};
+  const { debug } = await readConfig()
+  return debug
+}
 
 export const isExperimentalMode = async () => {
-  const { experimental } = await readConfig();
-  return experimental;
-};
+  const { experimental } = await readConfig()
+  return experimental
+}
 
 export const getInProgressTasks = async () => {
-  const projectName = base64Encode(processDir());
+  const projectName = base64Encode(processDir())
 
-  const config = await readConfig();
+  const config = await readConfig()
 
-  const project = config.projects[projectName];
+  const project = config.projects[projectName]
 
-  if (!project) return [];
+  if (!project) return []
 
-  return project.tasks;
-};
+  return project.tasks
+}
 
 export const isNewVersion = async (newVersion: string) => {
   const [newMajor, newMinor, newPatch] = newVersion
-    .split(".")
-    .map((v) => parseInt(v));
-  const { version } = await readConfig();
-  if (!version) return true;
+    .split('.')
+    .map((v) => parseInt(v))
+  const { version } = await readConfig()
+  if (!version) return true
   const [currentMajor, currentMinor, currentPatch] = version
-    .split(".")
-    .map((v) => parseInt(v));
+    .split('.')
+    .map((v) => parseInt(v))
 
   return (
     newMajor > currentMajor ||
     newMinor > currentMinor ||
     newPatch > currentPatch
-  );
-};
+  )
+}
 
 export const updateVersion = async (newVersion: string) => {
-  const config = await readConfig();
-  await writeConfig({ ...config, version: newVersion });
-};
+  const config = await readConfig()
+  await writeConfig({ ...config, version: newVersion })
+}
 
 const readConfig = async () => {
-  const fileContent = await readFile(`${homeDir()}/.mytools/config`);
-  return JSON.parse(fileContent) as Config;
-};
+  const fileContent = await readFile(`${homeDir()}/.mytools/config`)
+  return JSON.parse(fileContent) as Config
+}
 
 const writeConfig = async (config: Config) => {
-  const data = JSON.stringify(config, null, 2);
-  await writeFile(`${homeDir()}/.mytools/config`, data);
-};
+  const data = JSON.stringify(config, null, 2)
+  await writeFile(`${homeDir()}/.mytools/config`, data)
+}

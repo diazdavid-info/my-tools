@@ -11,7 +11,7 @@ import {
   getInProgressTasks,
   isNewVersion,
   updateVersion,
-  hasConfig
+  hasConfig,
 } from './src/shared/config'
 import checkInProgressTasks from './src/check-in-progress-tasks'
 import runServer from './src/run-server'
@@ -37,7 +37,7 @@ const assUserByOption = async (): Promise<string> => {
   const choices = [
     { title: 'Create branch', description: '', value: 'Create branch' },
     { title: 'Create PR', description: '', value: 'Create PR' },
-    { title: 'Exit', description: '', value: 'Exit' }
+    { title: 'Exit', description: '', value: 'Exit' },
   ]
 
   if (await isExperimentalMode()) {
@@ -46,22 +46,22 @@ const assUserByOption = async (): Promise<string> => {
       {
         title: `Check ${lengthInProgressTasks} in progress tasks`,
         description: '',
-        value: 'Check in progress tasks'
+        value: 'Check in progress tasks',
       },
       {
         title: `Run server`,
         description: '',
-        value: 'Run server'
+        value: 'Run server',
       },
       {
         title: `IA`,
         description: '',
-        value: 'IA'
+        value: 'IA',
       },
       {
         title: `Commit`,
         description: '',
-        value: 'Commit'
+        value: 'Commit',
       }
     )
   }
@@ -71,7 +71,7 @@ const assUserByOption = async (): Promise<string> => {
     name: 'task',
     message: 'What do you want to do?',
     choices,
-    initial: 0
+    initial: 0,
   })
 
   return task

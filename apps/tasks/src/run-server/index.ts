@@ -10,7 +10,9 @@ const run = async () => {
           const parsedUrlQuery = url.parse(req.url, true).query
           res.statusCode = 200
           res.setHeader('Content-type', 'text/plain; charset=utf-8')
-          res.end(`<h1>Hola, qué tal?? 😊</h1> ${JSON.stringify(parsedUrlQuery)}`)
+          res.end(
+            `<h1>Hola, qué tal?? 😊</h1> ${JSON.stringify(parsedUrlQuery)}`
+          )
           break
         }
         case 'POST': {
@@ -21,7 +23,7 @@ const run = async () => {
           req.on('end', () => {
             const data = JSON.parse(body)
             res.writeHead(201, {
-              'Content-type': 'application/json; charset=utf-8'
+              'Content-type': 'application/json; charset=utf-8',
             })
             res.end(JSON.stringify(data))
           })
