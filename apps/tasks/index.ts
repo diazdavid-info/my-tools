@@ -10,6 +10,7 @@ import {
   isNewVersion,
   updateVersion,
   hasConfig,
+  removeAllProjects,
 } from './src/shared/config'
 import runIA from './src/ia'
 import runCommit from './src/commit'
@@ -52,6 +53,7 @@ const install = async () => {
   if (hasConfig() && !(await isNewVersion())) return
   await configInit()
   await ensureFormatConfigFile()
+  await removeAllProjects()
   log(`new version detected`)
   await updateVersion()
 }

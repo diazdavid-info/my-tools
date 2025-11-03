@@ -18,6 +18,10 @@ export type GeneralTools = {
     token: string
     organization: string
   }
+  ia: {
+    model: string
+    token: string
+  }
 }
 
 export enum ConfigTaskStatus {
@@ -60,6 +64,10 @@ export const contentConfig: Config = {
     github: {
       token: process.env.GITHUB_TOKEN ?? '',
       organization: process.env.GITHUB_ORGANIZATION ?? '',
+    },
+    ia: {
+      model: 'gpt-4o-mini',
+      token: '',
     },
   },
   projects: {},

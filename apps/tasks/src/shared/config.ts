@@ -28,6 +28,12 @@ export const ensureFormatConfigFile = async () => {
   await writeConfig({ ...contentConfig, ...config })
 }
 
+export const removeAllProjects = async () => {
+  const config = await readConfig()
+
+  await writeConfig({ ...config, projects: {} })
+}
+
 export const isJiraConfigured = async () => {
   const projectName = base64Encode(processDir())
 
