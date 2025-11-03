@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.7
+
+### Patch Changes
+
+- refactor ai
+
 ## 0.17.6
 
 ### Patch Changes
