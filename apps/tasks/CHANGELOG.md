@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.6
+
+### Patch Changes
+
+- add ia config
+
 ## 0.17.5
 
 ### Patch Changes
