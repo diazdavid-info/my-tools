@@ -25,7 +25,14 @@ export const init = async () => {
 export const ensureFormatConfigFile = async () => {
   const config = await readConfig()
 
-  await writeConfig({ ...contentConfig, ...config })
+  const { tools: defaultTools, ...restDefaultConfig } = contentConfig
+  const { tools, ...restConfig } = config
+
+  await writeConfig({
+    ...restDefaultConfig,
+    ...restConfig,
+    tools: { ...defaultTools, ...tools },
+  })
 }
 
 export const removeAllProjects = async () => {
