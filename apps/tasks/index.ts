@@ -20,8 +20,6 @@ const handleSigTerm = () => process.exit(0)
 process.on('SIGINT', handleSigTerm)
 process.on('SIGTERM', handleSigTerm)
 
-const NEW_VERSION = '0.12.2'
-
 const options = [
   {
     title: 'Create branch',
@@ -51,11 +49,11 @@ const options = [
 ] as const
 
 const install = async () => {
-  if (hasConfig() && !(await isNewVersion(NEW_VERSION))) return
+  if (hasConfig() && !(await isNewVersion())) return
   await configInit()
   await ensureFormatConfigFile()
   log(`new version detected`)
-  await updateVersion(NEW_VERSION)
+  await updateVersion()
 }
 
 const assUserByOption = async (): Promise<string> => {
