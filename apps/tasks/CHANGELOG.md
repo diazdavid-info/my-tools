@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.5
+
+### Patch Changes
+
+- Add functionality to remove all projects during installation process
+
 ## 0.17.4
 
 ### Patch Changes
