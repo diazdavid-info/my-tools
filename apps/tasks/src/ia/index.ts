@@ -1,6 +1,7 @@
 import { generateText } from 'ai'
-import { openai } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai'
 import { simpleGit } from 'simple-git'
+import { aiConfig } from '../shared/config'
 
 const generateDiff = async (): Promise<(string | null)[]> => {
   const diff = await simpleGit().diff()
@@ -15,8 +16,14 @@ const generateDiff = async (): Promise<(string | null)[]> => {
 }
 
 const callAI = async (diff: (string | null)[]) => {
+  const { url, token, model } = await aiConfig()
+  const openai = createOpenAI({
+    baseURL: url,
+    apiKey: token,
+  })
+
   const { text } = await generateText({
-    model: openai('gpt-4o-mini'),
+    model: openai(model),
     system: `Eres un experto en gramática y redacción en inglés. Tu tarea es revisar los nombres de tests unitarios de un 
     proyecto y corregirlos si tienen errores gramaticales o de estilo. Siempre debes responder con una lista numerada en 
     el siguiente formato:

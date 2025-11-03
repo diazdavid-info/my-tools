@@ -18,9 +18,10 @@ export type GeneralTools = {
     token: string
     organization: string
   }
-  ia: {
+  ai: {
     model: string
     token: string
+    url: string
   }
 }
 
@@ -65,9 +66,10 @@ export const contentConfig: Config = {
       token: process.env.GITHUB_TOKEN ?? '',
       organization: process.env.GITHUB_ORGANIZATION ?? '',
     },
-    ia: {
+    ai: {
       model: 'gpt-4o-mini',
       token: '',
+      url: 'https://api.openai.com/v1',
     },
   },
   projects: {},

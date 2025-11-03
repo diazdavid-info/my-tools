@@ -83,6 +83,14 @@ export const updateVersion = async () => {
   await writeConfig({ ...config, version: newVersion })
 }
 
+export const aiConfig = async () => {
+  const config = await readConfig()
+  const { tools } = config
+  const { ai } = tools
+
+  return ai
+}
+
 const readPackage = async () => {
   const fileContent = await readFile(`${__dirname}/../package.json`)
   return JSON.parse(fileContent)

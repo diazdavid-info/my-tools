@@ -1,14 +1,21 @@
 import { generateText } from 'ai'
-import { openai } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai'
 import { simpleGit } from 'simple-git'
+import { aiConfig } from '../shared/config'
 
 const generateDiff = async (): Promise<string | null> => {
   return simpleGit().diff()
 }
 
 const callAI = async (diff: string | null) => {
+  const { url, token, model } = await aiConfig()
+  const openai = createOpenAI({
+    baseURL: url,
+    apiKey: token,
+  })
+
   const { text } = await generateText({
-    model: openai('gpt-4o-mini'),
+    model: openai(model),
     system: `Eres un experto en control de versiones y buenas prácticas de desarrollo. 
     Tu tarea es analizar un diff de Git y proponer un mensaje de commit **natural, breve y descriptivo**, sin prefijos como "feat:" o "fix:".
     El mensaje debe:
