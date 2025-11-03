@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.2
+
+### Patch Changes
+
+- read package version
+
 ## 0.17.1
 
 ### Patch Changes
