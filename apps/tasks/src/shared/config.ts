@@ -8,6 +8,7 @@ import {
 } from './file-system'
 import { Config, contentConfig } from './config-template'
 import { base64Encode } from './encoder'
+import { logInfo } from './logs'
 
 export const hasConfig = () => {
   return pathExists(`${homeDir()}/.mytools/config`)
@@ -52,6 +53,8 @@ export const isNewVersion = async (newVersion: string) => {
     .map((v) => parseInt(v))
   const { version } = await readConfig()
   if (!version) return true
+  const { version: versionPackage } = await readPackage()
+  logInfo(`Package current version: ${versionPackage}`)
   const [currentMajor, currentMinor, currentPatch] = version
     .split('.')
     .map((v) => parseInt(v))
@@ -66,6 +69,11 @@ export const isNewVersion = async (newVersion: string) => {
 export const updateVersion = async (newVersion: string) => {
   const config = await readConfig()
   await writeConfig({ ...config, version: newVersion })
+}
+
+const readPackage = async () => {
+  const fileContent = await readFile(`${__dirname}/../package.json`)
+  return JSON.parse(fileContent)
 }
 
 const readConfig = async () => {
