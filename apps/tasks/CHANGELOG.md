@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.8
+
+### Patch Changes
+
+- add a new option
+
 ## 0.17.7
 
 ### Patch Changes
