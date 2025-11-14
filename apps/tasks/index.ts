@@ -14,6 +14,7 @@ import {
 } from './src/shared/config'
 import runIA from './src/ia'
 import runCommit from './src/commit'
+import runCodeReview from './src/code-review'
 import { log, logError } from './src/shared/logs'
 
 const handleSigTerm = () => process.exit(0)
@@ -45,6 +46,12 @@ const options = [
     value: 'ia-generate-title-commit',
     isExperimental: true,
     fn: runCommit,
+  },
+  {
+    title: '[IA] Code review assistant',
+    value: 'ia-code-review-assistant',
+    isExperimental: true,
+    fn: runCodeReview,
   },
   { title: 'Exit', value: 'exit', isExperimental: false, fn: async () => {} },
 ] as const
