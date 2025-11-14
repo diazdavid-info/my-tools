@@ -20,7 +20,7 @@ const askUserByBaseBranch = async (branchList: string[]) => {
     type: 'select',
     name: 'baseBranch',
     message: 'What base branch?',
-    choices: branchList.map((branch) => ({ title: branch, value: branch })),
+    choices: branchList.map((branch) => ({ title: branch, value: branch }))
   })
 
   return baseBranch
@@ -35,7 +35,7 @@ const generateDiff = async (baseBranch: string): Promise<string | null> => {
     '--',
     ':!*.lock',
     ':!dist',
-    ':!coverage',
+    ':!coverage'
   ])
 }
 
@@ -43,7 +43,7 @@ const callAI = async (diff: string | null) => {
   const { url, token, model } = await aiConfig()
   const openai = createOpenAI({
     baseURL: url,
-    apiKey: token,
+    apiKey: token
   })
 
   const { text } = await generateText({
@@ -67,11 +67,11 @@ const callAI = async (diff: string | null) => {
     messages: [
       {
         role: 'user',
-        content: `Analiza este diff y dame un code review útil y conciso:\n\n${diff}`,
-      },
+        content: `Analiza este diff y dame un code review útil y conciso:\n\n${diff}`
+      }
     ],
     temperature: 0.3,
-    maxTokens: 1500,
+    maxTokens: 1500
   })
 
   await logMarkdown(text)
