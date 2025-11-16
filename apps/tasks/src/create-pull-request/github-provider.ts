@@ -406,6 +406,8 @@ export type PullRequest = PullRequestCreate & {
   number: number
   url: string
   state: string
+  headSha: string
+  baseSha: string
 }
 
 export const getProjectList = async (): Promise<Project[]> => {
@@ -471,8 +473,77 @@ export const createPullRequest = async (
     state: githubPullRequest.state,
     title: githubPullRequest.title,
     body: githubPullRequest.body,
+    headSha: githubPullRequest.head.sha,
     head: githubPullRequest.head.ref,
+    baseSha: githubPullRequest.base.sha,
     base: githubPullRequest.base.ref,
     repo: githubPullRequest.base.repo.name,
+  }
+}
+
+export const getPullRequest = async (
+  repositoryName: string
+): Promise<PullRequest[]> => {
+  const response = await fetch(
+    `https://api.github.com/repos/${process.env.GITHUB_ORGANIZATION}/${repositoryName}/pulls`,
+    {
+      method: 'get',
+      headers: {
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      },
+    }
+  )
+
+  if (!response.ok) {
+    const { message } = (await response.json()) as { message: string }
+    return Promise.reject(
+      `Fail to list PR in github -> ${response.statusText}: ${message}`
+    )
+  }
+
+  const pullRequestList = (await response.json()) as GithubPullRequest[]
+
+  return pullRequestList.map((githubPullRequest) => ({
+    id: githubPullRequest.id,
+    number: githubPullRequest.number,
+    url: githubPullRequest.html_url,
+    state: githubPullRequest.state,
+    title: githubPullRequest.title,
+    body: githubPullRequest.body,
+    headSha: githubPullRequest.head.sha,
+    head: githubPullRequest.head.ref,
+    baseSha: githubPullRequest.base.sha,
+    base: githubPullRequest.base.ref,
+    repo: githubPullRequest.base.repo.name,
+  }))
+}
+
+export const createIssueComment = async (
+  repositoryName: string,
+  issueNumber: number,
+  comment: string
+) => {
+  const response = await fetch(
+    `https://api.github.com/repos/${process.env.GITHUB_ORGANIZATION}/${repositoryName}/issues/${issueNumber}/comments`,
+    {
+      method: 'post',
+      body: JSON.stringify({
+        body: comment,
+      }),
+      headers: {
+        Accept: 'application/vnd.github.raw+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+      },
+    }
+  )
+
+  if (!response.ok) {
+    const { message } = (await response.json()) as { message: string }
+    return Promise.reject(
+      `Fail to create comment issue in github -> ${response.statusText}: ${message}`
+    )
   }
 }

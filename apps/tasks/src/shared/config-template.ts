@@ -20,6 +20,7 @@ export type GeneralTools = {
   }
   ai: {
     model: string
+    bigModel: string
     token: string
     url: string
   }
@@ -68,6 +69,7 @@ export const contentConfig: Config = {
     },
     ai: {
       model: 'gpt-4o-mini',
+      bigModel: 'gpt-4.1',
       token: '',
       url: 'https://api.openai.com/v1',
     },

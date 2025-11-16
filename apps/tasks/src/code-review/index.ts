@@ -1,4 +1,4 @@
-import { generateText, streamText } from 'ai'
+import { generateText } from 'ai'
 import { createOpenAI } from '@ai-sdk/openai'
 import { simpleGit } from 'simple-git'
 import { aiConfig } from '../shared/config'
@@ -20,7 +20,7 @@ const askUserByBaseBranch = async (branchList: string[]) => {
     type: 'select',
     name: 'baseBranch',
     message: 'What base branch?',
-    choices: branchList.map((branch) => ({ title: branch, value: branch }))
+    choices: branchList.map((branch) => ({ title: branch, value: branch })),
   })
 
   return baseBranch
@@ -35,19 +35,19 @@ const generateDiff = async (baseBranch: string): Promise<string | null> => {
     '--',
     ':!*.lock',
     ':!dist',
-    ':!coverage'
+    ':!coverage',
   ])
 }
 
 const callAI = async (diff: string | null) => {
-  const { url, token, model } = await aiConfig()
+  const { url, token, bigModel } = await aiConfig()
   const openai = createOpenAI({
     baseURL: url,
-    apiKey: token
+    apiKey: token,
   })
 
   const { text } = await generateText({
-    model: openai(model),
+    model: openai(bigModel),
     system: `Eres un revisor de código senior especializado en JavaScript, TypeScript y Node.js.
     Vas a analizar un diff completo de Git y devolver un *code review* claro, breve y útil.
     
@@ -67,11 +67,11 @@ const callAI = async (diff: string | null) => {
     messages: [
       {
         role: 'user',
-        content: `Analiza este diff y dame un code review útil y conciso:\n\n${diff}`
-      }
+        content: `Analiza este diff y dame un code review útil y conciso:\n\n${diff}`,
+      },
     ],
     temperature: 0.3,
-    maxTokens: 1500
+    maxTokens: 1500,
   })
 
   await logMarkdown(text)

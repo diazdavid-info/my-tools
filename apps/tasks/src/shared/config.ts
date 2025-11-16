@@ -1,11 +1,4 @@
-import {
-  createDir,
-  homeDir,
-  pathExists,
-  processDir,
-  readFile,
-  writeFile,
-} from './file-system'
+import { createDir, homeDir, pathExists, processDir, readFile, writeFile } from './file-system'
 import { Config, contentConfig } from './config-template'
 import { base64Encode } from './encoder'
 
@@ -16,8 +9,7 @@ export const hasConfig = () => {
 export const init = async () => {
   if (pathExists(`${homeDir()}/.mytools/config`)) return
 
-  if (!pathExists(`${homeDir()}/.mytools`))
-    await createDir(`${homeDir()}/.mytools`)
+  if (!pathExists(`${homeDir()}/.mytools`)) await createDir(`${homeDir()}/.mytools`)
 
   await writeConfig(contentConfig)
 }
@@ -25,13 +17,15 @@ export const init = async () => {
 export const ensureFormatConfigFile = async () => {
   const config = await readConfig()
 
-  const { tools: defaultTools, ...restDefaultConfig } = contentConfig
   const { tools, ...restConfig } = config
+  const { ai } = tools
+  const { tools: defaultTools, ...restDefaultConfig } = contentConfig
+  const { ai: defaultAi } = defaultTools
 
   await writeConfig({
     ...restDefaultConfig,
     ...restConfig,
-    tools: { ...defaultTools, ...tools },
+    tools: { ...defaultTools, ...tools, ai: { ...defaultAi, ...ai } }
   })
 }
 
@@ -61,20 +55,12 @@ export const isExperimentalMode = async () => {
 
 export const isNewVersion = async () => {
   const { version: newVersion } = await readPackage()
-  const [newMajor, newMinor, newPatch] = newVersion
-    .split('.')
-    .map((v: string) => parseInt(v))
+  const [newMajor, newMinor, newPatch] = newVersion.split('.').map((v: string) => parseInt(v))
   const { version } = await readConfig()
   if (!version) return true
-  const [currentMajor, currentMinor, currentPatch] = version
-    .split('.')
-    .map((v) => parseInt(v))
+  const [currentMajor, currentMinor, currentPatch] = version.split('.').map((v) => parseInt(v))
 
-  return (
-    newMajor > currentMajor ||
-    newMinor > currentMinor ||
-    newPatch > currentPatch
-  )
+  return newMajor > currentMajor || newMinor > currentMinor || newPatch > currentPatch
 }
 
 export const updateVersion = async () => {

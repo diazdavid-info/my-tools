@@ -15,6 +15,7 @@ import {
 import runIA from './src/ia'
 import runCommit from './src/commit'
 import runCodeReview from './src/code-review'
+import runCodeReviewPullRequest from './src/code-review-pull-request'
 import { log, logError } from './src/shared/logs'
 
 const handleSigTerm = () => process.exit(0)
@@ -53,6 +54,12 @@ const options = [
     isExperimental: true,
     fn: runCodeReview,
   },
+  {
+    title: '[IA] Pull Request code review assistant',
+    value: 'ia-pull-request-code-review-assistant',
+    isExperimental: true,
+    fn: runCodeReviewPullRequest,
+  },
   { title: 'Exit', value: 'exit', isExperimental: false, fn: async () => {} },
 ] as const
 
@@ -60,7 +67,7 @@ const install = async () => {
   if (hasConfig() && !(await isNewVersion())) return
   await configInit()
   await ensureFormatConfigFile()
-  await removeAllProjects()
+  await removeAllProjects() //0.17.8
   log(`new version detected`)
   await updateVersion()
 }
