@@ -11,6 +11,7 @@ import {
   Project,
   PullRequest,
 } from '../create-pull-request/github-provider'
+import { codeReview } from '../shared/system-prompts'
 
 const ensureTokenGithub = async () => {
   if (!process.env.GITHUB_TOKEN || !process.env.GITHUB_ORGANIZATION) {
@@ -76,21 +77,7 @@ const callAI = async (diff: string) => {
 
   const { text } = await generateText({
     model: openai(bigModel),
-    system: `Eres un revisor de código senior especializado en JavaScript, TypeScript y Node.js.
-    Vas a analizar un diff completo de Git y devolver un *code review* claro, breve y útil.
-    
-    Reglas:
-    - Revisa posibles errores de TypeScript, malos tipos o código dudoso.
-    - Detecta problemas reales: lógica peligrosa, malas prácticas, anti-patrones, duplicación innecesaria, uso incorrecto de promesas o async/await, etc.
-    - Sugiere refactor solo cuando sea **obvio y claramente beneficioso**.
-    - No inventes requisitos ni hagas suposiciones no realistas.
-    - No incluyas el diff completo ni reescribas código entero.
-    - Devuelve la respuesta organizada en secciones:
-        1. Riesgos o errores potenciales
-        2. Problemas menores o mejoras rápidas
-        3. Refactor obvio (si aplica)
-        4. Comentarios generales
-    - La salida siempre tiene que ser un formato markdown bien estructurado`,
+    system: codeReview,
     messages: [
       {
         role: 'user',
