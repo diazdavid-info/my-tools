@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.10
+
+### Patch Changes
+
+- update prompts
+
 ## 0.17.9
 
 ### Patch Changes
