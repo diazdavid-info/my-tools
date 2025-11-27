@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.11
+
+### Patch Changes
+
+- adjust temperature parameter in code-review modules for consistent responses
+
 ## 0.17.10
 
 ### Patch Changes
