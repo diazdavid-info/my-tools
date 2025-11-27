@@ -56,8 +56,7 @@ const callAI = async (diff: string | null) => {
         content: `Analiza este diff y dame un code review útil y conciso:\n\n${diff}`,
       },
     ],
-    temperature: 0.3,
-    maxTokens: 1500,
+    temperature: 0.1,
   })
 
   await logMarkdown(text)
