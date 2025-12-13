@@ -42,7 +42,7 @@ const callAI = async (diff: (string | null)[]) => {
       },
     ],
     temperature: 0.8,
-    maxTokens: 4096,
+    maxOutputTokens: 4096,
   })
 
   return text
