@@ -46,6 +46,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^2.0.80",
     "ai": "^5.0.108",
+    "fast-glob": "^3.3.3",
     "marked": "^15.0.12",
     "marked-terminal": "^7.3.0",
     "zod": "^4.1.13"
