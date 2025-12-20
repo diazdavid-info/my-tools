@@ -13,6 +13,7 @@ import {
   writeFile,
 } from '../shared/file-system'
 import prompts from 'prompts'
+import ora from 'ora'
 
 const askUserByFiles = async () => {
   const cwd = process.cwd()
@@ -20,7 +21,15 @@ const askUserByFiles = async () => {
   const files = await fg('**/*.{ts,js,tsx,jsx,json}', {
     cwd,
     onlyFiles: true,
-    ignore: ['node_modules/**', '.git/**'],
+    dot: false,
+    ignore: [
+      'node_modules/**',
+      '.git/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
+      'tmp/**',
+    ],
     absolute: true,
   })
 
@@ -29,24 +38,38 @@ const askUserByFiles = async () => {
     value: absPath,
   }))
 
-  const { selectedFiles } = await prompts({
-    type: 'autocompleteMultiselect',
-    name: 'selectedFiles',
-    message: 'Selecciona los ficheros',
-    choices,
-    limit: 10,
-  })
+  const { selectedFiles } = await prompts(
+    {
+      type: 'autocompleteMultiselect',
+      name: 'selectedFiles',
+      message: 'Select files to review',
+      choices,
+      limit: 10,
+    },
+    {
+      onCancel: () => {
+        throw new Error('User cancelled')
+      },
+    }
+  )
 
   return selectedFiles
 }
 
 const askUserByQuestion = async () => {
-  const { question } = await prompts({
-    type: 'text',
-    name: 'question',
-    initial: 'Qué te parece este código?',
-    message: 'Qué quieres preguntar?',
-  })
+  const { question } = await prompts(
+    {
+      type: 'text',
+      name: 'question',
+      initial: 'Qué te parece este código?',
+      message: 'What would you like to ask?',
+    },
+    {
+      onCancel: () => {
+        throw new Error('User cancelled')
+      },
+    }
+  )
 
   return question
 }
@@ -94,6 +117,8 @@ const getContentFiles = async (files: string[]) => {
 }
 
 const callAI = async (question: string, content: string) => {
+  const spinner = ora('Analyzing code...').start()
+
   const { url, token, bigModel } = await aiConfig()
   const openai = createOpenAI({
     baseURL: url,
@@ -111,6 +136,8 @@ const callAI = async (question: string, content: string) => {
     ],
     temperature: 0.1,
   })
+
+  spinner.succeed('Analysis completed')
 
   return text
 }

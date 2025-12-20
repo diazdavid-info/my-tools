@@ -48,9 +48,9 @@ Instrucciones estrictas:
   - No hagas recomendaciones genéricas si no aplican al fichero.
 
 Formato de respuesta (en markdown):
-  1. **Respuesta directa a la pregunta**
-  2. **Problemas detectados en el fichero (si los hay)**
-  3. **Cambios recomendados (con snippets)**
+  ## Respuesta directa a la pregunta
+  ## Problemas detectados en el fichero (si los hay)
+  ## Refactor obvio (con snippets)
 
 Reglas para los bloques de código:
   - Usa \`\`\`ts o \`\`\`js según corresponda.
