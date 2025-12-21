@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.17.12
+
+### Patch Changes
+
+- Add new IA tool
+
 ## 0.17.11
 
 ### Patch Changes
