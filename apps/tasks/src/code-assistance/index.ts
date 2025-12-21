@@ -4,7 +4,7 @@ import fg from 'fast-glob'
 import { generateText } from 'ai'
 import { createOpenAI } from '@ai-sdk/openai'
 import { aiConfig } from '../shared/config'
-import { logMarkdown } from '../shared/logs'
+import { logInfo, logMarkdown } from '../shared/logs'
 import { fileReview } from '../shared/system-prompts'
 import {
   createDir,
@@ -38,22 +38,26 @@ const askUserByFiles = async () => {
     value: absPath,
   }))
 
-  const { selectedFiles } = await prompts(
-    {
-      type: 'autocompleteMultiselect',
-      name: 'selectedFiles',
-      message: 'Select files to review',
-      choices,
-      limit: 10,
-    },
-    {
-      onCancel: () => {
-        throw new Error('User cancelled')
+  while (true) {
+    const { selectedFiles } = await prompts(
+      {
+        type: 'autocompleteMultiselect',
+        name: 'selectedFiles',
+        message: 'Select files to review',
+        choices,
+        limit: 10,
       },
-    }
-  )
+      {
+        onCancel: () => {
+          throw new Error('User cancelled')
+        },
+      }
+    )
 
-  return selectedFiles
+    if (selectedFiles?.length > 0) return selectedFiles
+
+    logInfo('You must select at least one file')
+  }
 }
 
 const askUserByQuestion = async () => {
