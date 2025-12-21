@@ -61,6 +61,8 @@ const askUserByFiles = async () => {
 }
 
 const askUserByQuestion = async () => {
+  logInfo('Type /exit to quit')
+
   const { question } = await prompts(
     {
       type: 'text',
@@ -148,12 +150,16 @@ const callAI = async (question: string, content: string) => {
 
 const run = async () => {
   const files = await askUserByFiles()
-  const question = await askUserByQuestion()
-  const content = await getContentFiles(files)
-  if (!content) return
-  const reviewComment = await callAI(question, content)
-  await saveFile(reviewComment)
-  await logMarkdown(reviewComment)
+
+  while (true) {
+    const content = await getContentFiles(files)
+    if (!content) return
+    const question = await askUserByQuestion()
+    if (question.trim() === '/exit') return
+    const reviewComment = await callAI(question, content)
+    await saveFile(reviewComment)
+    await logMarkdown(reviewComment)
+  }
 }
 
 export default run
