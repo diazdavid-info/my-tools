@@ -90,7 +90,7 @@ export const CardList = () => {
           </div>
         </div>
         <div className="flex flex-col items-start gap-2 text-sm font-light">
-          <p className="w-full truncate overflow-hidden rounded-xs bg-green-300 px-1 py-0.5 text-nowrap">
+          <p className="w-full truncate overflow-hidden rounded bg-emerald-100 px-1 py-0.5 text-nowrap text-emerald-700">
             {task.epicSummary}
           </p>
         </div>
