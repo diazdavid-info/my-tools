@@ -9,31 +9,43 @@ const session = await getSession(req);
 
 <header class="w-full bg-black/80">
   <nav
-    class="m-auto flex w-full items-center justify-end gap-2 px-5 py-2 lg:w-3/4"
+    class="m-auto flex w-full items-center justify-between gap-2 px-5 py-2 lg:w-3/4"
   >
-    {
-      !session && (
-        <SignIn
-          class="h-[40px] cursor-pointer rounded-xs bg-blue-400 px-4 py-1"
-          provider="atlassian"
-        >
-          Log In
-        </SignIn>
-      )
-    }
-    {
-      session && (
-        <div class="flex items-center gap-2">
-          <SignOut class="h-[40px] cursor-pointer rounded-xs bg-red-600 px-4 py-1">
-            Log out
-          </SignOut>
-          <img
-            class="w-10 rounded-full"
-            src={session.user?.image}
-            alt="user avatar"
-          />
-        </div>
-      )
-    }
+    <div class="flex gap-2">
+      <p
+        class="flex size-10 items-center justify-center rounded bg-blue-800 text-lg font-bold text-white"
+      >
+        T
+      </p>
+      <p class="flex items-center justify-center text-lg font-bold text-white">
+        Task Generator
+      </p>
+    </div>
+    <div class="">
+      {
+        !session && (
+          <SignIn
+            class="h-10 cursor-pointer rounded-xs bg-blue-800 px-4 py-1 text-white transition-colors hover:bg-blue-950"
+            provider="atlassian"
+          >
+            Log In
+          </SignIn>
+        )
+      }
+      {
+        session && (
+          <div class="flex items-center gap-2">
+            <SignOut class="h-10 cursor-pointer rounded-xs bg-red-800 px-4 py-1 text-white transition-colors hover:bg-red-950">
+              Log out
+            </SignOut>
+            <img
+              class="w-10 rounded-full"
+              src={session.user?.image}
+              alt="user avatar"
+            />
+          </div>
+        )
+      }
+    </div>
   </nav>
 </header>

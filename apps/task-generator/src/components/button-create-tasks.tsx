@@ -36,7 +36,7 @@ export const ButtonCreateTasks = ({
   return (
     <Button
       onClick={handlerCreateTask}
-      className={`${className} bg-blue-500 hover:bg-blue-800 hover:shadow`}
+      className={`${className} bg-blue-800 transition-colors hover:bg-blue-950 hover:shadow`}
     >
       Create Tasks
     </Button>
