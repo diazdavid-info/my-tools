@@ -16,13 +16,17 @@ export const GeneralOptions = () => {
   }, [])
 
   return (
-    <div className="flex flex-col gap-2 md:flex-row">
-      <TaskInput className="flex-1 cursor-pointer rounded-xs" />
-      <ProjectSelect className="flex-1 cursor-pointer rounded-xs" />
-      <TaskTypeSelect className="flex-1 cursor-pointer rounded-xs" />
-      <EpicInput className="flex-1 cursor-pointer rounded-xs" />
-      <DevSelect className="flex-1 cursor-pointer rounded-xs" />
-      <ButtonCreateTasks className="h-auto flex-1 cursor-pointer rounded-xs" />
+    <div className="flex flex-col justify-between gap-2 md:flex-row">
+      <div className="flex flex-col gap-2 md:flex-row md:flex-wrap">
+        <TaskInput className="cursor-pointer rounded-xs md:w-44" />
+        <ProjectSelect className="cursor-pointer rounded-xs md:w-44" />
+        <TaskTypeSelect className="cursor-pointer rounded-xs md:w-44" />
+        <EpicInput className="cursor-pointer rounded-xs md:w-44" />
+        <DevSelect className="cursor-pointer rounded-xs md:w-44" />
+      </div>
+      <div className="flex justify-end">
+        <ButtonCreateTasks className="h-[40px] w-44 cursor-pointer rounded-xs" />
+      </div>
     </div>
   )
 }
