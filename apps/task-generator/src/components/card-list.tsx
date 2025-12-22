@@ -1,37 +1,25 @@
-import { type ChangeEvent, type FC } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx'
-import { useTasksStore } from '@/store/tasks-store.ts'
-import { CardInputOption } from '@/components/card-input-option.tsx'
-import { CardSelectOption } from '@/components/card-select-option.tsx'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx'
+import {useTasksStore} from "@/store/tasks-store.ts";
+import {CardSelectOption} from "@/components/card-select-option.tsx";
+import {CardInputOption} from "@/components/card-input-option.tsx";
+import type {ChangeEvent} from "react";
+import {ExternalLink, Power, PowerOff} from "lucide-react";
 import type {TaskStatus} from "@/types/task";
 
-type CardListProp = object
-
-export const CardList: FC<CardListProp> = () => {
-  const {
-    tasks,
-    devItemList,
-    projectItemList,
-    typeItemList,
-    setPointsTask,
-    setDevTask,
-    setProjectTask,
-    setTypeTask,
-    setEpicTask,
-    setDisabledTask
-  } = useTasksStore((state) => state)
+export const CardList = () => {
+  const tasks = useTasksStore((state) => state.tasks)
+  const projectItemList = useTasksStore((state) => state.projectItemList)
+  const typeItemList = useTasksStore((state) => state.typeItemList)
+  const devItemList = useTasksStore((state) => state.devItemList)
+  const setProjectTask = useTasksStore((state) => state.setProjectTask)
+  const setPointsTask = useTasksStore((state) => state.setPointsTask)
+  const setTypeTask = useTasksStore((state) => state.setTypeTask)
+  const setDevTask = useTasksStore((state) => state.setDevTask)
+  const setDisabledTask = useTasksStore((state) => state.setDisabledTask)
 
   const handlePointsChange = (id: number) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value === '' ? '0' : event.target.value
       setPointsTask(id, parseInt(value))
-    }
-  }
-
-  const handleDevChange = (id: number) => {
-    return (event: string) => {
-      setDevTask(id, event)
     }
   }
 
@@ -47,44 +35,56 @@ export const CardList: FC<CardListProp> = () => {
     }
   }
 
-  const handleEpicChange = (id: number) => {
-    return (event: ChangeEvent<HTMLInputElement>) => {
-      setEpicTask(id, event.target.value)
+  const handleDevChange = (id: number) => {
+    return (event: string) => {
+      setDevTask(id, event)
     }
   }
 
-  const handleSkipChange = (id: number) => {
-    return (event: string) => {
-      setDisabledTask(id, event === 'skip')
+  const handleSkipChange = (id: number, disabled: boolean) => {
+    return () => {
+      setDisabledTask(id, !disabled)
     }
   }
 
   const colorStatus = (isDisabled: boolean, status: TaskStatus) => {
-    if(isDisabled) return 'bg-gray-500'
-    if(status === 'IN_PROGRESS') return 'bg-gray-300 opacity-20'
+    if(isDisabled) return 'bg-gray-500 opacity-50'
+    if(status === 'IN_PROGRESS') return 'bg-white opacity-20'
     if(status === 'CREATED') return 'bg-blue-200'
 
     return ''
   }
 
-  return tasks.map(({ id, title, points, dev, epic, project, type, disabled, status }) => (
-    <Card key={id} className={`${colorStatus(disabled, status)}`}>
-      <CardHeader>
-        <ToggleGroup onValueChange={handleSkipChange(id)} value={disabled ? 'skip' : ''} type="single">
-          <ToggleGroupItem value="skip">Omitir</ToggleGroupItem>
-          <ToggleGroupItem value="only">Sólo</ToggleGroupItem>
-        </ToggleGroup>
-        <CardTitle className="text-base">{title}</CardTitle>
-        <div className="text-sm text-muted-foreground">
-          <CardInputOption value={points.toString()} handleValueChange={handlePointsChange(id)} />
-          <CardSelectOption value={project} items={projectItemList} handleValueChange={handleProjectChange(id)} />
-          <CardSelectOption value={type} items={typeItemList} handleValueChange={handleTypeChange(id)} />
-          <CardInputOption value={epic ?? ''} handleValueChange={handleEpicChange(id)} />
-          <CardSelectOption value={dev} items={devItemList} handleValueChange={handleDevChange(id)} />
+  return tasks.map((task) => (
+    <article key={task.id} className={`${colorStatus(task.disabled, task.status)} border rounded shadow-sm py-4 px-3 flex flex-col gap-4 justify-between`}>
+      <header className="flex flex-col h-full justify-between gap-2">
+        <div className="flex justify-end gap-x-2">
+          <button className="flex items-center justify-center cursor-pointer" onClick={handleSkipChange(task.id, task.disabled)}>
+            {task.disabled ?
+              <PowerOff className="size-5 inline text-white" strokeWidth="1.5" /> :
+              <Power className="size-5 inline" strokeWidth="1.5" />
+            }
+          </button>
+          <a href={task.url} target="_blank" rel="noreferrer" className={`${task.url === '' ? 'opacity-50 cursor-not-allowed' : ''} flex items-center justify-center`}>
+            <ExternalLink className="size-5 inline" strokeWidth="1.5" />
+          </a>
         </div>
-      </CardHeader>
-      <CardContent className="text-sm">
-      </CardContent>
-    </Card>
+        <h2 className="font-semibold truncate" title={task.title}>{task.title}</h2>
+        <div className="flex flex-col items-start gap-2 text-sm font-light">
+          <p className="rounded-xs w-full bg-green-300 py-0.5 px-1 overflow-hidden text-nowrap truncate">{task.epicSummary}</p>
+        </div>
+      </header>
+      <footer className="flex flex-col gap-2 text-sm font-light">
+        <div className="flex flex-wrap gap-2 justify-between items-center text-sm font-light">
+          <CardSelectOption value={task.dev} items={devItemList} handleValueChange={handleDevChange(task.id)} />
+          <CardSelectOption value={task.type} items={typeItemList} handleValueChange={handleTypeChange(task.id)}/>
+          <CardInputOption value={task.points.toString()} handleValueChange={handlePointsChange(task.id)}/>
+        </div>
+        <div className="flex gap-2 justify-between items-center text-sm font-light">
+          <CardSelectOption value={task.project} items={projectItemList}
+                            handleValueChange={handleProjectChange(task.id)}/>
+        </div>
+      </footer>
+    </article>
   ))
 }

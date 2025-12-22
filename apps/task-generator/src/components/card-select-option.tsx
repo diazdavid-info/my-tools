@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
-import { Badge } from '@/components/ui/badge.tsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
+import {Pencil} from "lucide-react";
 
 type CardSelectOptionProps = {
   value?: string
@@ -13,8 +13,8 @@ export const CardSelectOption: FC<CardSelectOptionProps> = ({ value, items, hand
     const label = items.find(({key}) => key === value)?.value
     return (
     <Popover>
-      <PopoverTrigger>
-        <Badge variant="outline">{label}</Badge>
+      <PopoverTrigger className="flex items-center flex-row justify-end gap-2 cursor-pointer">
+        {label} {label && <Pencil className="size-3 inline" strokeWidth="1" />}
       </PopoverTrigger>
       <PopoverContent>
         <Select onValueChange={handleValueChange} value={value}>
