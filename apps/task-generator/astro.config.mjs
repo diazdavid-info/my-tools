@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import auth from "auth-astro";
 import vercel from "@astrojs/vercel";
@@ -11,6 +11,6 @@ export default defineConfig({
   adapter: vercel(),
 
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
 });

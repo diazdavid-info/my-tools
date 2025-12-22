@@ -1,4 +1,10 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select.tsx'
 import type { PropsWithChildren } from 'react'
 import { useTasksStore } from '@/store/tasks-store.ts'
 
@@ -6,7 +12,9 @@ type ProjectSelectProps = {
   className: string
 }
 
-export const ProjectSelect = ({ className }: PropsWithChildren<ProjectSelectProps>) => {
+export const ProjectSelect = ({
+  className
+}: PropsWithChildren<ProjectSelectProps>) => {
   const setProject = useTasksStore((state) => state.setProject)
   const projectItemList = useTasksStore((state) => state.projectItemList)
 

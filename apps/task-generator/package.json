@@ -9,7 +9,8 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
@@ -38,5 +39,10 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.7.3",
     "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "prettier-plugin-astro": "^0.13.0",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }

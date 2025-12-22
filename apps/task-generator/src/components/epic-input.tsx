@@ -1,5 +1,10 @@
 import { Input } from '@/components/ui/input.tsx'
-import {type ChangeEvent, type PropsWithChildren, useEffect, useState} from "react";
+import {
+  type ChangeEvent,
+  type PropsWithChildren,
+  useEffect,
+  useState
+} from 'react'
 import { useTasksStore } from '@/store/tasks-store.ts'
 
 type EpicInput = {
@@ -12,7 +17,7 @@ export const EpicInput = ({ className }: PropsWithChildren<EpicInput>) => {
   const [epicValue, setEpicValue] = useState('')
 
   useEffect(() => {
-    if(epic == null) return
+    if (epic == null) return
     setEpicValue(epic)
   }, [epic])
 
@@ -20,5 +25,13 @@ export const EpicInput = ({ className }: PropsWithChildren<EpicInput>) => {
     setEpic(event.target.value)
   }
 
-  return <Input onChange={handleChange} type="text" placeholder="ID Epic" className={className} value={epicValue} />
+  return (
+    <Input
+      onChange={handleChange}
+      type="text"
+      placeholder="ID Epic"
+      className={className}
+      value={epicValue}
+    />
+  )
 }

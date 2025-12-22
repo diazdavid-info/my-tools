@@ -1,23 +1,39 @@
 ---
 import SignIn from "auth-astro/src/components/SignIn.astro";
 import SignOut from "auth-astro/src/components/SignOut.astro";
-import {getSession} from '@/lib/session';
+import { getSession } from "@/lib/session";
 
-const req = Astro.request
-const session = await getSession(req)
+const req = Astro.request;
+const session = await getSession(req);
 ---
+
 <header class="w-full bg-black/80">
-    <nav class="w-full lg:w-3/4 m-auto px-5 py-2 flex gap-2 items-center justify-end">
-        {!session &&
-            <SignIn class="rounded-xs bg-blue-400 px-4 py-1 cursor-pointer" provider='atlassian'>
-                Log In
-            </SignIn>
-        }
-        {session &&
-          <div class="flex gap-2 items-center">
-              <SignOut class="rounded-xs bg-red-600 px-4 py-1 cursor-pointer">Log out</SignOut>
-              <img class="rounded-full w-8" src={session.user?.image}>
-          </div>
-        }
-    </nav>
+  <nav
+    class="m-auto flex w-full items-center justify-end gap-2 px-5 py-2 lg:w-3/4"
+  >
+    {
+      !session && (
+        <SignIn
+          class="cursor-pointer rounded-xs bg-blue-400 px-4 py-1"
+          provider="atlassian"
+        >
+          Log In
+        </SignIn>
+      )
+    }
+    {
+      session && (
+        <div class="flex items-center gap-2">
+          <SignOut class="cursor-pointer rounded-xs bg-red-600 px-4 py-1">
+            Log out
+          </SignOut>
+          <img
+            class="w-8 rounded-full"
+            src={session.user?.image}
+            alt="user avatar"
+          />
+        </div>
+      )
+    }
+  </nav>
 </header>

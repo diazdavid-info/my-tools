@@ -1,15 +1,24 @@
-import type {APIRoute} from "astro";
-import {getSession} from "auth-astro/server.ts";
+import type { APIRoute } from 'astro'
+import { getSession } from 'auth-astro/server.ts'
 
 export const POST: APIRoute = async ({ request }) => {
-  const session = await getSession(request);
-  if(!session) return Response.json({}, {status: 401})
+  const session = await getSession(request)
+  if (!session) return Response.json({}, { status: 401 })
 
   // @ts-ignore
-  const site = session?.site;
-  const {id, accessToken, url} = site
+  const site = session?.site
+  const { id, accessToken, url } = site
 
-  const { id: taskId, epic, type, dev, project, points, content, title } = await request.json()
+  const {
+    id: taskId,
+    epic,
+    type,
+    dev,
+    project,
+    points,
+    content,
+    title
+  } = await request.json()
 
   const body = {
     fields: {
@@ -27,20 +36,25 @@ export const POST: APIRoute = async ({ request }) => {
     }
   }
 
-  const data = await fetch(`https://api.atlassian.com/ex/jira/${id}/rest/api/3/issue`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  })
+  const data = await fetch(
+    `https://api.atlassian.com/ex/jira/${id}/rest/api/3/issue`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }
+  )
 
-  const {key} = await data.json()
+  const { key } = await data.json()
 
-  return new Response(JSON.stringify({
-    id: taskId,
-    key,
-    url: `${url}/browse/${key}`
-  }))
+  return new Response(
+    JSON.stringify({
+      id: taskId,
+      key,
+      url: `${url}/browse/${key}`
+    })
+  )
 }

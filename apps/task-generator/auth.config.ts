@@ -1,5 +1,5 @@
-import Atlassian from "@auth/core/providers/atlassian";
-import { defineConfig } from "auth-astro";
+import Atlassian from '@auth/core/providers/atlassian'
+import { defineConfig } from 'auth-astro'
 
 export default defineConfig({
   debug: false,
@@ -7,17 +7,26 @@ export default defineConfig({
     Atlassian({
       clientId: import.meta.env.ATLASSIAN_CLIENT_ID,
       clientSecret: import.meta.env.ATLASSIAN_CLIENT_SECRET,
-      authorization: { params: { scope: "read:me read:account read:jira-work write:jira-work read:field.option:jira", redirect_uri: import.meta.env.ATLASSIAN_REDIRECT_URI } },
+      authorization: {
+        params: {
+          scope:
+            'read:me read:account read:jira-work write:jira-work read:field.option:jira',
+          redirect_uri: import.meta.env.ATLASSIAN_REDIRECT_URI
+        }
+      },
       async profile(profile, account) {
         const accessToken = account.access_token
-        const data = await fetch('https://api.atlassian.com/oauth/token/accessible-resources', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'application/json'
+        const data = await fetch(
+          'https://api.atlassian.com/oauth/token/accessible-resources',
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              Accept: 'application/json'
+            }
           }
-        })
+        )
         const [dataSite] = await data.json()
-        const {id, url, name} = dataSite
+        const { id, url, name } = dataSite
 
         return {
           id: profile.account_id,
@@ -28,13 +37,13 @@ export default defineConfig({
           siteUrl: url,
           siteName: name,
           accessToken
-        };
+        }
       }
-    }),
+    })
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if(user) {
+      if (user) {
         // @ts-ignore
         token.siteId = user.siteId
         // @ts-ignore
@@ -47,7 +56,7 @@ export default defineConfig({
       return token
     },
     session({ session, token }) {
-      if(session.user) {
+      if (session.user) {
         // @ts-ignore
         session.site = {}
         // @ts-ignore
@@ -62,4 +71,4 @@ export default defineConfig({
       return session
     }
   }
-});
+})

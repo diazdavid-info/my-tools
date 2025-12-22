@@ -1,0 +1,23 @@
+{
+  "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/styles/global.css",
+  "tailwindFunctions": ["tw"],
+  "tailwindPreserveWhitespace": true,
+  "tailwindPreserveDuplicates": true,
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": {
+        "parser": "astro"
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "options": {
+        "semi": false,
+        "singleQuote": true,
+        "trailingComma": "none"
+      }
+    }
+  ]
+}

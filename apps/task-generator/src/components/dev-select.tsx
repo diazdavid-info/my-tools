@@ -1,5 +1,11 @@
-import {type PropsWithChildren, useEffect} from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
+import { type PropsWithChildren, useEffect } from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select.tsx'
 import { useTasksStore } from '@/store/tasks-store.ts'
 
 type DevSelectProps = {
@@ -13,10 +19,10 @@ export const DevSelect = ({ className }: PropsWithChildren<DevSelectProps>) => {
 
   useEffect(() => {
     fetch('/api/fields/customfield_10030')
-      .then(data => data.json())
+      .then((data) => data.json())
       .then(setDevList)
       .catch(console.error)
-  }, []);
+  }, [])
 
   const handleChange = (value: string) => {
     setDev(value)

@@ -9,7 +9,7 @@ type Fields = {
 
 type Parent = {
   key: string
-  fields: {summary: string}
+  fields: { summary: string }
 }
 
 type FieldsComment = {

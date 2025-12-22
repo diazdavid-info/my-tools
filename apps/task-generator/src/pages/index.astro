@@ -1,16 +1,18 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import {GeneralOptions} from "@/components/general-options.tsx";
-import {CardList} from "@/components/card-list.tsx";
+import Layout from "@/layouts/Layout.astro";
+import { GeneralOptions } from "@/components/general-options.tsx";
+import { CardList } from "@/components/card-list.tsx";
 ---
 
 <Layout title="Jira Task Generator">
-    <main class="w-full lg:w-3/4 m-auto p-5 flex flex-col gap-5">
-        <section class="flex flex-col gap-5">
-            <GeneralOptions client:idle/>
-        </section>
-        <section class="grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-2">
-            <CardList client:idle/>
-        </section>
-    </main>
+  <main class="m-auto flex w-full flex-col gap-5 p-5 lg:w-3/4">
+    <section class="flex flex-col gap-5">
+      <GeneralOptions client:idle />
+    </section>
+    <section
+      class="grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-2"
+    >
+      <CardList client:idle />
+    </section>
+  </main>
 </Layout>

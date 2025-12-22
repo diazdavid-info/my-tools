@@ -9,7 +9,9 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
   const parent = data.fields.parent.key
   const parentName = data.fields.parent.fields.summary
   const content = data.fields.comment.comments[0].body.content
-  const [firstElement] = content.filter((bodyContent) => ['bulletList', 'orderedList'].includes(bodyContent.type))
+  const [firstElement] = content.filter((bodyContent) =>
+    ['bulletList', 'orderedList'].includes(bodyContent.type)
+  )
   const { content: bulletListContent } = firstElement
 
   return bulletListContent.map((listItem, index) => {
@@ -20,7 +22,11 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
       points,
       epic: parent,
       epicSummary: parentName,
-      content: JSON.stringify([{ type: 'bulletList', content: [listItem] }], null, 2),
+      content: JSON.stringify(
+        [{ type: 'bulletList', content: [listItem] }],
+        null,
+        2
+      ),
       disabled: false,
       url: '',
       status: 'TO_DO'

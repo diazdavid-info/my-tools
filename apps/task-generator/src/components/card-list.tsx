@@ -1,9 +1,9 @@
-import {useTasksStore} from "@/store/tasks-store.ts";
-import {CardSelectOption} from "@/components/card-select-option.tsx";
-import {CardInputOption} from "@/components/card-input-option.tsx";
-import type {ChangeEvent} from "react";
-import {ExternalLink, Power, PowerOff} from "lucide-react";
-import type {TaskStatus} from "@/types/task";
+import { useTasksStore } from '@/store/tasks-store.ts'
+import { CardSelectOption } from '@/components/card-select-option.tsx'
+import { CardInputOption } from '@/components/card-input-option.tsx'
+import type { ChangeEvent } from 'react'
+import { ExternalLink, Power, PowerOff } from 'lucide-react'
+import type { TaskStatus } from '@/types/task'
 
 export const CardList = () => {
   const tasks = useTasksStore((state) => state.tasks)
@@ -48,41 +48,74 @@ export const CardList = () => {
   }
 
   const colorStatus = (isDisabled: boolean, status: TaskStatus) => {
-    if(isDisabled) return 'bg-gray-500 opacity-50'
-    if(status === 'IN_PROGRESS') return 'bg-white opacity-20'
-    if(status === 'CREATED') return 'bg-blue-200'
+    if (isDisabled) return 'bg-gray-500 opacity-50'
+    if (status === 'IN_PROGRESS') return 'bg-white opacity-20'
+    if (status === 'CREATED') return 'bg-blue-200'
 
     return ''
   }
 
   return tasks.map((task) => (
-    <article key={task.id} className={`${colorStatus(task.disabled, task.status)} border rounded shadow-sm py-4 px-3 flex flex-col gap-4 justify-between`}>
-      <header className="flex flex-col h-full justify-between gap-2">
+    <article
+      key={task.id}
+      className={` ${colorStatus(task.disabled, task.status)} flex flex-col justify-between gap-4 rounded border px-3 py-4 shadow-sm`}
+    >
+      <header className="flex h-full flex-col justify-between gap-2">
         <div className="flex justify-end gap-x-2">
-          <button className="flex items-center justify-center cursor-pointer" onClick={handleSkipChange(task.id, task.disabled)}>
-            {task.disabled ?
-              <PowerOff className="size-5 inline text-white" strokeWidth="1.5" /> :
-              <Power className="size-5 inline" strokeWidth="1.5" />
-            }
+          <button
+            className="flex cursor-pointer items-center justify-center"
+            onClick={handleSkipChange(task.id, task.disabled)}
+          >
+            {task.disabled ? (
+              <PowerOff
+                className="inline size-5 text-white"
+                strokeWidth="1.5"
+              />
+            ) : (
+              <Power className="inline size-5" strokeWidth="1.5" />
+            )}
           </button>
-          <a href={task.url} target="_blank" rel="noreferrer" className={`${task.url === '' ? 'opacity-50 cursor-not-allowed' : ''} flex items-center justify-center`}>
-            <ExternalLink className="size-5 inline" strokeWidth="1.5" />
+          <a
+            href={task.url}
+            target="_blank"
+            rel="noreferrer"
+            className={`${task.url === '' ? 'cursor-not-allowed opacity-50' : ''} flex items-center justify-center`}
+          >
+            <ExternalLink className="inline size-5" strokeWidth="1.5" />
           </a>
         </div>
-        <h2 className="font-semibold truncate" title={task.title}>{task.title}</h2>
+        <h2 className="truncate font-semibold" title={task.title}>
+          {task.title}
+        </h2>
         <div className="flex flex-col items-start gap-2 text-sm font-light">
-          <p className="rounded-xs w-full bg-green-300 py-0.5 px-1 overflow-hidden text-nowrap truncate">{task.epicSummary}</p>
+          <p className="w-full truncate overflow-hidden rounded-xs bg-green-300 px-1 py-0.5 text-nowrap">
+            {task.epicSummary}
+          </p>
         </div>
       </header>
       <footer className="flex flex-col gap-2 text-sm font-light">
-        <div className="flex flex-wrap gap-2 justify-between items-center text-sm font-light">
-          <CardSelectOption value={task.dev} items={devItemList} handleValueChange={handleDevChange(task.id)} />
-          <CardSelectOption value={task.type} items={typeItemList} handleValueChange={handleTypeChange(task.id)}/>
-          <CardInputOption value={task.points.toString()} handleValueChange={handlePointsChange(task.id)}/>
+        <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-light">
+          <CardSelectOption
+            value={task.dev}
+            items={devItemList}
+            handleValueChange={handleDevChange(task.id)}
+          />
+          <CardSelectOption
+            value={task.type}
+            items={typeItemList}
+            handleValueChange={handleTypeChange(task.id)}
+          />
+          <CardInputOption
+            value={task.points.toString()}
+            handleValueChange={handlePointsChange(task.id)}
+          />
         </div>
-        <div className="flex gap-2 justify-between items-center text-sm font-light">
-          <CardSelectOption value={task.project} items={projectItemList}
-                            handleValueChange={handleProjectChange(task.id)}/>
+        <div className="flex items-center justify-between gap-2 text-sm font-light">
+          <CardSelectOption
+            value={task.project}
+            items={projectItemList}
+            handleValueChange={handleProjectChange(task.id)}
+          />
         </div>
       </footer>
     </article>
