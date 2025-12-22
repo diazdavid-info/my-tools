@@ -58,35 +58,37 @@ export const CardList = () => {
   return tasks.map((task) => (
     <article
       key={task.id}
-      className={` ${colorStatus(task.disabled, task.status)} flex flex-col justify-between gap-4 rounded border px-3 py-4 shadow-sm`}
+      className={` ${colorStatus(task.disabled, task.status)} flex flex-col justify-between gap-4 rounded border border-gray-100 px-3 py-4 shadow-sm transition-shadow hover:shadow-md`}
     >
       <header className="flex h-full flex-col justify-between gap-2">
-        <div className="flex justify-end gap-x-2">
-          <button
-            className="flex cursor-pointer items-center justify-center"
-            onClick={handleSkipChange(task.id, task.disabled)}
-          >
-            {task.disabled ? (
-              <PowerOff
-                className="inline size-5 text-white"
-                strokeWidth="1.5"
-              />
-            ) : (
-              <Power className="inline size-5" strokeWidth="1.5" />
-            )}
-          </button>
-          <a
-            href={task.url}
-            target="_blank"
-            rel="noreferrer"
-            className={`${task.url === '' ? 'cursor-not-allowed opacity-50' : ''} flex items-center justify-center`}
-          >
-            <ExternalLink className="inline size-5" strokeWidth="1.5" />
-          </a>
+        <div className="flex items-start justify-between gap-x-6">
+          <h2 className="line-clamp-2 font-semibold" title={task.title}>
+            {task.title}
+          </h2>
+          <div className="flex justify-end">
+            <button
+              className="group flex cursor-pointer items-center justify-center rounded p-1 transition-colors hover:bg-gray-100"
+              onClick={handleSkipChange(task.id, task.disabled)}
+            >
+              {task.disabled ? (
+                <PowerOff
+                  className="inline size-5 text-white group-hover:text-black"
+                  strokeWidth="1.5"
+                />
+              ) : (
+                <Power className="inline size-5" strokeWidth="1.5" />
+              )}
+            </button>
+            <a
+              href={task.url}
+              target="_blank"
+              rel="noreferrer"
+              className={`${task.url === '' ? 'cursor-not-allowed opacity-50' : ''} flex items-center justify-center rounded p-1 transition-colors hover:bg-gray-100`}
+            >
+              <ExternalLink className="inline size-5" strokeWidth="1.5" />
+            </a>
+          </div>
         </div>
-        <h2 className="truncate font-semibold" title={task.title}>
-          {task.title}
-        </h2>
         <div className="flex flex-col items-start gap-2 text-sm font-light">
           <p className="w-full truncate overflow-hidden rounded-xs bg-green-300 px-1 py-0.5 text-nowrap">
             {task.epicSummary}
