@@ -131,7 +131,7 @@ const callAI = async (question: string, content: string) => {
     apiKey: token,
   })
 
-  const { text } = await generateText({
+  const { text, usage } = await generateText({
     model: openai(bigModel),
     system: fileReview,
     messages: [
@@ -143,7 +143,7 @@ const callAI = async (question: string, content: string) => {
     temperature: 0.1,
   })
 
-  spinner.succeed('Analysis completed')
+  spinner.succeed(`Analysis completed. Tokens ${usage?.totalTokens} used.`)
 
   return text
 }
