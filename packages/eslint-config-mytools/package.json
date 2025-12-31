@@ -5,7 +5,7 @@
   "main": "index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./index.js"
     }
   },
   "peerDependencies": {
