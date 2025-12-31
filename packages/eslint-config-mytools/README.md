@@ -1,4 +1,4 @@
-# Introducción
+# Introduction
 
 [![NPM license](https://img.shields.io/npm/l/eslint-config-mytools.svg)](https://www.npmjs.com/package/eslint-config-mytools)
 [![NPM version](https://img.shields.io/npm/v/eslint-config-mytools.svg)](https://www.npmjs.com/package/eslint-config-mytools)
@@ -8,29 +8,29 @@
 [![NPM downloads](https://img.shields.io/npm/dy/eslint-config-mytools.svg)](http://www.npmtrends.com/eslint-config-mytools)
 [![NPM downloads](https://img.shields.io/npm/dt/eslint-config-mytools.svg)](http://www.npmtrends.com/eslint-config-mytools)
 
-`eslint-config-mytools` te ayuda a configurar `eslint` y `prettier` en tu proyecto según las necesidades de tu equipo.
+`eslint-config-mytools` helps you configure `eslint` and `prettier` in your project according to your team's needs.
 
-## Instalación
+## Installation
 
 ```bash
 pnpm add -D eslint eslint-config-mytools
 ```
 
-Si también necesitas `prettier`, requiere que de lo instales
+If you also need `prettier`, you need to install it:
 
 ```bash
 pnpm add -D prettier prettier-plugin-astro
 ```
 
-Si tu proyecto es de `Astro` también necesitarás instalar la librería de `prettier` para `Astro`
+If your project is using `Astro`, you will also need to install the `prettier` library for `Astro`:
 
 ```bash
 pnpm add -D prettier
 ```
 
-## Configurar eslint para proyectos de Javascript
+## Configure eslint for Javascript projects
 
-Tienes que crear un fichero `eslint.config.mjs` dentro de tu proyecto e importar la config para js
+You have to create an `eslint.config.mjs` file in your project and import the js config:
 
 ```js
 import { defineConfig } from 'eslint/config'
@@ -41,9 +41,9 @@ export default defineConfig([
 ])
 ```
 
-## Configurar eslint para proyectos de Typescript
+## Configure eslint for Typescript projects
 
-Tienes que crear un fichero `eslint.config.mjs` dentro de tu proyecto e importar la config para js
+You have to create an `eslint.config.mjs` file in your project and import the js config:
 
 ```js
 import { defineConfig } from 'eslint/config'
@@ -55,9 +55,9 @@ export default defineConfig([
 ])
 ```
 
-## Configurar eslint para proyectos de React con Typescript o Javascript
+## Configure eslint for React projects with Typescript or Javascript
 
-Tienes que crear un fichero `eslint.config.mjs` dentro de tu proyecto e importar la config para js
+You have to create an `eslint.config.mjs` file in your project and import the js config:
 
 ```js
 import { defineConfig } from 'eslint/config'
@@ -70,9 +70,9 @@ export default defineConfig([
 ])
 ```
 
-## Configurar eslint para proyectos de Astro
+## Configure eslint for Astro projects
 
-Tienes que crear un fichero `eslint.config.mjs` dentro de tu proyecto e importar la config para js
+You have to create an `eslint.config.mjs` file in your project and import the js config:
 
 ```js
 import { defineConfig } from 'eslint/config'
@@ -85,7 +85,7 @@ export default defineConfig([
 ])
 ```
 
-Si tienes React, añadir también la config
+If you have React, add the config as well:
 
 ```js
 import { defineConfig } from 'eslint/config'
@@ -99,9 +99,9 @@ export default defineConfig([
 ])
 ```
 
-## Configurar Prettier para para cualquier proyecto
+## Configure Prettier for any project
 
-Tienes que crear un fichero `eslint.config.mjs` dentro de tu proyecto e importar la config para js
+You have to create an `eslint.config.mjs` file in your project and import the js config:
 
 ```js
 import { defineConfig } from 'eslint/config'
@@ -112,7 +112,7 @@ export default defineConfig([
 ])
 ```
 
-Si quieres que los ficheros `.astro`, `.json` y `.md` te funcionen con prettier, es requisito tener un fichero `prettier.config.mjs`
+If you want `.astro`, `.json`, and `.md` files to work with prettier, a `prettier.config.mjs` file is required:
 
 ```js
 /**
@@ -128,10 +128,12 @@ export default {
 }
 ```
 
-Y añadir en tu fichero `package.json` el siguiente script
+And add the following script to your `package.json` file:
 
-```
-"format": "prettier --write **/*{.astro,.json,.md}"
+```json
+{
+  "format": "prettier --write **/*{.astro,.json,.md}"
+}
 ```
 
-La configuración de prettier que se importa en eslint solo afectará a fichero: `**/*.{js,mjs,cjs,jsx,ts,jsx,tsx}`
+The prettier configuration imported into eslint will only affect files: `**/*.{js,mjs,cjs,jsx,ts,jsx,tsx}`
