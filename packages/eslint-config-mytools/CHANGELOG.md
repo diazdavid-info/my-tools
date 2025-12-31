@@ -1,5 +1,11 @@
 # eslint-config-mytools
 
+## 0.0.8
+
+### Patch Changes
+
+- new eslint version
+
 ## 0.0.7
 
 ### Patch Changes
