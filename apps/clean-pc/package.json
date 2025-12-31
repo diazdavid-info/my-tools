@@ -22,7 +22,7 @@
   "devDependencies": {
     "@types/node": "^20.14.10",
     "@vercel/ncc": "0.38.1",
-    "eslint-config-mytools": "^0.0.9",
+    "eslint-config-mytools": "^1.0.0",
     "mytools-tsconfig": "^0.1.0",
     "rimraf": "5.0.5",
     "typescript": "^5.5.3"
