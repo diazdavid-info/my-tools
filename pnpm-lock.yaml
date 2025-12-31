@@ -31,8 +31,8 @@ importers:
         specifier: ^22.10.3
         version: 22.10.3
       eslint-config-mytools:
-        specifier: ^0.0.7
-        version: 0.0.7(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4)
+        specifier: ^1.0.0
+        version: 1.0.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-astro@1.5.0(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint-plugin-react@7.37.5(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))
       mytools-tsconfig:
         specifier: workspace:^
         version: link:../../packages/mytools-tsconfig
@@ -58,8 +58,8 @@ importers:
         specifier: 0.38.1
         version: 0.38.1
       eslint-config-mytools:
-        specifier: ^0.0.7
-        version: 0.0.7(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4)
+        specifier: ^1.0.0
+        version: 1.0.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-astro@1.5.0(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint-plugin-react@7.37.5(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))
       mytools-tsconfig:
         specifier: ^0.1.0
         version: 0.1.0
@@ -331,6 +331,9 @@ importers:
       eslint-plugin-react:
         specifier: ^7.37.5
         version: 7.37.5(eslint@9.39.2(jiti@2.4.2))
+      globals:
+        specifier: ^16.5.0
+        version: 16.5.0
       typescript-eslint:
         specifier: ^8.51.0
         version: 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.3)
@@ -4554,14 +4557,16 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-config-mytools@0.0.7:
-    resolution: {integrity: sha512-NerM8UPMgMgWvZ7NEhQ3N0DMiQ9jyJlmQQt18Mz03BxI08WMg0tHjdCa4b7jFiJHeRzvMZRovL5knUCaxd9crA==}
+  eslint-config-mytools@1.0.0:
+    resolution: {integrity: sha512-JtEZ1BpI5sqrXPRQ2jnHNhT8g2CCV3QtI2Lh7/rtoo+Ygu7ZpAfW/SP3AxzrE0ns6WrP+R+UR1nY6VYfYhG9tA==}
     peerDependencies:
-      '@typescript-eslint/eslint-plugin': ^6.4.0
-      eslint: ^8.47.0
-      eslint-config-prettier: ^9.0.0
-      eslint-plugin-prettier: ^5.0.0
-      prettier: ^3.0.2
+      '@typescript-eslint/parser': ^8.51.0
+      eslint: ^9.39.2
+      eslint-config-prettier: ^10.1.8
+      eslint-plugin-astro: ^1.5.0
+      eslint-plugin-prettier: ^5.5.4
+      eslint-plugin-react: ^7.37.5
+      typescript-eslint: ^8.51.0
 
   eslint-config-prettier@10.1.8:
     resolution: {integrity: sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==}
@@ -13698,21 +13703,25 @@ snapshots:
       eslint: 9.39.2(jiti@2.4.2)
       semver: 7.7.3
 
-  eslint-config-mytools@0.0.7(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4):
+  eslint-config-mytools@1.0.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-astro@1.5.0(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint-plugin-react@7.37.5(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3)):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3)
+      '@typescript-eslint/parser': 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3)
       eslint: 9.39.2(jiti@2.4.2)
       eslint-config-prettier: 10.1.8(eslint@9.39.2(jiti@2.4.2))
+      eslint-plugin-astro: 1.5.0(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-prettier: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4)
-      prettier: 3.7.4
+      eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.4.2))
+      typescript-eslint: 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3)
 
-  eslint-config-mytools@0.0.7(@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4):
+  eslint-config-mytools@1.0.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-astro@1.5.0(eslint@9.39.2(jiti@2.4.2)))(eslint-plugin-prettier@5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4))(eslint-plugin-react@7.37.5(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2)):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2)
+      '@typescript-eslint/parser': 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2)
       eslint: 9.39.2(jiti@2.4.2)
       eslint-config-prettier: 10.1.8(eslint@9.39.2(jiti@2.4.2))
+      eslint-plugin-astro: 1.5.0(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-prettier: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))(prettier@3.7.4)
-      prettier: 3.7.4
+      eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.4.2))
+      typescript-eslint: 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2)
 
   eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.4.2)):
     dependencies:
@@ -17858,6 +17867,28 @@ snapshots:
   typescript-auto-import-cache@0.3.6:
     dependencies:
       semver: 7.7.3
+
+  typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3)
+      '@typescript-eslint/parser': 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3)
+      '@typescript-eslint/typescript-estree': 8.51.0(typescript@5.6.3)
+      '@typescript-eslint/utils': 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.6.3)
+      eslint: 9.39.2(jiti@2.4.2)
+      typescript: 5.6.3
+    transitivePeerDependencies:
+      - supports-color
+
+  typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2))(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2)
+      '@typescript-eslint/parser': 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2)
+      '@typescript-eslint/typescript-estree': 8.51.0(typescript@5.7.2)
+      '@typescript-eslint/utils': 8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.2)
+      eslint: 9.39.2(jiti@2.4.2)
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - supports-color
 
   typescript-eslint@8.51.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.7.3):
     dependencies:
