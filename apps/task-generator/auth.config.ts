@@ -25,7 +25,14 @@ export default defineConfig({
             }
           }
         )
-        const [dataSite] = await data.json()
+        const sites = (await data.json()) as {
+          id: string
+          url: string
+          name: string
+        }[]
+        const dataSite = sites.find((site) => site.name === 'zityhub')
+        if (!dataSite) throw new Error('Site not found')
+
         const { id, url, name } = dataSite
 
         return {
