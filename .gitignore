@@ -12,5 +12,6 @@ node_modules
 
 enviroments
 **/.env
+*.db
 
 .claude

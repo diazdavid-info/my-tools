@@ -1,0 +1,35 @@
+{
+  "name": "search-home",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "search-home": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "clean": "rm -rf node_modules && rm -rf dist",
+    "dev": "tsx --env-file=.env --watch src/index.ts",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "playwright": "^1.58.2",
+    "sql.js": "^1.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "eslint-config-mytools": "workspace:*",
+    "mytools-tsconfig": "workspace:*",
+    "rimraf": "^6.1.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.16.0"
+  }
+}
