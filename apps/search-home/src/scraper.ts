@@ -46,6 +46,10 @@ export async function scrape(config: ScraperConfig): Promise<Listing[]> {
       }
 
       const html = await page.content()
+      console.log(`[${config.name}] HTML length: ${html.length}, title: ${await page.title()}`)
+      if (html.includes('captcha') || html.includes('geo.captcha-delivery')) {
+        console.error(`[${config.name}] Blocked by captcha/anti-bot`)
+      }
       const listings = config.parse(html, url)
       console.log(`[${config.name}] Found ${listings.length} listings from ${url}`)
       allListings.push(...listings)
