@@ -21,19 +21,13 @@ RUN npx tsc
 # --- Production stage ---
 FROM node:24-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
-    libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 \
-    libpango-1.0-0 libcairo2 libasound2 libxshmfence1 \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 COPY apps/search-home/package.json ./
 RUN sed -i '/"mytools-tsconfig"/d' package.json \
     && sed -i '/"eslint-config-mytools"/d' package.json \
     && npm install --omit=dev \
-    && npx playwright install chromium
+    && npx playwright install --with-deps chromium
 
 COPY --from=build /app/dist/ ./dist/
 
