@@ -11,6 +11,7 @@ export interface Listing {
   description: string
   imageUrl: string | null
   createdAt: string
+  previousPrice?: number | null
 }
 
 export interface ScraperConfig {

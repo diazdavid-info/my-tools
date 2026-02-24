@@ -19,8 +19,8 @@ async function cycle(): Promise<void> {
     try {
       const listings = await scrape(config)
       if (listings.length > 0) {
-        const inserted = insertListings(listings)
-        log(`[${config.name}] Inserted ${inserted} new listings (${listings.length} scraped)`)
+        const { inserted, updated } = insertListings(listings)
+        log(`[${config.name}] ${inserted} new, ${updated} price updates (${listings.length} scraped)`)
       } else {
         log(`[${config.name}] No listings found`)
       }

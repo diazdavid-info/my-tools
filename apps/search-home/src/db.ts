@@ -48,26 +48,58 @@ export async function initDb(dbPath?: string): Promise<Database> {
     )
   `)
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS price_history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      listingId INTEGER NOT NULL,
+      price REAL,
+      recordedAt TEXT NOT NULL,
+      FOREIGN KEY (listingId) REFERENCES listings(id)
+    )
+  `)
+
   persist(resolvedDbPath)
   return db
 }
 
-export function insertListings(listings: Listing[]): number {
-  let inserted = 0
+function findExisting(source: string, externalId: string): { id: number; price: number | null } | null {
+  const stmt = db.prepare('SELECT id, price FROM listings WHERE source = ? AND externalId = ?')
+  stmt.bind([source, externalId])
+  let result: { id: number; price: number | null } | null = null
+  if (stmt.step()) {
+    const row = stmt.getAsObject() as Record<string, unknown>
+    result = { id: row.id as number, price: row.price as number | null }
+  }
+  stmt.free()
+  return result
+}
 
-  const stmt = db.prepare(`
-    INSERT OR IGNORE INTO listings (source, externalId, url, title, price, size, rooms, location, description, imageUrl, createdAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `)
+export function insertListings(listings: Listing[]): { inserted: number; updated: number } {
+  let inserted = 0
+  let updated = 0
 
   for (const l of listings) {
-    stmt.run([l.source, l.externalId, l.url, l.title, l.price, l.size, l.rooms, l.location, l.description, l.imageUrl, l.createdAt])
-    if (db.getRowsModified() > 0) inserted++
+    const existing = findExisting(l.source, l.externalId)
+
+    if (existing) {
+      // Price changed — record history and update
+      if (l.price != null && existing.price != null && l.price !== existing.price) {
+        db.run('INSERT INTO price_history (listingId, price, recordedAt) VALUES (?, ?, ?)', [existing.id, existing.price, new Date().toISOString()])
+        db.run('UPDATE listings SET price = ?, notified = 0 WHERE id = ?', [l.price, existing.id])
+        updated++
+      }
+    } else {
+      // New listing — insert
+      db.run(
+        'INSERT OR IGNORE INTO listings (source, externalId, url, title, price, size, rooms, location, description, imageUrl, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [l.source, l.externalId, l.url, l.title, l.price, l.size, l.rooms, l.location, l.description, l.imageUrl, l.createdAt],
+      )
+      if (db.getRowsModified() > 0) inserted++
+    }
   }
 
-  stmt.free()
   persist(resolvedDbPath)
-  return inserted
+  return { inserted, updated }
 }
 
 export function getNewListings(): Listing[] {
@@ -76,8 +108,20 @@ export function getNewListings(): Listing[] {
 
   while (stmt.step()) {
     const row = stmt.getAsObject() as Record<string, unknown>
+    const listingId = row.id as number
+
+    // Check if there's a previous price in history
+    let previousPrice: number | null = null
+    const histStmt = db.prepare('SELECT price FROM price_history WHERE listingId = ? ORDER BY recordedAt DESC LIMIT 1')
+    histStmt.bind([listingId])
+    if (histStmt.step()) {
+      const histRow = histStmt.getAsObject() as Record<string, unknown>
+      previousPrice = histRow.price as number | null
+    }
+    histStmt.free()
+
     listings.push({
-      id: row.id as number,
+      id: listingId,
       source: row.source as string,
       externalId: row.externalId as string,
       url: row.url as string,
@@ -89,6 +133,7 @@ export function getNewListings(): Listing[] {
       description: row.description as string,
       imageUrl: row.imageUrl as string | null,
       createdAt: row.createdAt as string,
+      previousPrice,
     })
   }
 

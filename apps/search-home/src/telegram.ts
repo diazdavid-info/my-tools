@@ -4,14 +4,28 @@ function escapeHtml(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
+function formatPrice(price: number): string {
+  return price.toLocaleString('es-ES')
+}
+
 function formatListing(listing: Listing): string {
   const lines: string[] = []
+
+  // Badge: new or price updated
+  if (listing.previousPrice != null) {
+    const arrow = listing.price != null && listing.price < listing.previousPrice ? '📉' : '📈'
+    lines.push(`${arrow} <b>Precio actualizado: ${formatPrice(listing.previousPrice)} € → ${formatPrice(listing.price!)} €</b>`)
+  } else {
+    lines.push('🆕 <b>Nuevo</b>')
+  }
+
+  lines.push('')
 
   // Details line: size | rooms | price
   const details: string[] = []
   if (listing.size != null) details.push(`${listing.size} m\u00b2`)
   if (listing.rooms != null) details.push(`${listing.rooms} hab.`)
-  if (listing.price != null) details.push(`${listing.price.toLocaleString('es-ES')} \u20ac/mes`)
+  if (listing.price != null) details.push(`${formatPrice(listing.price)} \u20ac/mes`)
   if (details.length > 0) lines.push(`<b>${details.join('  \u00b7  ')}</b>`)
 
   // Title
