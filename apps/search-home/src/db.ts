@@ -43,6 +43,7 @@ export async function initDb(dbPath?: string): Promise<Database> {
       description TEXT NOT NULL DEFAULT '',
       imageUrl TEXT,
       notified INTEGER NOT NULL DEFAULT 0,
+      available INTEGER NOT NULL DEFAULT 1,
       createdAt TEXT NOT NULL,
       UNIQUE(source, externalId)
     )
@@ -57,6 +58,13 @@ export async function initDb(dbPath?: string): Promise<Database> {
       FOREIGN KEY (listingId) REFERENCES listings(id)
     )
   `)
+
+  // Migration: add 'available' column for existing databases
+  const cols = db.exec("PRAGMA table_info(listings)")
+  const hasAvailable = cols.length > 0 && cols[0].values.some((row) => row[1] === 'available')
+  if (!hasAvailable) {
+    db.run('ALTER TABLE listings ADD COLUMN available INTEGER NOT NULL DEFAULT 1')
+  }
 
   persist(resolvedDbPath)
   return db
@@ -139,6 +147,46 @@ export function getNewListings(): Listing[] {
 
   stmt.free()
   return listings
+}
+
+export function markUnavailableListings(source: string, currentExternalIds: string[]): Listing[] {
+  if (currentExternalIds.length === 0) return []
+
+  const placeholders = currentExternalIds.map(() => '?').join(',')
+  const stmt = db.prepare(
+    `SELECT * FROM listings WHERE source = ? AND available = 1 AND externalId NOT IN (${placeholders})`,
+  )
+  stmt.bind([source, ...currentExternalIds])
+
+  const gone: Listing[] = []
+  while (stmt.step()) {
+    const row = stmt.getAsObject() as Record<string, unknown>
+    gone.push({
+      id: row.id as number,
+      source: row.source as string,
+      externalId: row.externalId as string,
+      url: row.url as string,
+      title: row.title as string,
+      price: row.price as number | null,
+      size: row.size as number | null,
+      rooms: row.rooms as number | null,
+      location: row.location as string,
+      description: row.description as string,
+      imageUrl: row.imageUrl as string | null,
+      createdAt: row.createdAt as string,
+      unavailable: true,
+    })
+  }
+  stmt.free()
+
+  if (gone.length > 0) {
+    const ids = gone.map((l) => l.id!)
+    const idPlaceholders = ids.map(() => '?').join(',')
+    db.run(`UPDATE listings SET available = 0 WHERE id IN (${idPlaceholders})`, ids)
+    persist(resolvedDbPath)
+  }
+
+  return gone
 }
 
 export function markAsNotified(ids: number[]): void {

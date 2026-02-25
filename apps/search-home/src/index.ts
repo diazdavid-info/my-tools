@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { initDb, insertListings, getNewListings, markAsNotified, closeDb } from './db.js'
+import { initDb, insertListings, getNewListings, markAsNotified, markUnavailableListings, closeDb } from './db.js'
 import { scrape, launchBrowser, closeBrowser } from './scraper.js'
 import { applyFilters } from './filters.js'
 import { sendListings } from './telegram.js'
@@ -15,12 +15,21 @@ function log(msg: string): void {
 async function cycle(): Promise<void> {
   log('Starting scrape cycle...')
 
+  let unavailableListings: import('./types.js').Listing[] = []
+
   for (const config of scrapers) {
     try {
       const listings = await scrape(config)
       if (listings.length > 0) {
         const { inserted, updated } = insertListings(listings)
         log(`[${config.name}] ${inserted} new, ${updated} price updates (${listings.length} scraped)`)
+
+        // Detect listings that disappeared from this source
+        const gone = markUnavailableListings(config.name, listings.map((l) => l.externalId))
+        if (gone.length > 0) {
+          log(`[${config.name}] ${gone.length} listings no longer available`)
+          unavailableListings = unavailableListings.concat(gone)
+        }
       } else {
         log(`[${config.name}] No listings found`)
       }
@@ -53,6 +62,12 @@ async function cycle(): Promise<void> {
     }
   } else {
     log('No new listings to notify')
+  }
+
+  // Notify unavailable listings
+  if (unavailableListings.length > 0 && process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
+    log(`Sending ${unavailableListings.length} unavailable listings via Telegram...`)
+    await sendListings(unavailableListings)
   }
 }
 
