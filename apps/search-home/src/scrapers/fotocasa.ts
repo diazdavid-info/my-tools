@@ -7,10 +7,16 @@ function parse(html: string, url: string): Listing[] {
   const now = new Date().toISOString()
   const seen = new Set<string>()
 
+  // Extract city slug from the source URL to filter out "nearby" listings from other cities
+  const citySlug = url.match(/\/viviendas\/([^/]+)\//)?.[1] ?? ''
+
   // Each listing title lives inside an h3 > a[link-box-link]
   $('h3 a[data-panot-component="link-box-link"][href*="/es/alquiler/vivienda/"]').each((_, el) => {
     const $link = $(el)
     const href = $link.attr('href') || ''
+
+    // Skip listings from other cities (e.g. "pisos cercanos" section)
+    if (citySlug && !href.includes(`/${citySlug}/`)) return
 
     const idMatch = href.match(/\/(\d+)\/d/)
     const externalId = idMatch?.[1]
