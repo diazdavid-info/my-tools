@@ -1,8 +1,11 @@
 import fg from 'fast-glob'
 import { tool } from 'ai'
 import z from 'zod'
+import { logTools } from '../../shared/logs'
 
 export const execute = async (pattern: string) => {
+  logTools(`[tool] glob(${pattern})`)
+
   const matches = await fg(pattern, {
     cwd: process.cwd(),
     onlyFiles: false,

@@ -3,8 +3,11 @@ import z from 'zod'
 import { formatError, resolveSafePath } from './helper'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { logTools } from '../../shared/logs'
 
 export const execute = async (filePath: string, content: string) => {
+  logTools(`[tool] write(${filePath})`)
+
   try {
     const fullPath = resolveSafePath(filePath)
 

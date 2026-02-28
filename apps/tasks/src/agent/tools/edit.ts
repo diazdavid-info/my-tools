@@ -3,6 +3,7 @@ import z from 'zod'
 import { formatError, resolveSafePath } from './helper'
 import { replace } from './replace'
 import fs from 'node:fs/promises'
+import { logTools } from '../../shared/logs'
 
 export const execute = async (
   filePath: string,
@@ -10,6 +11,8 @@ export const execute = async (
   newString: string
 ) => {
   try {
+    logTools(`[tool] edit(${filePath})`)
+
     const fullPath = resolveSafePath(filePath)
 
     const content = await fs.readFile(fullPath, 'utf-8')

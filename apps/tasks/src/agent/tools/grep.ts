@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { formatError, truncateIfNeeded } from './helper'
 import { tool } from 'ai'
 import z from 'zod'
+import { logTools } from '../../shared/logs'
 
 type GrepMatch = {
   file: string
@@ -111,6 +112,8 @@ const formatMatches = (matches: GrepMatch[]): string => {
 }
 
 export const execute = async (pattern: string, fileGlob?: string) => {
+  logTools(`[tool] grep(${pattern}, ${fileGlob || 'all files'})`)
+
   try {
     const raw = runRipgrep(pattern, fileGlob)
 

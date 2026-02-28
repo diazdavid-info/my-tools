@@ -1,8 +1,11 @@
 import { tool } from 'ai'
 import z from 'zod'
 import { execSync } from 'node:child_process'
+import { logTools } from '../../shared/logs'
 
 export const execute = async (command: string, timeout?: number) => {
+  logTools(`[tool] bash(${command}, ${timeout})`)
+
   const safeTimeout = Math.min(timeout || 60000, 600000)
 
   try {

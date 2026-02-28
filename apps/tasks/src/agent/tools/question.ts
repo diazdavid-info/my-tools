@@ -1,6 +1,7 @@
 import z from 'zod'
 import { tool } from 'ai'
 import prompts from 'prompts'
+import { logTools } from '../../shared/logs'
 
 type QuestionInput = {
   question: string
@@ -88,6 +89,8 @@ const formatAnswers = (questions: QuestionInput[], answers: string[][]) =>
     .join(', ')
 
 export const execute = async (questions: QuestionInput[]) => {
+  logTools(`[tool] question()`)
+
   const answers: string[][] = []
 
   for (const question of questions) {

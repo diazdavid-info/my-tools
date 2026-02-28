@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import { tool } from 'ai'
 import z from 'zod'
 import { formatError, resolveSafePath, truncateIfNeeded } from './helper'
+import { logTools } from '../../shared/logs'
 
 const formatFileContent = (
   content: string,
@@ -26,6 +27,8 @@ export const execute = async (
   offset?: number,
   limit?: number
 ) => {
+  logTools(`[tool] read(${filePath}, ${offset}, ${limit})`)
+
   try {
     const fullPath = resolveSafePath(filePath)
     const content = await fs.readFile(fullPath, 'utf-8')
