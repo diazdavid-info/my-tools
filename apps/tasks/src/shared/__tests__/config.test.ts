@@ -27,21 +27,21 @@ describe('config', () => {
 
       await init()
 
-      expect(createDirSpy).toBeCalledWith('/homeFake/.mytools')
-      expect(pathExistSpy).toBeCalledWith('/homeFake/.mytools/config')
-      expect(pathExistSpy).toBeCalledWith('/homeFake/.mytools')
-      expect(writeFileSpy).toBeCalledWith(
-        '/homeFake/.mytools/config',
-        JSON.stringify(contentConfig, null, 2)
-      )
+        expect(createDirSpy).toHaveBeenCalledWith('/homeFake/.mytools')
+        expect(pathExistSpy).toHaveBeenCalledWith('/homeFake/.mytools/config')
+        expect(pathExistSpy).toHaveBeenCalledWith('/homeFake/.mytools')
+        expect(writeFileSpy).toHaveBeenCalledWith(
+          '/homeFake/.mytools/config',
+          JSON.stringify(contentConfig, null, 2)
+        )
     })
     it('Should not init config when exist', async () => {
       pathExistSpy.mockReturnValue(true)
 
       await init()
 
-      expect(createDirSpy).toBeCalledTimes(0)
-      expect(writeFileSpy).toBeCalledTimes(0)
+        expect(createDirSpy).toHaveBeenCalledTimes(0)
+        expect(writeFileSpy).toHaveBeenCalledTimes(0)
     })
   })
   describe('isJiraConfigured', () => {
@@ -56,29 +56,29 @@ describe('config', () => {
 
       const isConfigured = await isJiraConfigured()
 
-      expect(base64EncodeSpy).toBeCalledWith('/fakeDir')
-      expect(readFileSpy).toBeCalledWith('/homeFake/.mytools/config')
-      expect(isConfigured).toBeTruthy()
-    })
-    it('Should be true when jira is project configured', async () => {
-      const contentFile = contentConfig
-      contentFile.projects = {
-        base64fake: {
-          tools: { jira: { domain: 'fakeDomain', authorization: 'key' } },
-          createdAt: 1697575949,
-          updatedAt: 1697575949,
-          tasks: [],
-        },
-      }
-      processDirSpy.mockReturnValue('/fakeDir')
-      base64EncodeSpy.mockReturnValue('base64fake')
-      homeDirSpy.mockReturnValue('/homeFake')
-      readFileSpy.mockResolvedValue(JSON.stringify({ ...contentFile }))
+        expect(base64EncodeSpy).toHaveBeenCalledWith('/fakeDir')
+        expect(readFileSpy).toHaveBeenCalledWith('/homeFake/.mytools/config')
+        expect(isConfigured).toBeTruthy()
+      })
+      it('Should be true when jira is project configured', async () => {
+        const contentFile = contentConfig
+        contentFile.projects = {
+          base64fake: {
+            tools: { jira: { domain: 'fakeDomain', authorization: 'key' } },
+            createdAt: 1697575949,
+            updatedAt: 1697575949,
+            tasks: [],
+          },
+        }
+        processDirSpy.mockReturnValue('/fakeDir')
+        base64EncodeSpy.mockReturnValue('base64fake')
+        homeDirSpy.mockReturnValue('/homeFake')
+        readFileSpy.mockResolvedValue(JSON.stringify({ ...contentFile }))
 
-      const isConfigured = await isJiraConfigured()
+        const isConfigured = await isJiraConfigured()
 
-      expect(base64EncodeSpy).toBeCalledWith('/fakeDir')
-      expect(readFileSpy).toBeCalledWith('/homeFake/.mytools/config')
+        expect(base64EncodeSpy).toHaveBeenCalledWith('/fakeDir')
+        expect(readFileSpy).toHaveBeenCalledWith('/homeFake/.mytools/config')
       expect(isConfigured).toBeTruthy()
     })
   })
