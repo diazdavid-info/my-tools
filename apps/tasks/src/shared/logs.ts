@@ -8,6 +8,8 @@ export const logInfo = (message: string) =>
   console.log(`🐷  ${cyan('[INFO]')} ${message}`)
 export const logError = (message: string) =>
   console.log(`🐷  ${red('[ERROR]')} ${message}`)
+export const logIA = (message: string) => console.log(`\n🤖 > ${message}\n`)
+export const logTools = (message: string) => console.log(`\t${message}`)
 
 export const logMarkdown = async (message: string) => {
   marked.setOptions({

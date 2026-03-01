@@ -17,6 +17,7 @@ import runCommit from './src/commit'
 import runCodeReview from './src/code-review'
 import runCodeReviewPullRequest from './src/code-review-pull-request'
 import runCodeAssistance from './src/code-assistance'
+import runAgent from './src/agent'
 import { log, logError } from './src/shared/logs'
 
 const handleSigTerm = () => process.exit(0)
@@ -66,6 +67,12 @@ const options = [
     value: 'ia-code-assistant',
     isExperimental: true,
     fn: runCodeAssistance,
+  },
+  {
+    title: '[IA] Agent',
+    value: 'ia-agent',
+    isExperimental: true,
+    fn: runAgent,
   },
   { title: 'Exit', value: 'exit', isExperimental: false, fn: async () => {} },
 ] as const
