@@ -27,7 +27,7 @@ export const execute = async (
   offset?: number,
   limit?: number
 ) => {
-  logTools(`[tool] read(${filePath}, ${offset}, ${limit})`)
+  logTools(`read(${filePath}, ${offset}, ${limit})`)
 
   try {
     const fullPath = resolveSafePath(filePath)

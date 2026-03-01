@@ -89,7 +89,7 @@ const formatAnswers = (questions: QuestionInput[], answers: string[][]) =>
     .join(', ')
 
 export const execute = async (questions: QuestionInput[]) => {
-  logTools(`[tool] question()`)
+  logTools(`question()`)
 
   const answers: string[][] = []
 

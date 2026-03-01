@@ -112,7 +112,7 @@ const formatMatches = (matches: GrepMatch[]): string => {
 }
 
 export const execute = async (pattern: string, fileGlob?: string) => {
-  logTools(`[tool] grep(${pattern}, ${fileGlob || 'all files'})`)
+  logTools(`grep(${pattern}, ${fileGlob || 'all files'})`)
 
   try {
     const raw = runRipgrep(pattern, fileGlob)

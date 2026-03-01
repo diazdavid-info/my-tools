@@ -11,7 +11,7 @@ export const execute = async (
   newString: string
 ) => {
   try {
-    logTools(`[tool] edit(${filePath})`)
+    logTools(`edit(${filePath})`)
 
     const fullPath = resolveSafePath(filePath)
 
