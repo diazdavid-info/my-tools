@@ -1,5 +1,11 @@
 # eslint-config-mytools
 
+## 1.0.2
+
+### Patch Changes
+
+- Fix problems
+
 ## 1.0.1
 
 ### Patch Changes
