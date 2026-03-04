@@ -1,6 +1,6 @@
 import { generateText, ModelMessage } from 'ai'
 import { agent, criticalMaximumSteps } from '../shared/system-prompts'
-import { logIA } from '../shared/logs'
+import { logIA, logInfo } from '../shared/logs'
 import prompts from 'prompts'
 import { executeTool, toolDefinitions } from './tools'
 import path from 'node:path'
@@ -13,7 +13,18 @@ import fs from 'node:fs'
 const TARGET_DIR = path.resolve(process.argv[2] || process.cwd())
 const MAX_TOOL_ITERATIONS = 100
 const messages: ModelMessage[] = []
+const sessionTokens = { input: 0, output: 0 }
 const INSTRUCTION_FILES = ['AGENTS.md', 'CLAUDE.md', 'CONTEXT.md'] as const
+
+function logTokenUsage(inputTokens = 0, outputTokens = 0) {
+  const totalTokens = inputTokens + outputTokens
+  sessionTokens.input += inputTokens
+  sessionTokens.output += outputTokens
+  const sessionTotal = sessionTokens.input + sessionTokens.output
+  logInfo(
+    `Context: ${inputTokens.toLocaleString()} input + ${outputTokens.toLocaleString()} output = ${totalTokens.toLocaleString()} tokens (session: ${sessionTotal.toLocaleString()})`
+  )
+}
 
 const askUserByQuestion = async (): Promise<string> => {
   const { question } = await prompts(
@@ -32,7 +43,7 @@ const askUserByQuestion = async (): Promise<string> => {
   return question
 }
 
-export function isGitRepo() {
+function isGitRepo() {
   try {
     execSync('git rev-parse --is-inside-work-tree', {
       cwd: TARGET_DIR,
@@ -104,8 +115,10 @@ const toolLoop = async (
       isLastStep ||
       result.finishReason === 'stop' ||
       result.toolCalls.length === 0
-    )
+    ) {
+      logTokenUsage(result.usage.inputTokens, result.usage.outputTokens)
       return
+    }
 
     for (const toolCall of result.toolCalls) {
       const { toolName: name, input: args } = toolCall
