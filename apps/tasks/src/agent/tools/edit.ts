@@ -2,6 +2,7 @@ import { tool } from 'ai'
 import z from 'zod'
 import { formatError, resolveSafePath } from './helper'
 import { replace } from './replace'
+import { runEslintFix } from './format'
 import fs from 'node:fs/promises'
 import { logTools } from '../../shared/logs'
 
@@ -18,6 +19,7 @@ export const execute = async (
     const content = await fs.readFile(fullPath, 'utf-8')
     const updated = replace(content, oldString, newString)
     await fs.writeFile(fullPath, updated, 'utf-8')
+    await runEslintFix(fullPath)
     return `File edited: ${filePath}`
   } catch (e) {
     return formatError(e)

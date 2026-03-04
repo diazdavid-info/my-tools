@@ -1,6 +1,7 @@
 import { tool } from 'ai'
 import z from 'zod'
 import { formatError, resolveSafePath } from './helper'
+import { runEslintFix } from './format'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { logTools } from '../../shared/logs'
@@ -13,6 +14,7 @@ export const execute = async (filePath: string, content: string) => {
 
     await fs.mkdir(path.dirname(fullPath), { recursive: true })
     await fs.writeFile(fullPath, content, 'utf-8')
+    await runEslintFix(fullPath)
     return `File written: ${filePath} (${content.length} bytes)`
   } catch (e) {
     return formatError(e)
