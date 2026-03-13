@@ -46,11 +46,13 @@ const askUserByQuestion = async (): Promise<string> => {
 
 function isGitRepo() {
   try {
-    execSync('git rev-parse --is-inside-work-tree', {
+    const result = execSync('git rev-parse --is-inside-work-tree', {
       cwd: TARGET_DIR,
       encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'ignore'],
     })
-    return true
+
+    return result.trim() === 'true'
   } catch {
     return false
   }
