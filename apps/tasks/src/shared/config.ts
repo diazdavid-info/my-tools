@@ -77,6 +77,11 @@ export const aiConfig = async () => {
   return ai
 }
 
+export const mcpConfig = async () => {
+  const config = await readConfig()
+  return config.mcpServers ?? {}
+}
+
 const readPackage = async () => {
   const fileContent = await readFile(`${__dirname}/../package.json`)
   return JSON.parse(fileContent)

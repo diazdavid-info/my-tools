@@ -1,3 +1,18 @@
+export type McpStdioServerConfig = {
+  type: 'stdio'
+  command: string
+  args?: string[]
+  env?: Record<string, string>
+}
+
+export type McpSseServerConfig = {
+  type: 'sse'
+  url: string
+  headers?: Record<string, string>
+}
+
+export type McpServerConfig = McpStdioServerConfig | McpSseServerConfig
+
 export type ProjectTools = {
   jira?: {
     domain: string
@@ -55,6 +70,7 @@ export type Config = {
   debug: boolean
   experimental: boolean
   version: string
+  mcpServers: Record<string, McpServerConfig>
 }
 
 export const contentConfig: Config = {
@@ -79,4 +95,5 @@ export const contentConfig: Config = {
   debug: false,
   experimental: false,
   version: '0.0.0',
+  mcpServers: {},
 }
