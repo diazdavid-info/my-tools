@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { GeneralOptions } from "@/components/general-options.tsx";
 import { CardList } from "@/components/card-list.tsx";
+import { TaskStats } from "@/components/task-stats.tsx";
 ---
 
 <Layout title="Jira Task Generator">
@@ -9,9 +10,10 @@ import { CardList } from "@/components/card-list.tsx";
     <section class="w-full">
       <GeneralOptions client:idle />
     </section>
-    <section
-      class="grid grid-cols-[repeat(auto-fill,_minmax(260px,_1fr))] gap-4"
-    >
+    <section class="w-full">
+      <TaskStats client:idle />
+    </section>
+    <section class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
       <CardList client:idle />
     </section>
   </main>
