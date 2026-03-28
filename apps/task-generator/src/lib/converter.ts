@@ -33,34 +33,3 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
     }
   })
 }
-
-export const tasksToCommand = ({ tasks }: { tasks: Task[] }): string => {
-  const commandList = []
-
-  for (const task of tasks) {
-    const { epic, type, dev, project, points, content, title, disabled } = task
-    if (disabled) continue
-    const body = {
-      fields: {
-        summary: title,
-        parent: { key: epic },
-        issuetype: { id: type },
-        customfield_10030: { id: '10020', value: dev },
-        project: { id: project },
-        customfield_10026: points,
-        description: {
-          type: 'doc',
-          version: 1,
-          content: JSON.parse(content)
-        }
-      }
-    }
-    commandList.push(`
-      curl -sX POST 'null/rest/api/3/issue' \\
-      -H 'Content-Type: application/json' \\
-      -H 'Authorization: Basic null' \\
-      -d '${JSON.stringify({ ...body })}'`)
-  }
-
-  return commandList.join(';')
-}
