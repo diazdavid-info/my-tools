@@ -27,7 +27,7 @@ export const jiraTasksToTasks = (data: JiraTask): Task[] => {
         null,
         2
       ),
-      disabled: false,
+      disabled: title.startsWith('[CREATED]'),
       url: '',
       status: 'TO_DO'
     }
