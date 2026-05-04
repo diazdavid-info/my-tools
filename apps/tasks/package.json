@@ -24,28 +24,28 @@
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
-    "@types/node": "25.3.2",
+    "@types/node": "25.6.0",
     "@types/prompts": "2.4.9",
     "@vercel/ncc": "0.38.4",
     "eslint-config-mytools": "workspace:*",
-    "jest": "30.2.0",
+    "jest": "30.3.0",
     "mytools-tsconfig": "workspace:*",
     "node-fetch": "3.3.2",
     "picocolors": "1.1.1",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.3",
     "prompts": "2.4.2",
     "rimraf": "6.1.3",
-    "simple-git": "3.32.3",
-    "ts-jest": "29.4.6",
+    "simple-git": "3.36.0",
+    "ts-jest": "29.4.9",
     "tsup": "^8.5.1",
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   },
   "engines": {
     "node": ">=18.16.0"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^3.0.37",
-    "ai": "^6.0.105",
-    "zod": "^4.3.6"
+    "@ai-sdk/openai": "^3.0.54",
+    "ai": "^6.0.170",
+    "zod": "^4.4.1"
   }
 }
