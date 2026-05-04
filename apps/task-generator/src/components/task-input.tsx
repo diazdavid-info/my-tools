@@ -7,14 +7,12 @@ type TaskInputProps = {
 }
 
 export const TaskInput = ({ className }: PropsWithChildren<TaskInputProps>) => {
-  const createTask = useTasksStore((state) => state.createTask)
+  const loadTasks = useTasksStore((state) => state.loadTasks)
 
   const handleOnBlur = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.value) return
-    fetch(`/api/tasks/${event.target.value}`)
-      .then((response) => (response.ok ? response.json() : []))
-      .then((json) => createTask(JSON.stringify(json)))
-      .catch(console.error)
+    const key = event.target.value.trim()
+    if (!key) return
+    loadTasks(key).catch(console.error)
   }
 
   return (

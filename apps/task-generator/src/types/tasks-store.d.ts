@@ -1,28 +1,30 @@
-import { Task, TASK_STATUS } from '@/types/task'
-import { JiraTask } from '@/lib/__tests__/fixture.ts'
+import type { Task, TaskStatus } from '@/types/task'
+import type { JiraTask } from '@/types/jira-task'
 
-type TaskOptions = {
+export type TaskOptions = {
   dev?: string
   epic?: string
   project?: string
   type?: string
 }
 
-type ItemList = {
+export type ItemList = {
   key: string
   value: string
 }
 
-type State = {
+export type State = {
   devItemList: ItemList[]
   projectItemList: ItemList[]
   typeItemList: ItemList[]
 
+  taskKey: string
   tasks: Task[]
   content: JiraTask | null
   tasksOptions: TaskOptions
 
-  createTask: (content: string) => void
+  loadTasks: (taskKey: string) => Promise<void>
+  refreshTasks: () => Promise<void>
   setDev: (value: string) => void
   setDevList: (itemList: ItemList[]) => void
   setEpic: (value: string) => void
@@ -37,6 +39,6 @@ type State = {
   setTypeTask: (id: number, dev: string) => void
   setEpicTask: (id: number, dev: string) => void
   setDisabledTask: (id: number, disabled: boolean) => void
-  setStatusTask: (id: number, status: TASK_STATUS) => void
+  setStatusTask: (id: number, status: TaskStatus) => void
   setUrlTask: (id: number, url: string) => void
 }

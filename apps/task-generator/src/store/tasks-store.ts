@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { Task, TaskStatus } from '@/types/task'
 import { jiraTasksToTasks } from '@/lib/converter.ts'
 import type { ItemList, State } from '@/types/tasks-store'
+import type { JiraTask } from '@/types/jira-task'
 
 const updatePropTask = <T>(
   id: number,
@@ -17,11 +18,48 @@ const updatePropTask = <T>(
   return [newTask, ...restTasks].sort((a: Task, b: Task) => a.id - b.id)
 }
 
+const applyTaskOptions = (
+  tasks: Task[],
+  tasksOptions: State['tasksOptions']
+): Task[] =>
+  tasks.map((task) => ({
+    ...task,
+    ...(tasksOptions.dev == null ? {} : { dev: tasksOptions.dev }),
+    ...(tasksOptions.epic == null ? {} : { epic: tasksOptions.epic }),
+    ...(tasksOptions.project == null ? {} : { project: tasksOptions.project }),
+    ...(tasksOptions.type == null ? {} : { type: tasksOptions.type })
+  }))
+
+const fetchTasks = async (taskKey: string): Promise<JiraTask> => {
+  const response = await fetch(`/api/tasks/${taskKey}`)
+  if (!response.ok) throw new Error('No se pudieron cargar las tareas')
+
+  return response.json()
+}
+
+const createTasksState = (
+  jsonContent: JiraTask,
+  tasksOptions: State['tasksOptions'],
+  preserveOptions = false
+) => {
+  const parent = jsonContent.fields.parent.key
+  const nextTasksOptions = preserveOptions
+    ? tasksOptions
+    : { ...tasksOptions, epic: parent }
+
+  return {
+    tasks: applyTaskOptions(jiraTasksToTasks(jsonContent), nextTasksOptions),
+    tasksOptions: nextTasksOptions,
+    content: jsonContent
+  }
+}
+
 const initialState = {
   devItemList: [],
   projectItemList: [],
   typeItemList: [],
 
+  taskKey: '',
   content: null,
   tasks: [],
   tasksOptions: {
@@ -32,26 +70,29 @@ const initialState = {
   }
 }
 
-export const useTasksStore = create<State>((set) => ({
+export const useTasksStore = create<State>((set, get) => ({
   ...initialState,
 
-  createTask: (content: string) =>
-    set(({ tasksOptions }) => {
-      try {
-        const jsonContent = JSON.parse(content)
-        const parent = jsonContent.fields.parent.key
-        const tasks = jiraTasksToTasks(jsonContent)
+  loadTasks: async (taskKey: string) => {
+    const key = taskKey.trim()
+    if (!key) return
 
-        return {
-          tasks,
-          tasksOptions: { ...tasksOptions, epic: parent },
-          content: jsonContent
-        }
-      } catch (e: any) {
-        console.log(e.message)
-        return {}
-      }
-    }),
+    const jsonContent = await fetchTasks(key)
+    set(({ tasksOptions }) => ({
+      ...createTasksState(jsonContent, tasksOptions),
+      taskKey: key
+    }))
+  },
+  refreshTasks: async () => {
+    const key = get().taskKey.trim()
+    if (!key) return
+
+    const jsonContent = await fetchTasks(key)
+    set(({ tasksOptions }) => ({
+      ...createTasksState(jsonContent, tasksOptions, true),
+      taskKey: key
+    }))
+  },
   setDev: (value: string) =>
     set(({ tasks, tasksOptions }) => {
       const newTasks = tasks.map((task) => ({ ...task, dev: value }))

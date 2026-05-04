@@ -7,6 +7,7 @@ import { useTasksStore } from '@/store/tasks-store.ts'
 import { allProjects } from '@/services/project-service.ts'
 import { TaskInput } from '@/components/task-input.tsx'
 import { ButtonCreateTasks } from '@/components/button-create-tasks.tsx'
+import { ButtonRefreshTasks } from '@/components/button-refresh-tasks.tsx'
 
 export const GeneralOptions = () => {
   const setProjectList = useTasksStore((state) => state.setProjectList)
@@ -24,8 +25,9 @@ export const GeneralOptions = () => {
         <EpicInput className="cursor-pointer rounded-xs md:w-44" />
         <DevSelect className="cursor-pointer rounded-xs md:w-44" />
       </div>
-      <div className="flex justify-end">
-        <ButtonCreateTasks className="h-[40px] w-44 cursor-pointer rounded-xs" />
+      <div className="flex flex-col justify-end gap-2 md:flex-row">
+        <ButtonRefreshTasks className="h-10 w-10 cursor-pointer rounded-xs" />
+        <ButtonCreateTasks className="h-10 w-44 cursor-pointer rounded-xs" />
       </div>
     </div>
   )
