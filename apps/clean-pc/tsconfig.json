@@ -3,11 +3,10 @@
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
+    "lib": ["es2022"],
     "declaration": false,
     "declarationMap": false,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "ignoreDeprecations": "6.0",
+    "types": ["node"]
   }
 }

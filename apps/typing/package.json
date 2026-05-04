@@ -16,7 +16,7 @@
     "@fontsource-variable/open-sans": "^5.0.28",
     "astro": "^4.5.3",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.4.2",
+    "typescript": "6.0.3",
     "typing-testing": "workspace:*"
   },
   "devDependencies": {
