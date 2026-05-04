@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.18.0
+
+### Minor Changes
+
+- remove options
+
 ## 0.17.14
 
 ### Patch Changes
