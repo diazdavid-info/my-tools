@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.19.0
+
+### Minor Changes
+
+- remove tests, jest configuration, and related dependencies for cleanup
+
 ## 0.18.0
 
 ### Minor Changes
