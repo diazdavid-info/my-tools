@@ -52,7 +52,7 @@ const createPullRequest = async (
 ) => {
   const { url } = await githubCreatePullRequest({
     title: `${currentBranch} pull request`,
-    body: 'Esta PR [cierra, soluciona, resuelve] [#000](https://zityhub.atlassian.net/browse/000)\n\n![required gif]()\n\n### Descripción\n\n- Sobre Esta PR\n\n### Aceptación\n\n- [ ] Hay que probar....\n\n### Información extra\n\n- Más info\n\n',
+    body: 'Esta PR viene de [#000](https://zityhub.atlassian.net/browse/000)\n\n### Descripción\n\n- Sobre Esta PR\n\n### Aceptación\n\n- [ ] Levantar la api `node --run clean-db:development && node --run dev:debug`\n- [ ] Hay que probar....\n- [ ] Revisar código\n\n### Información extra\n\n- Más info\n',
     head: currentBranch,
     base: baseBranch,
     repo: projectSelected,

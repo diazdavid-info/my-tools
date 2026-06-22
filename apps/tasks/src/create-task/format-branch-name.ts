@@ -13,6 +13,7 @@ const clearName = (name: string): string =>
     .replace(/:/g, '')
     .replace(/"/g, '')
     .replace(/&/g, '')
+    .replace(/['\u2019]/g, '-')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, ' ')
     .replace(/\s/g, '-')
