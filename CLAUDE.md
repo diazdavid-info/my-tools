@@ -42,7 +42,7 @@ pnpm changeset publish      # Publish to npm
 
 | App | Purpose | Build Tool | Test Framework |
 |-----|---------|------------|----------------|
-| **mytools-tasks** | CLI (`tasks`) — branch/PR creation, AI-powered commit/review/assistance via Vercel AI SDK + OpenAI | tsup (CJS, node18) | Jest (ts-jest) |
+| **mytools-tasks** | CLI (`tasks`) — branch/PR creation, AI-powered commit/review/assistance via Vercel AI SDK + OpenAI | tsup (CJS, node18) | — |
 | **api-route** | Lightweight Node.js HTTP router library | tsc | — |
 | **clean-pc** | CLI (`clean-pc`) — find large dirs/files on disk | @vercel/ncc | — |
 | **typing** | Astro web app — typing practice | Astro | — |
@@ -57,7 +57,6 @@ pnpm changeset publish      # Publish to npm
 
 ### Testing
 
-- **Jest** in `apps/tasks`: `pnpm --filter mytools-tasks test` (single test: `pnpm --filter mytools-tasks test -- --testPathPattern=<pattern>`)
 - **Vitest** in `packages/typing-test`: `pnpm --filter typing-test test` (uses happy-dom environment)
 
 ## Conventions
