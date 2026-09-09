@@ -22,7 +22,7 @@
     "sql.js": "^1.14.2"
   },
   "devDependencies": {
-    "@types/node": "^25.9.5",
+    "@types/node": "^26.5.0",
     "eslint-config-mytools": "workspace:*",
     "mytools-tsconfig": "workspace:*",
     "rimraf": "^6.1.3",

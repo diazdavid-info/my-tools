@@ -6,7 +6,7 @@ export type Method = 'GET' | 'POST'
 
 export type Handler = ({
   request,
-  params
+  params,
 }: {
   request: Request
   params: Record<string, string>
@@ -27,11 +27,16 @@ export const apiRouter = (): ApiRoute => {
     run: function (port, host, callback = () => {}) {
       createServer((socket) =>
         socket.on('data', (data) =>
-          processor({ data, route, host: host || defaultHost, port }).then((buffer) => {
+          processor({
+            data: typeof data === 'string' ? Buffer.from(data) : data,
+            route,
+            host: host || defaultHost,
+            port,
+          }).then((buffer) => {
             socket.write(buffer)
-          })
-        )
+          }),
+        ),
       ).listen(port, host, () => callback())
-    }
+    },
   }
 }

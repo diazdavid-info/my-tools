@@ -15,7 +15,7 @@ const searchPathname = (pathname: string, method: Method, route: Route) => {
 
   for (const key of Object.keys(pathList)) {
     const urlMatch = match<Record<string, string>>(key, {
-      decode: decodeURIComponent
+      decode: decodeURIComponent,
     })
     const matched = urlMatch(pathname)
     if (matched) {

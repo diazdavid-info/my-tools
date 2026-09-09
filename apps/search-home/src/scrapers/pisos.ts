@@ -17,7 +17,15 @@ function parse(html: string, url: string): Listing[] {
     const title = $card.find('.ad-preview__title').text().trim()
     const location = $card.find('.ad-preview__subtitle').text().trim()
 
-    const priceText = $card.find('.ad-preview__price').first().clone().children().remove().end().text().replace(/[^\d]/g, '')
+    const priceText = $card
+      .find('.ad-preview__price')
+      .first()
+      .clone()
+      .children()
+      .remove()
+      .end()
+      .text()
+      .replace(/[^\d]/g, '')
     const price = priceText ? parseInt(priceText, 10) : null
 
     let rooms: number | null = null
@@ -31,7 +39,7 @@ function parse(html: string, url: string): Listing[] {
       if (sizeMatch) size = parseInt(sizeMatch[1], 10)
     })
 
-    const fullUrl = `https://www.pisos.com${href}`
+    const fullUrl = new URL(href, url).toString()
 
     listings.push({
       source: 'pisos.com',

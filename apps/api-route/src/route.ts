@@ -10,7 +10,7 @@ export default class Route {
   add(method: string, path: string, handler: Handler) {
     this.route[method] = {
       ...this.route[method],
-      [path]: handler
+      [path]: handler,
     }
   }
 

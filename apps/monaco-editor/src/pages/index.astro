@@ -49,7 +49,7 @@ import LineDashed from "../components/icon/LineDashed.astro";
 <script>
 	import {execute} from '../services/codeExecutor';
 	import * as monaco from 'monaco-editor';
-	import TypescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+	import TypescriptWorker from 'monaco-editor/language/typescript/ts.worker?worker';
 	import Split from 'split-grid'
 
 	const containerElement = document.getElementById('container') as HTMLElement;

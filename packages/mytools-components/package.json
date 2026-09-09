@@ -17,13 +17,13 @@
     "lint": "eslint \"src/**/*.ts*\""
   },
   "devDependencies": {
-    "@types/node": "25.6.0",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
+    "@types/node": "26.5.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
     "eslint-config-mytools": "workspace:*",
     "mytools-tsconfig": "workspace:*",
-    "react": "^18.3.1",
-    "tsup": "^7.2.0",
+    "react": "^19.2.8",
+    "tsup": "^8.5.1",
     "typescript": "6.0.3"
   },
   "publishConfig": {

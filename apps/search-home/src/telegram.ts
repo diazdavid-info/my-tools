@@ -16,7 +16,9 @@ function formatListing(listing: Listing): string {
     lines.push('❌ <b>Ya no disponible</b>')
   } else if (listing.previousPrice != null) {
     const arrow = listing.price != null && listing.price < listing.previousPrice ? '📉' : '📈'
-    lines.push(`${arrow} <b>Precio actualizado: ${formatPrice(listing.previousPrice)} € → ${formatPrice(listing.price!)} €</b>`)
+    lines.push(
+      `${arrow} <b>Precio actualizado: ${formatPrice(listing.previousPrice)} € → ${formatPrice(listing.price!)} €</b>`,
+    )
   } else {
     lines.push('🆕 <b>Nuevo</b>')
   }

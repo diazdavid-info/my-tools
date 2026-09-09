@@ -6,7 +6,7 @@ export type OptionsTyping = {
     wrongCounter,
     secondsStart,
     charactersMinute,
-    wroteCounter
+    wroteCounter,
   }: {
     wrongCounter: number
     secondsStart: number
@@ -51,13 +51,12 @@ function run(input: HTMLInputElement, spanElements: NodeListOf<HTMLSpanElement>,
   const startCurrentTime = parseInt(spanElements[0].dataset.startCurrentTime ?? '0')
 
   if (textWroteList.length === spanElements.length) {
-    options.finishCallback &&
-      options.finishCallback({
-        wrongCounter: wrongCharacters,
-        secondsStart: startCurrentTime ? Math.round(new Date().valueOf() / 1000 - startCurrentTime) : 0,
-        charactersMinute: Math.round((60 * rightCharacters) / (new Date().valueOf() / 1000 - startCurrentTime)),
-        wroteCounter: textWroteList.length
-      })
+    options.finishCallback({
+      wrongCounter: wrongCharacters,
+      secondsStart: startCurrentTime ? Math.round(new Date().valueOf() / 1000 - startCurrentTime) : 0,
+      charactersMinute: Math.round((60 * rightCharacters) / (new Date().valueOf() / 1000 - startCurrentTime)),
+      wroteCounter: textWroteList.length,
+    })
     // input.blur()
     return
   }

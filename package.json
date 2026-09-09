@@ -9,8 +9,16 @@
     "test": "turbo test"
   },
   "devDependencies": {
-    "@changesets/cli": "2.27.1",
-    "turbo": "2.0.11",
-    "typescript": "6.0.3"
+    "@changesets/cli": "3.0.2",
+    "@typescript-eslint/parser": "8.70.0",
+    "eslint": "9.39.5",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-astro": "1.5.0",
+    "eslint-plugin-prettier": "5.5.6",
+    "eslint-plugin-react": "7.37.5",
+    "globals": "17.12.0",
+    "turbo": "2.10.12",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0"
   }
 }

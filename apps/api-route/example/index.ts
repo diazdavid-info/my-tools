@@ -14,11 +14,11 @@ app.add('GET', '/', ({ request }): Response => {
       request,
       headers,
       body: request.body,
-      status: 'ok!!!'
+      status: 'ok!!!',
     }),
     {
-      status: 200
-    }
+      status: 200,
+    },
   )
 })
 

@@ -25,7 +25,10 @@ async function cycle(): Promise<void> {
         log(`[${config.name}] ${inserted} new, ${updated} price updates (${listings.length} scraped)`)
 
         // Detect listings that disappeared from this source
-        const gone = markUnavailableListings(config.name, listings.map((l) => l.externalId))
+        const gone = markUnavailableListings(
+          config.name,
+          listings.map((l) => l.externalId),
+        )
         if (gone.length > 0) {
           log(`[${config.name}] ${gone.length} listings no longer available`)
           unavailableListings = unavailableListings.concat(gone)

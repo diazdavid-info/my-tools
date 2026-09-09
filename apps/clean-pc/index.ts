@@ -24,7 +24,9 @@ const readDir = async (path: string, limitSize: number) => {
       if (stat.isFile()) {
         size += stat.size
       }
-    } catch (e) {}
+    } catch {
+      // Ignore entries that cannot be inspected because of filesystem permissions.
+    }
   }
 
   if (size >= limitSize) console.log(`${size}B\t${(size / ONE_GB).toFixed(1)}GB\t${path}`)

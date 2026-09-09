@@ -49,9 +49,10 @@ function parse(html: string, url: string): Listing[] {
 
     // Image: walk up to the article/section wrapper that contains both image and details
     const $wrapper = $card.parent()
-    const imageUrl = $wrapper.find('img[src*="fotocasa"], img[src*="static"]').first().attr('src')
-      || $wrapper.find('img').first().attr('src')
-      || null
+    const imageUrl =
+      $wrapper.find('img[src*="fotocasa"], img[src*="static"]').first().attr('src') ||
+      $wrapper.find('img').first().attr('src') ||
+      null
 
     listings.push({
       source: 'fotocasa',

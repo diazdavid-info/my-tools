@@ -4,7 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/dom'
 
 describe('typing', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date'] })
 
     document.body.innerHTML = `
         <p data-text="foo" id="element">
@@ -24,7 +24,7 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     expect(document.activeElement).toBe(result)
@@ -36,7 +36,7 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'ptu' } })
@@ -50,14 +50,14 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'eaw' } })
 
     await waitFor(() => {
       const correctElements = selectorAll<HTMLSpanElement[]>('.correct')
-      const correctCharacters = correctElements.map((element: HTMLSpanElement) => element.innerText)
+      const correctCharacters = Array.from(correctElements, (element) => element.innerText)
 
       expect(correctElements.length).toBe(1)
       expect(Array.from(correctCharacters)).toEqual(['a'])
@@ -70,14 +70,14 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'a' } })
 
     await waitFor(() => {
       const inCorrectElements = selectorAll<HTMLSpanElement[]>('.incorrect')
-      const inCorrectCharacters = inCorrectElements.map((element: HTMLSpanElement) => element.innerText)
+      const inCorrectCharacters = Array.from(inCorrectElements, (element) => element.innerText)
 
       expect(inCorrectElements.length).toBe(1)
       expect(Array.from(inCorrectCharacters)).toEqual(['b'])
@@ -91,7 +91,7 @@ describe('typing', () => {
       expect(inCorrectElements.length).toBe(0)
 
       const correctElements = selectorAll<HTMLSpanElement[]>('.correct')
-      const correctCharacters = correctElements.map((element: HTMLSpanElement) => element.innerText)
+      const correctCharacters = Array.from(correctElements, (element) => element.innerText)
 
       expect(correctElements.length).toBe(1)
       expect(Array.from(correctCharacters)).toEqual(['b'])
@@ -104,14 +104,14 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'eaw' } })
 
     await waitFor(() => {
       const correctElements = selectorAll<HTMLSpanElement[]>('.incorrect')
-      const correctCharacters = correctElements.map((element: HTMLSpanElement) => element.innerText)
+      const correctCharacters = Array.from(correctElements, (element) => element.innerText)
 
       expect(correctElements.length).toBe(2)
       expect(Array.from(correctCharacters)).toEqual(['b', 'r'])
@@ -124,7 +124,7 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'eaw' } })
@@ -140,7 +140,7 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'e' } })
@@ -164,7 +164,7 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'b' } })
@@ -188,7 +188,7 @@ describe('typing', () => {
       readElement: selector<HTMLParagraphElement>('#element'),
       rightClass: 'correct',
       wrongClass: 'incorrect',
-      finishCallback
+      finishCallback,
     })
 
     fireEvent.change(result, { target: { value: 'b z' } })

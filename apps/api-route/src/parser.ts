@@ -6,7 +6,7 @@ export const parseHttpRequest = ({ data, host, port }: { data: Buffer; host: str
     method: '',
     pathname: '',
     headers: {},
-    body: ''
+    body: '',
   }
 
   parser[HTTPParser.kOnHeadersComplete] = (info) => {

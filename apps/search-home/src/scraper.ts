@@ -23,7 +23,8 @@ export async function scrape(config: ScraperConfig): Promise<Listing[]> {
     try {
       console.log(`[${config.name}] Navigating to ${url}`)
       const context = await browser.newContext({
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        userAgent:
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         locale: 'es-ES',
       })
       const page = await context.newPage()
@@ -32,7 +33,9 @@ export async function scrape(config: ScraperConfig): Promise<Listing[]> {
 
       // Accept cookies if a consent dialog appears
       try {
-        const cookieBtn = page.locator('#didomi-notice-agree-button, button:has-text("Aceptar"), button:has-text("Acepto"), button:has-text("Accept")')
+        const cookieBtn = page.locator(
+          '#didomi-notice-agree-button, button:has-text("Aceptar"), button:has-text("Acepto"), button:has-text("Accept")',
+        )
         await cookieBtn.first().click({ timeout: 3_000 })
         await page.waitForTimeout(1_000)
       } catch {

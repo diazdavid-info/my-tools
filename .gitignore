@@ -3,6 +3,7 @@ dist
 build/**
 .next/**
 .turbo
+.wrangler/
 
 # dependencies
 node_modules

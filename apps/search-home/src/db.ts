@@ -60,7 +60,7 @@ export async function initDb(dbPath?: string): Promise<Database> {
   `)
 
   // Migration: add 'available' column for existing databases
-  const cols = db.exec("PRAGMA table_info(listings)")
+  const cols = db.exec('PRAGMA table_info(listings)')
   const hasAvailable = cols.length > 0 && cols[0].values.some((row) => row[1] === 'available')
   if (!hasAvailable) {
     db.run('ALTER TABLE listings ADD COLUMN available INTEGER NOT NULL DEFAULT 1')
@@ -92,7 +92,11 @@ export function insertListings(listings: Listing[]): { inserted: number; updated
     if (existing) {
       // Price changed — record history and update
       if (l.price != null && existing.price != null && l.price !== existing.price) {
-        db.run('INSERT INTO price_history (listingId, price, recordedAt) VALUES (?, ?, ?)', [existing.id, existing.price, new Date().toISOString()])
+        db.run('INSERT INTO price_history (listingId, price, recordedAt) VALUES (?, ?, ?)', [
+          existing.id,
+          existing.price,
+          new Date().toISOString(),
+        ])
         db.run('UPDATE listings SET price = ?, notified = 0 WHERE id = ?', [l.price, existing.id])
         updated++
       }
@@ -100,7 +104,19 @@ export function insertListings(listings: Listing[]): { inserted: number; updated
       // New listing — insert
       db.run(
         'INSERT OR IGNORE INTO listings (source, externalId, url, title, price, size, rooms, location, description, imageUrl, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [l.source, l.externalId, l.url, l.title, l.price, l.size, l.rooms, l.location, l.description, l.imageUrl, l.createdAt],
+        [
+          l.source,
+          l.externalId,
+          l.url,
+          l.title,
+          l.price,
+          l.size,
+          l.rooms,
+          l.location,
+          l.description,
+          l.imageUrl,
+          l.createdAt,
+        ],
       )
       if (db.getRowsModified() > 0) inserted++
     }
