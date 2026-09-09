@@ -26,16 +26,16 @@
   "author": "David Diaz",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.10.3",
-    "eslint-config-mytools": "^1.0.0",
+    "@types/node": "^22.20.1",
+    "eslint-config-mytools": "^1.0.2",
     "mytools-tsconfig": "workspace:^",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.14",
     "rimraf": "6.0.1",
     "ts-node": "10.9.2",
     "typescript": "6.0.3"
   },
   "dependencies": {
-    "http-parser-js": "^0.5.8",
-    "path-to-regexp": "^8.2.0"
+    "http-parser-js": "^0.5.10",
+    "path-to-regexp": "^8.4.2"
   }
 }
