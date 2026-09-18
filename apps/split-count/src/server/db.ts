@@ -1,6 +1,6 @@
 import { createClient, type Client } from '@libsql/client'
-import { dirname, isAbsolute, resolve } from 'node:path'
-import { mkdirSync } from 'node:fs'
+import { dirname, isAbsolute, join, resolve } from 'node:path'
+import { existsSync, mkdirSync, statSync } from 'node:fs'
 
 let client: Client | undefined
 
@@ -10,7 +10,13 @@ export function getDbPath(): string {
   if (!dbPath) {
     throw new Error('DB_PATH is required. Define it in .env locally or in the deployment environment.')
   }
-  return isAbsolute(dbPath) ? dbPath : resolve(dbPath)
+
+  const resolvedPath = isAbsolute(dbPath) ? dbPath : resolve(dbPath)
+  if (existsSync(resolvedPath) && statSync(resolvedPath).isDirectory()) {
+    return join(resolvedPath, 'bote.db')
+  }
+
+  return resolvedPath
 }
 
 export function getDb(): Client {
