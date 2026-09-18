@@ -1,0 +1,11 @@
+---
+interface Props {
+  text?: string;
+}
+
+const { text = "SIN CUENTA" } = Astro.props;
+---
+
+<span class="inline-block rotate-[-8deg] rounded-md border-2 border-accent px-2.5 py-1 font-mono text-[11px] font-medium tracking-[1.8px] text-accent">
+  {text}
+</span>

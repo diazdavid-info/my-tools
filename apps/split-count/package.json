@@ -1,0 +1,43 @@
+{
+  "name": "split-count",
+  "description": "Bote — reparto de gastos en grupo",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/node": "^11.1.5",
+    "@astrojs/preact": "^6.0.5",
+    "@fontsource-variable/instrument-sans": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.8",
+    "@fontsource/instrument-serif": "^5.2.8",
+    "@libsql/client": "^0.15.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.2",
+    "nanoid": "^5.1.6",
+    "preact": "^10.27.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "6.0.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^8.70.0",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^3.1.0",
+    "preact-render-to-string": "^6.6.1",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^1.0.0",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "vitest": "^5.0.0"
+  }
+}

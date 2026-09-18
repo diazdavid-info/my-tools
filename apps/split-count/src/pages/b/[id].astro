@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { BoteApp } from "@/components/preact/bote-app";
+import { getBote } from "@/server/store";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const bote = id ? await getBote(id) : null;
+
+if (!bote) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`${bote.name} — Bote`}>
+  <main class="mx-auto w-full max-w-[480px]">
+    <BoteApp initialBote={bote} client:load />
+  </main>
+</Layout>

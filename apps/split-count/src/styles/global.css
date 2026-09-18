@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@import "@fontsource-variable/instrument-sans";
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@theme {
+  --color-paper: #f5f1e8;
+  --color-paper-soft: #f9f6ef;
+  --color-paper-white: #fffdf9;
+  --color-ink: #17150f;
+  --color-ink-muted: #57524a;
+  --color-ink-soft: #8a8375;
+  --color-ink-on-dark: #b8b1a3;
+  --color-accent: #e0562b;
+  --color-accent-on-dark: #f0724a;
+  --color-line: #d9d2c4;
+  --color-line-soft: #e6e0d3;
+  --color-line-strong: #b8b1a3;
+  --color-chip: #ebe6da;
+  --color-bar-track: #ece7dc;
+  --color-dim: #706d66;
+  --color-tint-1: #f7d3c3;
+  --color-tint-2: #cfdcf6;
+  --color-tint-3: #c5e6cf;
+
+  --font-sans:
+    "Instrument Sans Variable", "Instrument Sans", sans-serif, ui-sans-serif,
+    system-ui;
+  --font-serif: "Instrument Serif", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --shadow-button: 0 10px 24px rgb(224 86 43 / 0.28);
+  --shadow-fab: 0 12px 28px rgb(224 86 43 / 0.35);
+  --shadow-ticket: 0 18px 28px rgb(23 21 15 / 0.16);
+}
+
+body {
+  @apply bg-paper font-sans text-ink antialiased;
+}
+
+input,
+button {
+  @apply outline-hidden;
+}
+
+/* Zigzag del ticket */
+.zigzag {
+  --zz: 8px;
+  height: var(--zz);
+  background:
+    linear-gradient(135deg, var(--color-paper-white) 50%, transparent 50%) 0 0 /
+      16px 100%,
+    linear-gradient(-135deg, var(--color-paper-white) 50%, transparent 50%) 8px
+      0 / 16px 100%;
+  background-repeat: repeat-x;
+}
+
+@utility label-mono {
+  @apply font-mono text-[12px] tracking-[1.4px] text-ink-soft;
+}
+
+@utility label-mono-strong {
+  @apply font-mono text-[11px] font-medium tracking-[1.4px] text-accent uppercase;
+}

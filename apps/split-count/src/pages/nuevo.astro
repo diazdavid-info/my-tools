@@ -1,0 +1,10 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { ParticipantsForm } from "@/components/preact/participants-form";
+---
+
+<Layout title="Nuevo bote — Bote">
+  <main class="mx-auto w-full max-w-[480px]">
+    <ParticipantsForm client:load />
+  </main>
+</Layout>

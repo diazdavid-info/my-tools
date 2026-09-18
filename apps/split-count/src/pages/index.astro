@@ -1,0 +1,342 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Button from "@/components/button.astro";
+import Stamp from "@/components/stamp.astro";
+import Ticket from "@/components/ticket.astro";
+
+const year = new Date().getFullYear();
+---
+
+<Layout title="Bote — Reparto de gastos en grupo">
+  <main class="mx-auto flex w-full max-w-[480px] flex-col overflow-hidden bg-paper shadow-xl sm:my-6 sm:min-h-screen sm:rounded-[32px]">
+    <!-- Nav -->
+    <header class="flex h-16 items-center justify-between px-5">
+      <a href="/" class="font-serif text-3xl italic text-ink">
+        Bote
+      </a>
+      <a href="#como-funciona" class="text-[15px] font-medium text-ink">
+        Cómo funciona
+      </a>
+    </header>
+
+    <!-- Hero -->
+    <section
+      class="flex flex-col gap-[22px] px-5 pt-7 pb-14"
+      style="background: radial-gradient(120% 90% at 50% 0%, #fae2d6 0%, #f5f1e800 70%)"
+    >
+      <p class="label-mono-strong">REPARTO DE GASTOS EN GRUPO</p>
+      <h1 class="flex flex-col">
+        <span class="text-[50px]/[0.98] font-normal tracking-[-0.75px] text-ink">
+          Quién pagó qué. Quién debe a quién.
+        </span>
+        <span class="text-[50px]/[0.98] font-normal italic tracking-[-0.75px] text-accent">
+          Sin crear cuenta.
+        </span>
+      </h1>
+      <p class="text-[17px]/[1.5] text-ink-muted">
+        Bote reparte los gastos de un viaje, una cena o un piso compartido.
+        Apunta lo que se paga, comparte el enlace y olvídate de las cuentas en
+        el grupo de WhatsApp.
+      </p>
+      <div class="flex flex-col gap-3">
+        <Button href="/nuevo">Crear un bote</Button>
+        <p class="text-center font-mono text-[12px] tracking-[0.5px] text-ink-soft">
+          Sin registro · Funciona en el navegador
+        </p>
+      </div>
+      <div class="pt-5">
+        <Ticket />
+      </div>
+    </section>
+
+    <!-- Sin cuenta -->
+    <section class="flex flex-col gap-7 px-5 pt-12">
+      <div class="flex flex-col gap-3">
+        <p class="label-mono-strong">SIN CUENTA, DE VERDAD</p>
+        <h2 class="text-[38px]/[1.02] font-normal tracking-[-0.4px] text-ink">
+          Nadie tiene que registrarse. Tú tampoco.
+        </h2>
+        <p class="text-base/[1.5] text-ink-muted">
+          Un bote es un enlace. Lo abres, apuntas y lo compartes. No pedimos
+          correo, contraseña ni número de teléfono.
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex items-start gap-4 py-5">
+          <svg
+            class="mt-0.5 size-6 shrink-0 text-accent"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[17px] font-semibold text-ink">
+              Sin correo ni contraseña
+            </h3>
+            <p class="text-[15px]/[1.45] text-ink-muted">
+              Abres Bote y empiezas. Nadie del grupo tiene que darse de alta
+              para ver o añadir gastos.
+            </p>
+          </div>
+        </div>
+        <div class="h-px bg-line"></div>
+        <div class="flex items-start gap-4 py-5">
+          <svg
+            class="mt-0.5 size-6 shrink-0 text-accent"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[17px] font-semibold text-ink">
+              Tu bote es un enlace
+            </h3>
+            <p class="text-[15px]/[1.45] text-ink-muted">
+              Compártelo por WhatsApp o donde quieras. Quien tenga el enlace,
+              entra.
+            </p>
+          </div>
+        </div>
+        <div class="h-px bg-line"></div>
+        <div class="flex items-start gap-4 py-5">
+          <svg
+            class="mt-0.5 size-6 shrink-0 text-accent"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect width="20" height="14" x="2" y="5" rx="2" />
+            <path d="M2 17h20" />
+            <path d="M6 21h12" />
+          </svg>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[17px] font-semibold text-ink">
+              Desde el móvil, sin instalar nada
+            </h3>
+            <p class="text-[15px]/[1.45] text-ink-muted">
+              Funciona en el navegador. Si quieres, añádelo a la pantalla de
+              inicio.
+            </p>
+          </div>
+        </div>
+        <div class="h-px bg-line"></div>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section id="como-funciona" class="flex flex-col gap-6 px-5 py-16">
+      <div class="flex flex-col gap-3">
+        <p class="label-mono-strong">CÓMO FUNCIONA</p>
+        <h2 class="text-[38px]/[1.02] font-normal tracking-[-0.4px] text-ink">
+          Tres pasos y a repartir.
+        </h2>
+      </div>
+      <div class="flex flex-col gap-3.5">
+        <div class="flex items-start gap-4 rounded-[14px] border border-line bg-paper-white p-5">
+          <span class="w-11 text-[40px] leading-none italic text-accent">
+            01
+          </span>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[17px] font-semibold text-ink">
+              Ponle nombre y añade a la gente
+            </h3>
+            <p class="text-[15px]/[1.45] text-ink-muted">
+              «Escapada a Cádiz»: Ana, Marta y la pareja Luis y Sara. Listo.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 rounded-[14px] border border-line bg-paper-white p-5">
+          <span class="w-11 text-[40px] leading-none italic text-accent">
+            02
+          </span>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[17px] font-semibold text-ink">
+              Apunta cada gasto
+            </h3>
+            <p class="text-[15px]/[1.45] text-ink-muted">
+              Quién pagó, cuánto y cómo se reparte: por igual, por porcentajes o
+              por importes.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 rounded-[14px] border border-line bg-paper-white p-5">
+          <span class="w-11 text-[40px] leading-none italic text-accent">
+            03
+          </span>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-[17px] font-semibold text-ink">
+              Salda y cierra el bote
+            </h3>
+            <p class="text-[15px]/[1.45] text-ink-muted">
+              Bote calcula quién debe a quién. Se paga, se marca y fin de la
+              historia.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reparte como quieras -->
+    <section class="flex flex-col gap-[22px] bg-ink px-5 py-14">
+      <p class="font-mono text-xs font-medium tracking-[1.4px] text-accent-on-dark">
+        REPARTE COMO QUIERAS
+      </p>
+      <h2 class="text-[40px] leading-none tracking-[-0.4px] text-paper">
+        Un gasto, varios bolsillos.
+      </h2>
+      <p class="text-base/[1.5] text-ink-on-dark">
+        Si la cena la pagaron dos personas, se apunta tal cual. Y cada gasto se
+        reparte como acordéis: por igual, por porcentajes o por importes
+        exactos. Y si dos personas comparten cartera, añádelas como pareja:
+        pagan y cobran como una sola.
+      </p>
+      <div class="flex flex-col gap-[18px] rounded-2xl bg-paper-white p-5 pt-3.5">
+        <div class="flex items-center justify-between gap-3">
+          <h3 class="text-[17px] font-semibold text-ink">
+            Cena en el Bajo de Guía
+          </h3>
+          <span class="font-mono text-[17px] font-medium text-ink">
+            120,00 €
+          </span>
+        </div>
+        <div class="flex flex-col gap-2.5">
+          <p class="font-mono text-[11px] tracking-[1.5px] text-ink-soft">
+            PAGADO POR
+          </p>
+          <div class="flex flex-col gap-2">
+            <span class="flex h-9 w-fit items-center gap-2 rounded-full border border-line pl-1.5 pr-3">
+              <span class="flex size-6 items-center justify-center rounded-full bg-tint-1 text-[11px] text-ink">
+                A
+              </span>
+              <span class="text-sm font-medium text-ink">Ana</span>
+              <span class="font-mono text-[13px] text-ink-muted">80,00 €</span>
+            </span>
+            <span class="flex h-9 w-fit items-center gap-2 rounded-full border border-line pl-1.5 pr-3">
+              <span class="flex size-6 items-center justify-center rounded-full bg-tint-2 text-[9px] tracking-[0.2px] text-ink">
+                LS
+              </span>
+              <span class="text-sm font-medium text-ink">Luis y Sara</span>
+              <span class="font-mono text-[13px] text-ink-muted">40,00 €</span>
+            </span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2.5">
+          <p class="font-mono text-[11px] tracking-[1.5px] text-ink-soft">
+            REPARTIDO POR PORCENTAJES
+          </p>
+          <div class="flex flex-col gap-2.5">
+            <div class="flex items-center gap-3">
+              <div class="flex w-full flex-col gap-1.5">
+                <span class="text-sm font-medium text-ink">Ana</span>
+                <div class="h-2 w-full rounded bg-bar-track">
+                  <div class="h-2 w-1/2 rounded bg-ink"></div>
+                </div>
+              </div>
+              <span class="w-11 text-right font-mono text-sm text-ink">
+                50 %
+              </span>
+              <span class="w-15 text-right font-mono text-[13px] text-ink-soft">
+                60,00 €
+              </span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="flex w-full flex-col gap-1.5">
+                <span class="text-sm font-medium text-ink">Luis y Sara</span>
+                <div class="h-2 w-full rounded bg-bar-track">
+                  <div class="h-2 w-[30%] rounded bg-ink"></div>
+                </div>
+              </div>
+              <span class="w-11 text-right font-mono text-sm text-ink">
+                30 %
+              </span>
+              <span class="w-15 text-right font-mono text-[13px] text-ink-soft">
+                36,00 €
+              </span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="flex w-full flex-col gap-1.5">
+                <span class="text-sm font-medium text-ink">Marta</span>
+                <div class="h-2 w-full rounded bg-bar-track">
+                  <div class="h-2 w-1/5 rounded bg-ink"></div>
+                </div>
+              </div>
+              <span class="w-11 text-right font-mono text-sm text-ink">
+                20 %
+              </span>
+              <span class="w-15 text-right font-mono text-[13px] text-ink-soft">
+                24,00 €
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonio -->
+    <section class="flex flex-col gap-4 px-5 pt-16">
+      <blockquote class="text-[27px]/[1.2] font-normal italic tracking-[-0.3px] text-ink">
+        «Cita real de alguien que haya usado Bote: una frase, con sus palabras»
+      </blockquote>
+      <p class="font-mono text-xs tracking-[0.5px] text-ink-soft">
+        — Nombre · viaje o grupo
+      </p>
+    </section>
+
+    <!-- CTA final -->
+    <section class="px-5 pt-16">
+      <div class="relative overflow-hidden rounded-[18px] border border-line bg-paper-white px-[22px] pb-[26px] pt-[58px]">
+        <div class="absolute right-5 top-4 rotate-[-8deg]">
+          <Stamp text="SIN REGISTRO" />
+        </div>
+        <h2 class="text-[44px] leading-none tracking-[-0.7px] text-ink">
+          Empieza ahora.
+        </h2>
+        <p class="mt-4 text-base/[1.5] text-ink-muted">
+          Crear tu primer bote tarda menos que pedir la cuenta.
+        </p>
+        <div class="mt-7 flex flex-col gap-3">
+          <Button href="/nuevo">Crear un bote</Button>
+          <p class="text-center font-mono text-[12px] tracking-[0.5px] text-ink-soft">
+            Sin registro · Sin instalar
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="flex flex-col gap-3 px-5 py-12">
+      <p class="font-serif text-[26px] italic text-ink">Bote</p>
+      <p class="text-sm/[1.5] text-ink-muted">
+        Hecho para grupos que prefieren no discutir por dinero.
+      </p>
+      <div class="flex h-11 items-center gap-5">
+        <a href="#" class="text-sm text-ink-muted hover:text-ink">
+          Privacidad
+        </a>
+        <a href="#" class="text-sm text-ink-muted hover:text-ink">
+          Contacto
+        </a>
+        <span class="ml-auto font-mono text-[11px] text-ink-soft">
+          © {year}
+        </span>
+      </div>
+    </footer>
+  </main>
+</Layout>

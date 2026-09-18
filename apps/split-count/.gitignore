@@ -1,0 +1,4 @@
+.split-count-data/
+dist/
+node_modules/
+.astro/

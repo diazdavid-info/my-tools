@@ -1,0 +1,91 @@
+---
+import Stamp from "./stamp.astro";
+
+const rows = [
+  { title: "Cena en el Bajo de Guía", amount: "120,00 €" },
+  { title: "Entradas al castillo", amount: "36,00 €" },
+  { title: "Gasolina", amount: "56,40 €" },
+];
+---
+
+<div class="flex justify-center">
+  <div class="relative w-[350px] max-w-full rotate-2 shadow-ticket">
+    <div class="relative rounded-t-md bg-paper-white pb-0">
+      <div class="flex flex-col gap-3 rounded-t-md border border-b-0 border-transparent px-5 pb-0 pt-[22px]">
+        <div class="absolute -top-1 right-4 rotate-[9deg]">
+          <Stamp text="BOTE · SEPT. 2026" />
+        </div>
+        <div class="flex flex-col gap-1">
+          <p class="font-mono text-[11px] tracking-[1.5px] text-ink-soft">
+            BOTE · SEPT. 2026
+          </p>
+          <p class="text-[28px] leading-[1.05] text-ink">Escapada a Cádiz</p>
+          <p class="font-mono text-xs text-ink-soft">
+            3 participantes · 5 gastos
+          </p>
+        </div>
+        <div class="my-1 border-t border-dashed border-line"></div>
+        <div class="flex flex-col gap-2.5 pb-1">
+          {rows.map((row) => (
+            <div class="flex items-center gap-2">
+              <span class="text-[15px] text-ink">{row.title}</span>
+              <div class="w-full border-t border-dashed border-line" />
+              <span class="font-mono text-[15px] text-ink">{row.amount}</span>
+            </div>
+          ))}
+          <p class="pt-1 text-[13px] text-ink-soft">+ 2 gastos más</p>
+        </div>
+        <div class="my-1 border-t border-dashed border-line"></div>
+        <div class="flex items-end justify-between">
+          <span class="font-mono text-xs tracking-[1.5px] text-ink">TOTAL</span>
+          <span class="font-mono text-[22px] font-medium text-ink">
+            312,60 €
+          </span>
+        </div>
+        <div class="my-1 border-t border-dashed border-line"></div>
+        <div class="flex flex-col gap-2 pb-4">
+          <p class="font-mono text-[11px] tracking-[1.5px] text-ink-soft">
+            QUIÉN DEBE A QUIÉN
+          </p>
+          <div class="flex items-center gap-2">
+            <span class="text-[15px] text-ink">Ana</span>
+            <svg
+              class="size-4 text-accent"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+            <span class="text-[15px] text-ink">Luis y Sara</span>
+            <div class="w-full border-t border-dashed border-line" />
+            <span class="font-mono text-[15px] text-ink">10,00 €</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[15px] text-ink">Marta</span>
+            <svg
+              class="size-4 text-accent"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+            <span class="text-[15px] text-ink">Luis y Sara</span>
+            <div class="w-full border-t border-dashed border-line" />
+            <span class="font-mono text-[15px] text-ink">25,80 €</span>
+          </div>
+        </div>
+      </div>
+      <div class="zigzag"></div>
+    </div>
+  </div>
+</div>

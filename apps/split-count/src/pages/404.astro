@@ -1,0 +1,23 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="No encontrado — Bote">
+  <main class="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col items-center justify-center gap-4 px-5 text-center">
+    <p class="font-mono text-xs font-medium tracking-[1.4px] text-accent">
+      ERROR 404
+    </p>
+    <h1 class="text-[38px] leading-[1.02] tracking-[-0.4px] text-ink">
+      Este bote no existe.
+    </h1>
+    <p class="text-[15px]/[1.45] text-ink-muted">
+      Puede que el enlace esté mal o que el bote se haya borrado.
+    </p>
+    <a
+      href="/"
+      class="mt-4 flex h-13 items-center gap-2 rounded-xl bg-ink px-5 text-[15px] font-semibold text-paper"
+    >
+      Volver al inicio
+    </a>
+  </main>
+</Layout>
