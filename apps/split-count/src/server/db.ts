@@ -1,14 +1,23 @@
 import { createClient, type Client } from '@libsql/client'
+import { dirname, isAbsolute, resolve } from 'node:path'
 import { mkdirSync } from 'node:fs'
-import { join } from 'node:path'
 
 let client: Client | undefined
 
+/** DB_PATH comes from Astro's local .env or the runtime environment in production. */
+export function getDbPath(): string {
+  const dbPath = process.env.DB_PATH ?? import.meta.env.DB_PATH
+  if (!dbPath) {
+    throw new Error('DB_PATH is required. Define it in .env locally or in the deployment environment.')
+  }
+  return isAbsolute(dbPath) ? dbPath : resolve(dbPath)
+}
+
 export function getDb(): Client {
   if (!client) {
-    const dir = join(process.cwd(), '.split-count-data')
-    mkdirSync(dir, { recursive: true })
-    client = createClient({ url: `file:${join(dir, 'bote.db')}` })
+    const file = getDbPath()
+    mkdirSync(dirname(file), { recursive: true })
+    client = createClient({ url: `file:${file}` })
   }
   return client
 }

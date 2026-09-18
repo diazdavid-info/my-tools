@@ -1,0 +1,11 @@
+**
+!apps/
+!apps/split-count/
+!apps/split-count/package.json
+!apps/split-count/pnpm-lock.yaml
+!apps/split-count/astro.config.mjs
+!apps/split-count/tsconfig.json
+!apps/split-count/src/
+!apps/split-count/src/**
+!apps/split-count/public/
+!apps/split-count/public/**
