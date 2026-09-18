@@ -17,6 +17,8 @@ export function BoteApp({ initialBote }: Props) {
   const [bote, setBote] = useState(initialBote)
   const [tab, setTab] = useState<'gastos' | 'saldos'>('gastos')
   const [showModal, setShowModal] = useState(false)
+  const [showShareDialog, setShowShareDialog] = useState(false)
+  const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
 
   const totalCents = bote.expenses.reduce((sum, e) => sum + e.amountCents, 0)
 
@@ -84,20 +86,45 @@ export function BoteApp({ initialBote }: Props) {
     }
   }
 
+  const closeShareDialog = () => {
+    setShowShareDialog(false)
+    setShareStatus(null)
+  }
+
   const share = async () => {
-    const url = location.href
-    if (navigator.share) {
+    const url = window.location.href
+    const text = `Únete al bote «${bote.name}»`
+
+    if (typeof navigator.share === 'function') {
       try {
         await navigator.share({
           title: bote.name,
-          text: `Bote: ${bote.name}`,
+          text,
           url
         })
-      } catch {
-        /* cancelado */
+        closeShareDialog()
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return
+        setShareStatus('error')
       }
     } else {
-      await navigator.clipboard.writeText(url)
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${text}: ${url}`)}`
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+      closeShareDialog()
+    }
+  }
+
+  const copyLink = async () => {
+    const url = window.location.href
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(url)
+        setShareStatus('copied')
+      } else {
+        window.prompt('Copia este enlace:', url)
+      }
+    } catch {
+      setShareStatus('error')
     }
   }
 
@@ -128,7 +155,9 @@ export function BoteApp({ initialBote }: Props) {
         </button>
         <button
           type="button"
-          onClick={share}
+          aria-haspopup="dialog"
+          aria-expanded={showShareDialog}
+          onClick={() => setShowShareDialog(true)}
           class="flex h-11 items-center gap-2 rounded-full border border-line bg-paper-white pr-4 pl-3 text-[15px] font-semibold text-ink active:bg-paper-soft"
         >
           <svg
@@ -482,6 +511,122 @@ export function BoteApp({ initialBote }: Props) {
           onClose={() => setShowModal(false)}
           onSaved={addExpense}
         />
+      )}
+
+      {showShareDialog && (
+        <div
+          class="fixed inset-0 z-50 flex items-end justify-center bg-dim/60 backdrop-blur-[2px]"
+          onClick={closeShareDialog}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="share-dialog-title"
+            class="w-full max-w-[480px] rounded-t-3xl bg-paper px-5 pt-2.5 pb-8 sm:mb-6 sm:rounded-3xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div class="flex justify-center pb-1">
+              <div class="h-1 w-10 rounded-sm bg-[#cfc8b9]" />
+            </div>
+            <div class="flex items-center justify-between pb-5">
+              <div>
+                <p class="label-mono-strong">ENLACE DEL BOTE</p>
+                <h2 id="share-dialog-title" class="mt-1 text-[30px] leading-none text-ink">
+                  Compartir {bote.name}
+                </h2>
+              </div>
+              <button
+                type="button"
+                aria-label="Cerrar"
+                onClick={closeShareDialog}
+                class="flex size-11 shrink-0 items-center justify-center rounded-xl border border-line bg-paper-white text-ink"
+              >
+                <svg
+                  class="size-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="mb-4 truncate rounded-xl border border-line bg-paper-white px-4 py-3 font-mono text-xs text-ink-muted">
+              {window.location.href}
+            </div>
+
+            <div class="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={share}
+                class="flex h-14 items-center justify-center gap-2.5 rounded-xl bg-ink text-base font-semibold text-paper active:scale-[0.98]"
+              >
+                <svg
+                  class="size-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <path d="m8.59 13.51 6.83 3.98" />
+                  <path d="m15.41 6.51-6.82 3.98" />
+                </svg>
+                Compartir
+              </button>
+              <button
+                type="button"
+                onClick={copyLink}
+                class={`flex h-14 items-center justify-center gap-2.5 rounded-xl border text-base font-semibold active:scale-[0.98] ${
+                  shareStatus === 'copied'
+                    ? 'border-ink bg-paper-white text-ink'
+                    : 'border-line bg-paper-white text-ink'
+                }`}
+              >
+                {shareStatus === 'copied' ? (
+                  <svg
+                    class="size-5 text-accent"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                ) : (
+                  <svg
+                    class="size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect width="14" height="14" x="8" y="8" rx="2" />
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                  </svg>
+                )}
+                {shareStatus === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}
+              </button>
+              {shareStatus === 'error' && (
+                <p role="alert" class="text-center text-sm font-medium text-accent">
+                  No se pudo completar la acción. Inténtalo de nuevo.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
