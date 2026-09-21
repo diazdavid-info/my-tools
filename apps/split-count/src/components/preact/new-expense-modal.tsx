@@ -6,6 +6,7 @@ import type { Bote, Expense, Participant, SplitMode } from '@/lib/types'
 
 interface Props {
   bote: Bote
+  expense?: Expense
   onClose: () => void
   onSaved: (expense: Expense) => void
 }
@@ -46,12 +47,31 @@ function redistributeCents(
   return result
 }
 
-export function NewExpenseModal({ bote, onClose, onSaved }: Props) {
-  const [title, setTitle] = useState('')
-  const [amountInput, setAmountInput] = useState('')
-  const [payers, setPayers] = useState<Record<string, string>>({})
-  const [splitMode, setSplitMode] = useState<SplitMode>('equal')
-  const [shares, setShares] = useState<Record<string, string>>({})
+export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Props) {
+  const [title, setTitle] = useState(editing?.title ?? '')
+  const [amountInput, setAmountInput] = useState(
+    editing ? centsToInput(editing.amountCents) : ''
+  )
+  const [payers, setPayers] = useState<Record<string, string>>(() =>
+    editing
+      ? Object.fromEntries(
+          editing.payers.map((p) => [p.id, centsToInput(p.amountCents)])
+        )
+      : {}
+  )
+  const [splitMode, setSplitMode] = useState<SplitMode>(
+    editing?.split.mode ?? 'equal'
+  )
+  const [shares, setShares] = useState<Record<string, string>>(() =>
+    editing && editing.split.mode !== 'equal'
+      ? Object.fromEntries(
+          Object.entries(editing.split.shares).map(([id, value]) => [
+            id,
+            formatDecimalNumber(value)
+          ])
+        )
+      : {}
+  )
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -208,20 +228,25 @@ export function NewExpenseModal({ bote, onClose, onSaved }: Props) {
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/botes/${bote.id}/expenses`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: title.trim(),
-          amountCents,
-          date: new Date().toISOString(),
-          payers: activePayerIds.map((id) => ({
-            id,
-            amountCents: Math.round(parseAmount(payers[id]) * 100)
-          })),
-          split
-        })
-      })
+      const res = await fetch(
+        editing
+          ? `/api/botes/${bote.id}/expenses/${editing.id}`
+          : `/api/botes/${bote.id}/expenses`,
+        {
+          method: editing ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title.trim(),
+            amountCents,
+            date: editing?.date ?? new Date().toISOString(),
+            payers: activePayerIds.map((id) => ({
+              id,
+              amountCents: Math.round(parseAmount(payers[id]) * 100)
+            })),
+            split
+          })
+        }
+      )
       const data = (await res.json()) as Expense & { error?: string }
       if (!res.ok) {
         setError(data.error ?? 'No se pudo guardar el gasto')
@@ -230,7 +255,9 @@ export function NewExpenseModal({ bote, onClose, onSaved }: Props) {
       }
       onSaved(data)
     } catch {
-      setError('No se pudo guardar el gasto')
+      setError(
+        editing ? 'No se pudo actualizar el gasto' : 'No se pudo guardar el gasto'
+      )
       setSaving(false)
     }
   }
@@ -250,7 +277,7 @@ export function NewExpenseModal({ bote, onClose, onSaved }: Props) {
         </div>
         <div class="flex items-center justify-between px-5 pb-2">
           <h2 class="text-[32px] leading-none tracking-[-0.3px] text-ink">
-            Nuevo gasto
+            {editing ? 'Editar gasto' : 'Nuevo gasto'}
           </h2>
           <button
             type="button"
@@ -571,7 +598,7 @@ export function NewExpenseModal({ bote, onClose, onSaved }: Props) {
 
         <div class="px-5 pt-3 pb-8">
           <Button onClick={save} loading={saving}>
-            Guardar gasto
+            {editing ? 'Guardar cambios' : 'Guardar gasto'}
           </Button>
         </div>
       </div>

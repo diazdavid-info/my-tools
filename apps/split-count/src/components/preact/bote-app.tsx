@@ -17,6 +17,7 @@ export function BoteApp({ initialBote }: Props) {
   const [bote, setBote] = useState(initialBote)
   const [tab, setTab] = useState<'gastos' | 'saldos'>('gastos')
   const [showModal, setShowModal] = useState(false)
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   const [showShareDialog, setShowShareDialog] = useState(false)
   const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
 
@@ -42,7 +43,25 @@ export function BoteApp({ initialBote }: Props) {
 
   const addExpense = (expense: Expense) => {
     setBote((prev) => ({ ...prev, expenses: [...prev.expenses, expense] }))
+    closeExpenseModal()
+  }
+
+  const updateExpense = (expense: Expense) => {
+    setBote((prev) => ({
+      ...prev,
+      expenses: prev.expenses.map((e) => (e.id === expense.id ? expense : e))
+    }))
+    closeExpenseModal()
+  }
+
+  const openEditExpense = (expense: Expense) => {
+    setEditingExpense(expense)
+    setShowModal(true)
+  }
+
+  const closeExpenseModal = () => {
     setShowModal(false)
+    setEditingExpense(null)
   }
 
   const markSettlement = async (transfer: {
@@ -298,7 +317,20 @@ export function BoteApp({ initialBote }: Props) {
                   .map((p) => participantName(p.id))
                   .join(' + ')
                 return (
-                  <div key={expense.id} class="flex items-center gap-3 py-2.5">
+                  <div
+                    key={expense.id}
+                    role="button"
+                    tabindex={0}
+                    aria-label={`Editar gasto ${expense.title}`}
+                    onClick={() => openEditExpense(expense)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        openEditExpense(expense)
+                      }
+                    }}
+                    class="flex cursor-pointer items-center gap-3 rounded-xl py-2.5 transition-colors active:bg-paper-soft"
+                  >
                     <div class="flex w-fit shrink-0 -space-x-4">
                       {payerAvatars.map((p) => (
                         <Avatar
@@ -508,8 +540,9 @@ export function BoteApp({ initialBote }: Props) {
       {showModal && (
         <NewExpenseModal
           bote={bote}
-          onClose={() => setShowModal(false)}
-          onSaved={addExpense}
+          expense={editingExpense ?? undefined}
+          onClose={closeExpenseModal}
+          onSaved={editingExpense ? updateExpense : addExpense}
         />
       )}
 

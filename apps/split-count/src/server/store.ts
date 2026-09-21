@@ -137,6 +137,29 @@ export async function addExpense(
   return { id, ...expense }
 }
 
+export async function updateExpense(
+  boteId: string,
+  expenseId: string,
+  expense: Omit<Expense, 'id'>
+): Promise<Expense | null> {
+  await initDb()
+  const db = getDb()
+  const result = await db.execute({
+    sql: 'UPDATE expenses SET title = ?, amount_cents = ?, date = ?, payers = ?, split = ? WHERE id = ? AND bote_id = ?',
+    args: [
+      expense.title,
+      expense.amountCents,
+      expense.date,
+      JSON.stringify(expense.payers),
+      JSON.stringify(expense.split),
+      expenseId,
+      boteId
+    ]
+  })
+  if (result.rowsAffected === 0) return null
+  return { id: expenseId, ...expense }
+}
+
 export async function deleteExpense(
   boteId: string,
   expenseId: string
