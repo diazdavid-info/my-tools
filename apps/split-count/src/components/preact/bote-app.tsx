@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'preact/hooks'
 import { Avatar } from './avatar'
 import { NewExpenseModal } from './new-expense-modal'
+import { BoteSettings } from './bote-settings'
 import {
   computeBalances,
-  computeSettlementSuggestions,
+  planRoutedSettlements,
   dateGroupLabel,
-  formatMoney,
+  formatMoney
 } from '@/lib/split'
 import type { Bote, Expense } from '@/lib/types'
 
@@ -19,15 +20,20 @@ export function BoteApp({ initialBote }: Props) {
   const [showModal, setShowModal] = useState(false)
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   const [showShareDialog, setShowShareDialog] = useState(false)
-  const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
+  const [showSettings, setShowSettings] = useState(false)
+  const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(
+    null
+  )
+  const [paymentError, setPaymentError] = useState<string | null>(null)
 
   const totalCents = bote.expenses.reduce((sum, e) => sum + e.amountCents, 0)
 
   const balances = useMemo(() => computeBalances(bote), [bote])
-  const transfers = useMemo(
-    () => computeSettlementSuggestions(balances),
-    [balances]
+  const plan = useMemo(
+    () => planRoutedSettlements(bote, balances),
+    [bote, balances]
   )
+  const transfers = plan.transfers
   const pendingTransfers = transfers.length
 
   const groupedExpenses = useMemo(() => {
@@ -72,20 +78,14 @@ export function BoteApp({ initialBote }: Props) {
     const res = await fetch(`/api/botes/${bote.id}/settlements`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'create', ...transfer })
+      body: JSON.stringify({ action: 'create', paid: true, ...transfer })
     })
     if (res.ok) {
-      const settlement = (await res.json()) as {
-        id: string
-        from: string
-        to: string
-        amountCents: number
-        paid: boolean
-      }
-      setBote((prev) => ({
-        ...prev,
-        settlements: [...prev.settlements, settlement]
-      }))
+      const fresh = await fetch(`/api/botes/${bote.id}`)
+      if (fresh.ok) setBote((await fresh.json()) as Bote)
+      setPaymentError(null)
+    } else {
+      setPaymentError('No se pudo registrar el pago')
     }
   }
 
@@ -96,12 +96,28 @@ export function BoteApp({ initialBote }: Props) {
       body: JSON.stringify({ action: 'mark', settlementId, paid })
     })
     if (res.ok) {
+      const fresh = await fetch(`/api/botes/${bote.id}`)
+      if (fresh.ok) setBote((await fresh.json()) as Bote)
+      setPaymentError(null)
+    } else {
+      setPaymentError('No se pudo actualizar el pago')
+    }
+  }
+
+  const removePendingSettlement = async (settlementId: string) => {
+    const res = await fetch(`/api/botes/${bote.id}/settlements`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', settlementId })
+    })
+    if (res.ok) {
       setBote((prev) => ({
         ...prev,
-        settlements: prev.settlements.map((s) =>
-          s.id === settlementId ? { ...s, paid } : s
-        )
+        settlements: prev.settlements.filter((item) => item.id !== settlementId)
       }))
+      setPaymentError(null)
+    } else {
+      setPaymentError('No se pudo quitar el pago pendiente')
     }
   }
 
@@ -149,6 +165,19 @@ export function BoteApp({ initialBote }: Props) {
 
   const participantName = (id: string) =>
     bote.participants.find((p) => p.id === id)?.name ?? '?'
+  const walletName = (id: string) => {
+    const wallet = bote.sharedWallets.find((item) => item.id === id)
+    return wallet
+      ? wallet.memberIds.map(participantName).join(' y ')
+      : participantName(id)
+  }
+  const accountColor = (id: string) => {
+    const wallet = bote.sharedWallets.find((item) => item.id === id)
+    return (
+      bote.participants.find((p) => p.id === (wallet?.memberIds[0] ?? id))
+        ?.color ?? '#eee'
+    )
+  }
 
   return (
     <div class="relative flex min-h-dvh flex-col bg-paper">
@@ -172,27 +201,49 @@ export function BoteApp({ initialBote }: Props) {
             <path d="m15 18-6-6 6-6" />
           </svg>
         </button>
-        <button
-          type="button"
-          aria-haspopup="dialog"
-          aria-expanded={showShareDialog}
-          onClick={() => setShowShareDialog(true)}
-          class="flex h-11 items-center gap-2 rounded-full border border-line bg-paper-white pr-4 pl-3 text-[15px] font-semibold text-ink active:bg-paper-soft"
-        >
-          <svg
-            class="size-[18px]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Personas y monederos"
+            onClick={() => setShowSettings(true)}
+            class="flex h-11 items-center gap-1.5 rounded-xl border border-line bg-paper-white px-3 text-sm font-semibold text-ink"
           >
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-          </svg>
-          Compartir
-        </button>
+            <svg
+              class="size-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+            </svg>
+            <span>Personas</span>
+          </button>
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded={showShareDialog}
+            onClick={() => setShowShareDialog(true)}
+            class="flex h-11 items-center gap-2 rounded-full border border-line bg-paper-white pr-4 pl-3 text-[15px] font-semibold text-ink active:bg-paper-soft"
+          >
+            <svg
+              class="size-[18px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
+            Compartir
+          </button>
+        </div>
       </header>
 
       {/* Título */}
@@ -304,9 +355,11 @@ export function BoteApp({ initialBote }: Props) {
                 {group.label}
               </p>
               {group.expenses.map((expense) => {
-                const payerAvatars = bote.participants.filter((p) =>
-                  expense.payers.some((payer) => payer.id === p.id)
-                )
+                const payerAvatars = expense.payers.map((payer) => ({
+                  id: payer.id,
+                  name: walletName(payer.id),
+                  color: accountColor(payer.id)
+                }))
                 const splitLabel =
                   expense.split.mode === 'equal'
                     ? 'por igual'
@@ -314,7 +367,11 @@ export function BoteApp({ initialBote }: Props) {
                       ? 'porcentajes'
                       : 'importes'
                 const payerNames = expense.payers
-                  .map((p) => participantName(p.id))
+                  .map((p) =>
+                    bote.sharedWallets.some((wallet) => wallet.id === p.id)
+                      ? `Compartido ${walletName(p.id)}`
+                      : walletName(p.id)
+                  )
                   .join(' + ')
                 return (
                   <div
@@ -361,32 +418,57 @@ export function BoteApp({ initialBote }: Props) {
         </div>
       ) : (
         <div class="flex-1 overflow-y-auto px-5 pt-1 pb-32">
-          {/* Saldo por persona */}
+          {/* Saldos de todos los monederos */}
           <p class="pt-3 pb-1.5 font-mono text-[11px] tracking-[1.5px] text-ink-soft">
-            SALDO POR PERSONA
+            SALDO POR MONEDERO
           </p>
           <div class="flex flex-col overflow-hidden rounded-[14px] border border-line bg-paper-white">
-            {bote.participants.map((p, i) => {
+            {[
+              ...bote.participants,
+              ...bote.sharedWallets.map((wallet) => ({
+                id: wallet.id,
+                name: walletName(wallet.id),
+                color: accountColor(wallet.id)
+              }))
+            ].map((p, i, accounts) => {
               const balance = balances[p.id]
               const positive = balance.net > 0
               const zero = balance.net === 0
+              const shared = bote.sharedWallets.find(
+                (wallet) => wallet.id === p.id
+              )
               return (
                 <>
-                  <div key={p.id} class="flex h-14 items-center gap-3 px-3.5">
+                  <div
+                    key={p.id}
+                    class="flex min-h-16 items-center gap-3 px-3.5 py-2"
+                  >
                     <Avatar name={p.name} color={p.color} size={36} />
                     <div class="flex min-w-0 flex-1 flex-col gap-0.5">
                       <span class="flex items-center gap-2 truncate text-base font-medium text-ink">
                         {p.name}
-                        {p.couple && (
+                        {shared && (
                           <span class="shrink-0 rounded border border-line px-1 py-px font-mono text-[9px] tracking-[1.1px] text-ink-muted">
-                            PAREJA
+                            COMPARTIDO
                           </span>
                         )}
                       </span>
-                      <span class="truncate text-xs text-ink-soft">
-                        Pagó {formatMoney(balance.paid)} · Le toca{' '}
+                      <span class="text-xs text-ink-soft">
+                        Gastos: pagó {formatMoney(balance.paid)} · le toca{' '}
                         {formatMoney(balance.owed)}
                       </span>
+                      {balance.transferredIn || balance.transferredOut ? (
+                        <span class="text-xs text-ink-soft">
+                          Liquidaciones: envió{' '}
+                          {formatMoney(balance.transferredOut ?? 0)} · recibió{' '}
+                          {formatMoney(balance.transferredIn ?? 0)}
+                        </span>
+                      ) : null}
+                      {shared && plan.recipients[shared.id] && (
+                        <span class="text-xs text-ink-soft">
+                          Cobra {participantName(plan.recipients[shared.id])}
+                        </span>
+                      )}
                     </div>
                     <div class="flex shrink-0 flex-col items-end gap-px whitespace-nowrap">
                       <span
@@ -401,9 +483,7 @@ export function BoteApp({ initialBote }: Props) {
                       </span>
                     </div>
                   </div>
-                  {i < bote.participants.length - 1 && (
-                    <div class="h-px bg-line-soft" />
-                  )}
+                  {i < accounts.length - 1 && <div class="h-px bg-line-soft" />}
                 </>
               )
             })}
@@ -415,6 +495,12 @@ export function BoteApp({ initialBote }: Props) {
               PARA SALDAR
             </p>
           </div>
+          {Object.keys(plan.recipients).length > 0 && (
+            <p class="pb-2 text-xs text-ink-soft">
+              Elegimos quién cobra por cada monedero compartido para reducir
+              pagos. Se mantiene hasta saldar el bote.
+            </p>
+          )}
           <div class="flex flex-col overflow-hidden rounded-[14px] border border-line bg-paper-white">
             {transfers.length === 0 && (
               <p class="px-3.5 py-5 text-sm text-ink-muted">
@@ -424,6 +510,7 @@ export function BoteApp({ initialBote }: Props) {
             {transfers.map((t, i) => {
               const existing = bote.settlements.find(
                 (s) =>
+                  !s.paid &&
                   s.from === t.from &&
                   s.to === t.to &&
                   s.amountCents === t.amountCents
@@ -436,27 +523,23 @@ export function BoteApp({ initialBote }: Props) {
                   >
                     <div class="flex w-13 shrink-0 -space-x-[18px]">
                       <Avatar
-                        name={participantName(t.from)}
-                        color={
-                          bote.participants.find((p) => p.id === t.from)
-                            ?.color ?? '#eee'
-                        }
+                        name={walletName(t.from)}
+                        color={accountColor(t.from)}
                         size={34}
                         className="ring-2 ring-paper-white"
                       />
                       <Avatar
-                        name={participantName(t.to)}
-                        color={
-                          bote.participants.find((p) => p.id === t.to)?.color ??
-                          '#eee'
-                        }
+                        name={walletName(t.to)}
+                        color={accountColor(t.to)}
                         size={34}
                         className="ring-2 ring-paper-white"
                       />
                     </div>
                     <div class="flex min-w-0 flex-1 flex-col gap-0.5">
                       <span class="truncate text-[13px] text-ink-soft">
-                        {participantName(t.from)} paga a {participantName(t.to)}
+                        {bote.sharedWallets.some((wallet) => wallet.id === t.to)
+                          ? `${participantName(t.from)} ingresa en ${walletName(t.to)}`
+                          : `${participantName(t.from)} paga a ${participantName(t.to)}`}
                       </span>
                       <span class="font-mono text-[17px] font-medium whitespace-nowrap text-ink">
                         {formatMoney(t.amountCents)}
@@ -465,31 +548,10 @@ export function BoteApp({ initialBote }: Props) {
                     {existing ? (
                       <button
                         type="button"
-                        onClick={() => togglePaid(existing.id, !existing.paid)}
-                        class={`flex h-11 shrink-0 items-center gap-1.25 rounded-[10px] border px-3 text-sm font-semibold transition-colors ${
-                          existing.paid
-                            ? 'border-ink bg-ink text-paper'
-                            : 'border-ink bg-paper-white text-ink active:bg-paper-soft'
-                        }`}
+                        onClick={() => togglePaid(existing.id, true)}
+                        class="flex h-11 shrink-0 items-center gap-1.25 rounded-[10px] border border-ink bg-paper-white px-3 text-sm font-semibold text-ink active:bg-paper-soft"
                       >
-                        {existing.paid ? (
-                          <>
-                            <svg
-                              class="size-4"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="3"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <path d="M20 6 9 17l-5-5" />
-                            </svg>
-                            Pagado
-                          </>
-                        ) : (
-                          'Marcar pagado'
-                        )}
+                        Marcar pagado
                       </button>
                     ) : (
                       <button
@@ -508,6 +570,63 @@ export function BoteApp({ initialBote }: Props) {
               )
             })}
           </div>
+          {paymentError && (
+            <p role="alert" class="pt-2 text-sm text-accent">
+              {paymentError}
+            </p>
+          )}
+          {bote.settlements.length > 0 && (
+            <div class="pt-5">
+              <p class="pb-1.5 font-mono text-[11px] tracking-[1.5px] text-ink-soft">
+                PAGOS REGISTRADOS
+              </p>
+              <div class="overflow-hidden rounded-[14px] border border-line bg-paper-white">
+                {bote.settlements.map((settlement, index) => (
+                  <div
+                    key={settlement.id}
+                    class={`flex min-h-16 items-center gap-3 px-3.5 ${index > 0 ? 'border-t border-line-soft' : ''}`}
+                  >
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate text-sm font-medium text-ink">
+                        {walletName(settlement.from)} →{' '}
+                        {walletName(settlement.to)}
+                      </p>
+                      <p class="text-xs text-ink-soft">
+                        {settlement.paid ? 'Pagado' : 'Pendiente'} ·{' '}
+                        {formatMoney(settlement.amountCents)}
+                      </p>
+                    </div>
+                    {settlement.paid ? (
+                      <button
+                        type="button"
+                        onClick={() => togglePaid(settlement.id, false)}
+                        class="h-11 text-xs font-medium text-ink-muted"
+                      >
+                        Deshacer
+                      </button>
+                    ) : (
+                      <div class="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => togglePaid(settlement.id, true)}
+                          class="h-11 text-xs font-semibold text-ink"
+                        >
+                          Marcar pagado
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removePendingSettlement(settlement.id)}
+                          class="h-11 text-xs text-accent"
+                        >
+                          Quitar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -546,6 +665,14 @@ export function BoteApp({ initialBote }: Props) {
         />
       )}
 
+      {showSettings && (
+        <BoteSettings
+          bote={bote}
+          onChanged={setBote}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
+
       {showShareDialog && (
         <div
           class="fixed inset-0 z-50 flex items-end justify-center bg-dim/60 backdrop-blur-[2px]"
@@ -555,16 +682,16 @@ export function BoteApp({ initialBote }: Props) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="share-dialog-title"
-            class="w-full max-w-[480px] rounded-t-3xl bg-paper px-5 pt-2.5 pb-8 sm:mb-6 sm:rounded-3xl"
+            class="w-full max-w-[480px] rounded-t-3xl bg-paper px-5 pt-5 pb-8 sm:mb-6 sm:rounded-3xl"
             onClick={(event) => event.stopPropagation()}
           >
-            <div class="flex justify-center pb-1">
-              <div class="h-1 w-10 rounded-sm bg-[#cfc8b9]" />
-            </div>
             <div class="flex items-center justify-between pb-5">
               <div>
                 <p class="label-mono-strong">ENLACE DEL BOTE</p>
-                <h2 id="share-dialog-title" class="mt-1 text-[30px] leading-none text-ink">
+                <h2
+                  id="share-dialog-title"
+                  class="mt-1 text-[30px] leading-none text-ink"
+                >
                   Compartir {bote.name}
                 </h2>
               </div>
@@ -653,7 +780,10 @@ export function BoteApp({ initialBote }: Props) {
                 {shareStatus === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}
               </button>
               {shareStatus === 'error' && (
-                <p role="alert" class="text-center text-sm font-medium text-accent">
+                <p
+                  role="alert"
+                  class="text-center text-sm font-medium text-accent"
+                >
                   No se pudo completar la acción. Inténtalo de nuevo.
                 </p>
               )}

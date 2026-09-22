@@ -2,17 +2,20 @@ import { describe, expect, it } from 'vitest'
 import {
   centsToInput,
   computeBalances,
+  computeRoutedSettlements,
+  planRoutedSettlements,
   computeSettlementSuggestions,
   formatDecimalNumber,
   formatMoney,
   splitEqual,
-  splitProportional,
+  splitExpense,
+  splitProportional
 } from '@/lib/split'
 import type { Bote, Expense, Participant } from '@/lib/types'
 
 const participants: Participant[] = [
   { id: 'ana', name: 'Ana', color: '#f00' },
-  { id: 'luis', name: 'Luis y Sara', color: '#0f0', couple: true },
+  { id: 'luis', name: 'Luis', color: '#0f0' },
   { id: 'marta', name: 'Marta', color: '#00f' }
 ]
 
@@ -79,6 +82,7 @@ describe('computeBalances', () => {
       name: 'Test',
       createdAt: new Date().toISOString(),
       participants,
+      sharedWallets: [],
       expenses: [expense],
       settlements: []
     }
@@ -87,6 +91,227 @@ describe('computeBalances', () => {
     expect(balances.ana.net).toBe(8000 - 6000)
     expect(balances.luis.net).toBe(4000 - 3600)
     expect(balances.marta.net).toBe(0 - 2400)
+  })
+})
+
+describe('monederos compartidos', () => {
+  const people: Participant[] = [
+    { id: 'david', name: 'David', color: '#f00' },
+    { id: 'lau', name: 'Lau', color: '#0f0' },
+    { id: 'bea', name: 'Bea', color: '#00f' }
+  ]
+  const expense = (
+    id: string,
+    amountCents: number,
+    payerId: string,
+    split: Expense['split']
+  ): Expense => ({
+    id,
+    title: id,
+    amountCents,
+    date: '2026-01-01',
+    payers: [{ id: payerId, amountCents }],
+    split
+  })
+  const bote: Bote = {
+    id: 'b',
+    name: 'Viaje',
+    createdAt: '2026-01-01',
+    participants: people,
+    sharedWallets: [
+      { id: 'joint', memberIds: ['david', 'lau'], lockedRecipientId: null }
+    ],
+    expenses: [
+      expense('comida', 3000, 'joint', {
+        mode: 'equal',
+        participantIds: ['david', 'lau', 'bea']
+      }),
+      expense('cafe', 900, 'bea', {
+        mode: 'equal',
+        participantIds: ['david', 'lau', 'bea']
+      }),
+      expense('postre', 600, 'bea', {
+        mode: 'percentages',
+        shares: { bea: 50, lau: 50 }
+      })
+    ],
+    settlements: []
+  }
+
+  it('separa el saldo conjunto de los individuales cuando paga Bea', () => {
+    const balances = computeBalances(bote)
+    expect(
+      Object.fromEntries(
+        Object.entries(balances).map(([id, balance]) => [id, balance.net])
+      )
+    ).toEqual({
+      david: -300,
+      lau: -600,
+      bea: -100,
+      joint: 1000
+    })
+  })
+
+  it('elige el receptor con menos pagos y respeta la elección fijada', () => {
+    const balances = computeBalances(bote)
+    const transfers = computeRoutedSettlements(bote, balances)
+    expect(transfers).toEqual([
+      { from: 'lau', to: 'david', amountCents: 600 },
+      { from: 'bea', to: 'david', amountCents: 100 },
+      { from: 'david', to: 'joint', amountCents: 1000 }
+    ])
+    const settled = computeBalances({
+      ...bote,
+      settlements: transfers.map((transfer, index) => ({
+        id: String(index),
+        ...transfer,
+        paid: true
+      }))
+    })
+    expect(Object.values(settled).every((balance) => balance.net === 0)).toBe(
+      true
+    )
+    const withLau = {
+      ...bote,
+      sharedWallets: [{ ...bote.sharedWallets[0], lockedRecipientId: 'lau' }]
+    }
+    expect(computeRoutedSettlements(withLau, balances)).toEqual([
+      { from: 'david', to: 'lau', amountCents: 300 },
+      { from: 'bea', to: 'lau', amountCents: 100 },
+      { from: 'lau', to: 'joint', amountCents: 1000 }
+    ])
+  })
+
+  it('cambia de receptor cuando reduce el número de pagos', () => {
+    const balances = {
+      david: { paid: 0, owed: 0, net: -300 },
+      lau: { paid: 0, owed: 0, net: -1000 },
+      bea: { paid: 0, owed: 0, net: 300 },
+      joint: { paid: 0, owed: 0, net: 1000 }
+    }
+    const chosen = planRoutedSettlements(bote, balances)
+    expect(chosen.recipients).toEqual({ joint: 'lau' })
+    expect(chosen.transfers).toHaveLength(2)
+    const locked = planRoutedSettlements(
+      {
+        ...bote,
+        sharedWallets: [
+          { ...bote.sharedWallets[0], lockedRecipientId: 'david' }
+        ]
+      },
+      balances
+    )
+    expect(locked.recipients).toEqual({ joint: 'david' })
+    expect(locked.transfers).toHaveLength(3)
+  })
+
+  it('mantiene independientes varios monederos compartidos', () => {
+    const fourPeople = [
+      ...people,
+      { id: 'carlos', name: 'Carlos', color: '#fff' }
+    ]
+    const all = fourPeople.map((person) => person.id)
+    const second = {
+      id: 'other',
+      memberIds: ['bea', 'carlos'],
+      lockedRecipientId: null
+    }
+    const multiple: Bote = {
+      ...bote,
+      participants: fourPeople,
+      sharedWallets: [...bote.sharedWallets, second],
+      expenses: [
+        expense('uno', 4000, 'joint', { mode: 'equal', participantIds: all }),
+        expense('dos', 2000, 'other', { mode: 'equal', participantIds: all })
+      ]
+    }
+    const balances = computeBalances(multiple)
+    expect(
+      Object.fromEntries(
+        Object.entries(balances).map(([id, balance]) => [id, balance.net])
+      )
+    ).toEqual({
+      david: -500,
+      lau: -500,
+      bea: -1000,
+      carlos: -1000,
+      joint: 2000,
+      other: 1000
+    })
+    const transfers = computeRoutedSettlements(multiple, balances)
+    const settled = computeBalances({
+      ...multiple,
+      settlements: transfers.map((transfer, index) => ({
+        id: String(index),
+        ...transfer,
+        paid: true
+      }))
+    })
+    expect(Object.values(settled).every((balance) => balance.net === 0)).toBe(
+      true
+    )
+  })
+
+  it('respeta un cobro anterior al cambiar de responsable', () => {
+    const withEarlierPayment: Bote = {
+      ...bote,
+      sharedWallets: [{ ...bote.sharedWallets[0], lockedRecipientId: 'lau' }],
+      settlements: [
+        { id: 'paid', from: 'bea', to: 'david', amountCents: 100, paid: true }
+      ]
+    }
+    const balances = computeBalances(withEarlierPayment)
+    const transfers = computeRoutedSettlements(withEarlierPayment, balances)
+    expect(transfers).toEqual([
+      { from: 'david', to: 'lau', amountCents: 400 },
+      { from: 'lau', to: 'joint', amountCents: 1000 }
+    ])
+  })
+
+  it('mantiene el reparto igualitario original al añadir una persona', () => {
+    const original = bote.expenses[0]
+    expect(
+      splitExpense(original, [
+        ...people,
+        { id: 'new', name: 'Nueva', color: '#fff' }
+      ])
+    ).toEqual({
+      david: 1000,
+      lau: 1000,
+      bea: 1000
+    })
+  })
+
+  it('cuadra los saldos después de pagos personales y otro pago compartido', () => {
+    const extended: Bote = {
+      ...bote,
+      expenses: [
+        ...bote.expenses,
+        expense('entradas', 1200, 'david', {
+          mode: 'equal',
+          participantIds: ['david', 'lau', 'bea']
+        }),
+        expense('taxi', 1000, 'lau', {
+          mode: 'percentages',
+          shares: { david: 50, lau: 50 }
+        }),
+        expense('compra', 1800, 'joint', {
+          mode: 'equal',
+          participantIds: ['david', 'lau', 'bea']
+        })
+      ]
+    }
+    const balances = computeBalances(extended)
+    expect(
+      Object.fromEntries(
+        Object.entries(balances).map(([id, balance]) => [id, balance.net])
+      )
+    ).toEqual({
+      david: 0,
+      lau: -500,
+      bea: -1100,
+      joint: 1600
+    })
   })
 })
 

@@ -33,10 +33,9 @@ export function splitExpense(
   participants: Participant[]
 ): Record<string, number> {
   if (expense.split.mode === 'equal') {
-    return splitEqual(
-      expense.amountCents,
-      participants.map((p) => p.id)
-    )
+    const participantIds =
+      expense.split.participantIds ?? participants.map((p) => p.id)
+    return splitEqual(expense.amountCents, participantIds)
   }
 
   const shares = expense.split.shares
@@ -101,13 +100,30 @@ export interface Balance {
   paid: number
   owed: number
   net: number
+  transferredOut?: number
+  transferredIn?: number
 }
 
 /** Saldos netos por participante: pagado − lo que le toca pagar */
 export function computeBalances(bote: Bote): Record<string, Balance> {
   const balances: Record<string, Balance> = {}
   for (const p of bote.participants) {
-    balances[p.id] = { paid: 0, owed: 0, net: 0 }
+    balances[p.id] = {
+      paid: 0,
+      owed: 0,
+      net: 0,
+      transferredOut: 0,
+      transferredIn: 0
+    }
+  }
+  for (const wallet of bote.sharedWallets ?? []) {
+    balances[wallet.id] = {
+      paid: 0,
+      owed: 0,
+      net: 0,
+      transferredOut: 0,
+      transferredIn: 0
+    }
   }
 
   for (const expense of bote.expenses) {
@@ -115,24 +131,96 @@ export function computeBalances(bote: Bote): Record<string, Balance> {
       if (balances[payer.id]) balances[payer.id].paid += payer.amountCents
     }
     const shares = splitExpense(expense, bote.participants)
+    const sharedPayer =
+      expense.payers.length === 1
+        ? bote.sharedWallets?.find(
+            (wallet) => wallet.id === expense.payers[0].id
+          )
+        : undefined
     for (const [id, cents] of Object.entries(shares)) {
-      if (balances[id]) balances[id].owed += cents
+      const accountId = sharedPayer?.memberIds.includes(id)
+        ? sharedPayer.id
+        : id
+      if (balances[accountId]) balances[accountId].owed += cents
     }
   }
 
   for (const settlement of bote.settlements) {
     if (balances[settlement.from] && settlement.paid) {
-      balances[settlement.from].paid += settlement.amountCents
+      balances[settlement.from].transferredOut =
+        (balances[settlement.from].transferredOut ?? 0) + settlement.amountCents
     }
     if (balances[settlement.to] && settlement.paid) {
-      balances[settlement.to].owed += settlement.amountCents
+      balances[settlement.to].transferredIn =
+        (balances[settlement.to].transferredIn ?? 0) + settlement.amountCents
     }
   }
 
   for (const b of Object.values(balances)) {
-    b.net = b.paid - b.owed
+    b.net = b.paid - b.owed + (b.transferredOut ?? 0) - (b.transferredIn ?? 0)
   }
   return balances
+}
+
+export interface Transfer {
+  from: string
+  to: string
+  amountCents: number
+}
+
+/** Prueba cada receptor posible y escoge la ruta con menos pagos.
+ * En empate se conserva el orden en que se añadieron las personas. */
+export function planRoutedSettlements(
+  bote: Bote,
+  balances: Record<string, Balance>
+): { transfers: Transfer[]; recipients: Record<string, string> } {
+  const active = (bote.sharedWallets ?? []).filter(
+    (wallet) => (balances[wallet.id]?.net ?? 0) > 0
+  )
+  let best: {
+    transfers: Transfer[]
+    recipients: Record<string, string>
+  } | null = null
+  const evaluate = (index: number, recipients: Record<string, string>) => {
+    if (index < active.length) {
+      const wallet = active[index]
+      const members = bote.participants
+        .filter((person) => wallet.memberIds.includes(person.id))
+        .map((person) => person.id)
+      const choices = wallet.lockedRecipientId
+        ? [wallet.lockedRecipientId]
+        : members
+      for (const recipient of choices) {
+        if (members.includes(recipient))
+          evaluate(index + 1, { ...recipients, [wallet.id]: recipient })
+      }
+      return
+    }
+    const routed: Record<string, Balance> = Object.fromEntries(
+      Object.entries(balances).map(([id, balance]) => [id, { ...balance }])
+    )
+    const deposits: Transfer[] = []
+    for (const wallet of active) {
+      const recipient = recipients[wallet.id]
+      if (!recipient) continue
+      const amountCents = routed[wallet.id].net
+      routed[recipient].net += amountCents
+      delete routed[wallet.id]
+      deposits.push({ from: recipient, to: wallet.id, amountCents })
+    }
+    const transfers = [...computeSettlementSuggestions(routed), ...deposits]
+    if (!best || transfers.length < best.transfers.length)
+      best = { transfers, recipients }
+  }
+  evaluate(0, {})
+  return best ?? { transfers: [], recipients: {} }
+}
+
+export function computeRoutedSettlements(
+  bote: Bote,
+  balances: Record<string, Balance>
+): Transfer[] {
+  return planRoutedSettlements(bote, balances).transfers
 }
 
 /** Pagos mínimos para saldar deudas (algoritmo greedy) */
@@ -183,6 +271,12 @@ export function validateSplit(
   amountCents: number
 ): string | null {
   if (split.mode === 'equal') return null
+  if (
+    Object.values(split.shares).some(
+      (value) => !Number.isFinite(value) || value < 0
+    )
+  )
+    return 'El reparto debe tener importes válidos y no negativos'
   const total = Object.values(split.shares).reduce((a, b) => a + b, 0)
   if (total <= 0) return 'Añade al menos a un participante'
   if (split.mode === 'percentages' && Math.abs(total - 100) > 0.01)
@@ -197,20 +291,22 @@ export function formatMoney(cents: number, decimals = 2): string {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
+    maximumFractionDigits: decimals
   }).format(cents / 100)
 }
 
 /** Número decimal con coma y sin ceros finales (70.5 → "70,5", 70 → "70") */
 export function formatDecimalNumber(value: number): string {
-  return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(value)
+  return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(
+    value
+  )
 }
 
 /** Céntimos a texto de input con coma (8000 → "80,00") */
 export function centsToInput(cents: number): string {
   return new Intl.NumberFormat('es-ES', {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 2
   }).format(cents / 100)
 }
 

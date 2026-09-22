@@ -29,18 +29,24 @@ export function parseExpenseBody(
   if (!title) {
     return { error: jsonError('Ponle un concepto al gasto', 400) }
   }
-  if (!Number.isFinite(amountCents) || amountCents <= 0) {
+  if (
+    !Number.isFinite(amountCents) ||
+    !Number.isInteger(amountCents) ||
+    amountCents <= 0
+  ) {
     return { error: jsonError('El importe debe ser mayor que 0', 400) }
   }
   const participantIds = new Set(bote.participants.map((p) => p.id))
+  const walletIds = new Set(bote.sharedWallets.map((wallet) => wallet.id))
   if (payers.length === 0) {
-    return { error: jsonError('Marca quién ha pagado', 400) }
+    return { error: jsonError('Elige con qué monedero se pagó', 400) }
   }
   if (
     payers.some(
       (p) =>
-        !participantIds.has(p.id) ||
+        (!participantIds.has(p.id) && !walletIds.has(p.id)) ||
         !Number.isFinite(p.amountCents) ||
+        !Number.isInteger(p.amountCents) ||
         p.amountCents <= 0
     )
   ) {
@@ -52,6 +58,17 @@ export function parseExpenseBody(
       error: jsonError('Lo pagado debe coincidir con el importe del gasto', 400)
     }
   }
+  if (payers.length > 1 && payers.some((payer) => walletIds.has(payer.id))) {
+    return {
+      error: jsonError(
+        'Un monedero compartido debe ser el único pagador de este gasto',
+        400
+      )
+    }
+  }
+  if (new Set(payers.map((payer) => payer.id)).size !== payers.length) {
+    return { error: jsonError('Hay pagadores repetidos', 400) }
+  }
   if (!split) {
     return { error: jsonError('Falta cómo se reparte', 400) }
   }
@@ -62,6 +79,18 @@ export function parseExpenseBody(
   const shareIds = split.mode === 'equal' ? [] : Object.keys(split.shares)
   if (shareIds.some((id) => !participantIds.has(id))) {
     return { error: jsonError('Participante no válido en el reparto', 400) }
+  }
+  if (split.mode === 'equal') {
+    const ids =
+      split.participantIds ?? bote.participants.map((person) => person.id)
+    if (
+      ids.length === 0 ||
+      new Set(ids).size !== ids.length ||
+      ids.some((id) => !participantIds.has(id))
+    ) {
+      return { error: jsonError('Participantes no válidos en el reparto', 400) }
+    }
+    split.participantIds = ids
   }
 
   return {

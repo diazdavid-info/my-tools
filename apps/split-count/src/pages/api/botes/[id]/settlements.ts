@@ -1,10 +1,16 @@
 import type { APIRoute } from 'astro'
-import { addSettlement, getBote, markSettlementPaid } from '@/server/store'
+import {
+  addSettlement,
+  deletePendingSettlement,
+  getBote,
+  markSettlementPaid
+} from '@/server/store'
+import { computeBalances, planRoutedSettlements } from '@/lib/split'
 
 export const prerender = false
 
 interface SettlementBody {
-  action?: 'create' | 'mark'
+  action?: 'create' | 'mark' | 'delete'
   from?: string
   to?: string
   amountCents?: number
@@ -35,6 +41,10 @@ export const POST: APIRoute = async ({ params, request }) => {
       status: 404
     })
   }
+  const recipients = planRoutedSettlements(
+    bote,
+    computeBalances(bote)
+  ).recipients
 
   if (body.action === 'mark') {
     if (!body.settlementId) {
@@ -42,10 +52,20 @@ export const POST: APIRoute = async ({ params, request }) => {
         status: 400
       })
     }
+    if (
+      !bote.settlements.some(
+        (settlement) => settlement.id === body.settlementId
+      )
+    ) {
+      return new Response(JSON.stringify({ error: 'No encontrado' }), {
+        status: 404
+      })
+    }
     const ok = await markSettlementPaid(
       boteId,
       body.settlementId,
-      body.paid ?? true
+      body.paid ?? true,
+      body.paid === false ? {} : recipients
     )
     if (!ok) {
       return new Response(JSON.stringify({ error: 'No encontrado' }), {
@@ -54,15 +74,36 @@ export const POST: APIRoute = async ({ params, request }) => {
     }
     return new Response(JSON.stringify({ ok: true }))
   }
+  if (body.action === 'delete') {
+    if (!body.settlementId)
+      return new Response(JSON.stringify({ error: 'Falta el pago' }), {
+        status: 400
+      })
+    const deleted = await deletePendingSettlement(boteId, body.settlementId)
+    return new Response(JSON.stringify({ ok: deleted }), {
+      status: deleted ? 200 : 404
+    })
+  }
 
   const amountCents = Number(body.amountCents)
   if (
     !body.from ||
     !body.to ||
+    body.from === body.to ||
     !Number.isFinite(amountCents) ||
+    !Number.isInteger(amountCents) ||
     amountCents <= 0
   ) {
     return new Response(JSON.stringify({ error: 'Datos incompletos' }), {
+      status: 400
+    })
+  }
+  const accountIds = new Set([
+    ...bote.participants.map((person) => person.id),
+    ...bote.sharedWallets.map((wallet) => wallet.id)
+  ])
+  if (!accountIds.has(body.from) || !accountIds.has(body.to)) {
+    return new Response(JSON.stringify({ error: 'Monedero no válido' }), {
       status: 400
     })
   }
@@ -70,7 +111,9 @@ export const POST: APIRoute = async ({ params, request }) => {
     boteId,
     body.from,
     body.to,
-    amountCents
+    amountCents,
+    body.paid === true,
+    recipients
   )
   return new Response(JSON.stringify(settlement), { status: 201 })
 }

@@ -1,7 +1,7 @@
 export type SplitMode = 'equal' | 'percentages' | 'amounts'
 
 export type SplitValue =
-  | { mode: 'equal' }
+  | { mode: 'equal'; participantIds?: string[] }
   | { mode: 'percentages'; shares: Record<string, number> }
   | { mode: 'amounts'; shares: Record<string, number> }
 
@@ -9,8 +9,12 @@ export interface Participant {
   id: string
   name: string
   color: string
-  couple?: boolean
-  members?: string[]
+}
+
+export interface SharedWallet {
+  id: string
+  memberIds: string[]
+  lockedRecipientId?: string | null
 }
 
 export interface Expense {
@@ -35,6 +39,7 @@ export interface Bote {
   name: string
   createdAt: string
   participants: Participant[]
+  sharedWallets: SharedWallet[]
   expenses: Expense[]
   settlements: Settlement[]
 }

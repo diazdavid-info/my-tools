@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'preact/hooks'
 import { Avatar } from './avatar'
 import { Button } from './button'
 import { centsToInput, formatDecimalNumber, formatMoney } from '@/lib/split'
-import type { Bote, Expense, Participant, SplitMode } from '@/lib/types'
+import type { Bote, Expense, SplitMode } from '@/lib/types'
 
 interface Props {
   bote: Bote
@@ -47,7 +47,12 @@ function redistributeCents(
   return result
 }
 
-export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Props) {
+export function NewExpenseModal({
+  bote,
+  expense: editing,
+  onClose,
+  onSaved
+}: Props) {
   const [title, setTitle] = useState(editing?.title ?? '')
   const [amountInput, setAmountInput] = useState(
     editing ? centsToInput(editing.amountCents) : ''
@@ -62,6 +67,11 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
   const [splitMode, setSplitMode] = useState<SplitMode>(
     editing?.split.mode ?? 'equal'
   )
+  const equalIds =
+    editing?.split.mode === 'equal'
+      ? (editing.split.participantIds ??
+        bote.participants.map((person) => person.id))
+      : bote.participants.map((person) => person.id)
   const [shares, setShares] = useState<Record<string, string>>(() =>
     editing && editing.split.mode !== 'equal'
       ? Object.fromEntries(
@@ -89,7 +99,24 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
     [payers]
   )
 
-  const activePayerIds = bote.participants
+  const payerOptions = [
+    ...bote.participants.map((person) => ({ ...person, shared: false })),
+    ...bote.sharedWallets.map((wallet) => ({
+      id: wallet.id,
+      name: wallet.memberIds
+        .map(
+          (id) =>
+            bote.participants.find((person) => person.id === id)?.name ?? '?'
+        )
+        .join(' y '),
+      color:
+        bote.participants.find((person) => person.id === wallet.memberIds[0])
+          ?.color ?? '#eee',
+      shared: true
+    }))
+  ]
+
+  const activePayerIds = payerOptions
     .filter((p) => payers[p.id] !== undefined)
     .map((p) => p.id)
 
@@ -116,8 +143,16 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
     setPayers({})
   }
 
-  const togglePayer = (p: Participant) => {
+  const togglePayer = (p: { id: string; shared: boolean }) => {
     setPayers((prev) => {
+      if (p.shared)
+        return prev[p.id] === undefined
+          ? { [p.id]: centsToInput(amountCents) }
+          : {}
+      const selectedShared = Object.keys(prev).some((id) =>
+        bote.sharedWallets.some((wallet) => wallet.id === id)
+      )
+      if (selectedShared) return { [p.id]: centsToInput(amountCents) }
       const ids = Object.keys(prev)
       if (prev[p.id] !== undefined) {
         // Deseleccionar: repartir de nuevo entre los restantes
@@ -153,7 +188,7 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
 
   const splitValid =
     splitMode === 'equal'
-      ? true
+      ? equalIds.length > 0
       : splitMode === 'percentages'
         ? Math.abs(sharesTotal - 100) < 0.01
         : sharesTotalCents === amountCents
@@ -175,7 +210,7 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
           Object.fromEntries(
             bote.participants.map((p, i) => [
               p.id,
-              formatDecimalNumber(per + (i === 0 ? rest : 0)),
+              formatDecimalNumber(per + (i === 0 ? rest : 0))
             ])
           )
         )
@@ -183,7 +218,9 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
     } else if (mode === 'amounts') {
       const ids = bote.participants.map((p) => p.id)
       const split = autoSplitCents(amountCents, ids)
-      setShares(Object.fromEntries(ids.map((id) => [id, centsToInput(split[id])])))
+      setShares(
+        Object.fromEntries(ids.map((id) => [id, centsToInput(split[id])]))
+      )
     }
   }
 
@@ -197,7 +234,7 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
       return
     }
     if (activePayerIds.length === 0) {
-      setError('Marca quién ha pagado')
+      setError('Elige con qué monedero se pagó')
       return
     }
     if (payersTotalCents !== amountCents) {
@@ -206,16 +243,18 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
     }
     if (!splitValid) {
       setError(
-        splitMode === 'percentages'
-          ? 'Los porcentajes deben sumar 100 %'
-          : 'Los importes deben sumar el total del gasto'
+        splitMode === 'equal'
+          ? 'Selecciona al menos una persona para el reparto'
+          : splitMode === 'percentages'
+            ? 'Los porcentajes deben sumar 100 %'
+            : 'Los importes deben sumar el total del gasto'
       )
       return
     }
 
     const split =
       splitMode === 'equal'
-        ? ({ mode: 'equal' } as const)
+        ? ({ mode: 'equal', participantIds: equalIds } as const)
         : ({
             mode: splitMode,
             shares: Object.fromEntries(
@@ -256,7 +295,9 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
       onSaved(data)
     } catch {
       setError(
-        editing ? 'No se pudo actualizar el gasto' : 'No se pudo guardar el gasto'
+        editing
+          ? 'No se pudo actualizar el gasto'
+          : 'No se pudo guardar el gasto'
       )
       setSaving(false)
     }
@@ -268,13 +309,9 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
       onClick={onClose}
     >
       <div
-        class="mx-auto flex max-h-[92dvh] w-full max-w-[480px] flex-1 flex-col overflow-hidden rounded-t-3xl bg-paper pt-2.5 sm:mb-6 sm:rounded-3xl"
+        class="mx-auto flex max-h-[92dvh] w-full max-w-[480px] flex-1 flex-col overflow-hidden rounded-t-3xl bg-paper pt-5 sm:mb-6 sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Grabber + cabecera */}
-        <div class="flex justify-center px-5 pb-1">
-          <div class="h-1 w-10 rounded-sm bg-[#cfc8b9]" />
-        </div>
         <div class="flex items-center justify-between px-5 pb-2">
           <h2 class="text-[32px] leading-none tracking-[-0.3px] text-ink">
             {editing ? 'Editar gasto' : 'Nuevo gasto'}
@@ -333,14 +370,21 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
           {/* Quién ha pagado */}
           <div class="flex flex-col gap-2.5">
             <div class="flex items-end justify-between">
-              <span class="label-mono">¿QUIÉN HA PAGADO?</span>
-              <span class="text-xs text-ink-soft">Puedes marcar a varios</span>
+              <span class="label-mono">¿CON QUÉ MONEDERO SE PAGÓ?</span>
+              <span class="text-xs text-ink-soft">
+                El compartido paga por sí solo
+              </span>
             </div>
             <div class="flex flex-col overflow-hidden rounded-[14px] border border-line bg-paper-white">
-              {bote.participants.map((p, i) => {
+              {payerOptions.map((p, i) => {
                 const active = payers[p.id] !== undefined
                 return (
                   <>
+                    {(i === 0 || i === bote.participants.length) && (
+                      <div class="bg-paper-soft px-3.5 py-2 font-mono text-[10px] tracking-[1px] text-ink-muted">
+                        {p.shared ? 'COMPARTIDOS' : 'INDIVIDUALES'}
+                      </div>
+                    )}
                     <div
                       key={p.id}
                       class="flex h-[60px] items-center gap-3 px-3 py-0 pr-3"
@@ -379,9 +423,9 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
                         class={`flex w-full flex-col gap-px ${active ? 'text-ink' : 'text-ink-soft'}`}
                       >
                         <span class="text-base font-medium">{p.name}</span>
-                        {p.couple && (
+                        {p.shared && (
                           <span class="font-mono text-[10px] tracking-[1.2px] text-ink-soft">
-                            PAREJA
+                            MONEDERO COMPARTIDO
                           </span>
                         )}
                       </span>
@@ -404,7 +448,7 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
                         </span>
                       )}
                     </div>
-                    {i < bote.participants.length - 1 && (
+                    {i < payerOptions.length - 1 && (
                       <div class="mx-3.5 h-px bg-line-soft" />
                     )}
                   </>
@@ -443,7 +487,7 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
                 )}
                 <span class="text-[13px]">
                   {activePayerIds.length === 0
-                    ? 'Marca quién ha pagado'
+                    ? 'Elige con qué monedero se pagó'
                     : `Suman ${formatMoney(payersTotalCents)} de ${formatMoney(amountCents)}`}
                 </span>
               </div>
@@ -477,7 +521,10 @@ export function NewExpenseModal({ bote, expense: editing, onClose, onSaved }: Pr
 
             {splitMode === 'equal' ? (
               <p class="text-[13px] text-ink-muted">
-                Se reparte entre los {bote.participants.length} participantes
+                {editing?.split.mode === 'equal' &&
+                equalIds.length !== bote.participants.length
+                  ? `Se mantiene el reparto entre las ${equalIds.length} personas originales.`
+                  : `Se reparte entre las ${equalIds.length} personas del bote.`}
               </p>
             ) : (
               <div class="flex flex-col overflow-hidden rounded-[14px] border border-line bg-paper-white">

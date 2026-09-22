@@ -1,9 +1,11 @@
 import { nanoid } from 'nanoid'
 import { getDb, initDb } from './db'
+import { computeBalances } from '@/lib/split'
 import type {
   Bote,
   Expense,
   Participant,
+  SharedWallet,
   Settlement,
   SplitValue
 } from '@/lib/types'
@@ -44,13 +46,15 @@ interface SettlementRow {
 function toBote(
   row: BoteRow,
   expenses: Expense[],
-  settlements: Settlement[]
+  settlements: Settlement[],
+  sharedWallets: SharedWallet[]
 ): Bote {
   return {
     id: row.id,
     name: row.name,
     createdAt: row.created_at,
     participants: JSON.parse(row.participants) as Participant[],
+    sharedWallets,
     expenses,
     settlements
   }
@@ -58,17 +62,88 @@ function toBote(
 
 export async function createBote(
   name: string,
-  participants: Participant[]
+  participants: Participant[],
+  sharedWallets: SharedWallet[] = []
 ): Promise<Bote> {
   await initDb()
   const db = getDb()
   const id = shortId()
   const createdAt = new Date().toISOString()
-  await db.execute({
-    sql: 'INSERT INTO botes (id, name, created_at, participants) VALUES (?, ?, ?, ?)',
-    args: [id, name, createdAt, JSON.stringify(participants)]
+  await db.batch(
+    [
+      {
+        sql: 'INSERT INTO botes (id, name, created_at, participants) VALUES (?, ?, ?, ?)',
+        args: [id, name, createdAt, JSON.stringify(participants)]
+      },
+      ...sharedWallets.map((wallet) => ({
+        sql: 'INSERT INTO shared_wallets (id, bote_id, member_ids, locked_recipient_id) VALUES (?, ?, ?, ?)',
+        args: [
+          wallet.id,
+          id,
+          JSON.stringify(wallet.memberIds),
+          wallet.lockedRecipientId ?? null
+        ]
+      }))
+    ],
+    'write'
+  )
+  return {
+    id,
+    name,
+    createdAt,
+    participants,
+    sharedWallets,
+    expenses: [],
+    settlements: []
+  }
+}
+
+export async function addParticipant(
+  boteId: string,
+  participant: Participant
+): Promise<Participant | null> {
+  const bote = await getBote(boteId)
+  if (!bote) return null
+  const db = getDb()
+  const operations = bote.expenses
+    .filter(
+      (expense) =>
+        expense.split.mode === 'equal' && !expense.split.participantIds
+    )
+    .map((expense) => ({
+      sql: 'UPDATE expenses SET split = ? WHERE id = ? AND bote_id = ?',
+      args: [
+        JSON.stringify({
+          mode: 'equal',
+          participantIds: bote.participants.map((p) => p.id)
+        }),
+        expense.id,
+        boteId
+      ]
+    }))
+  operations.push({
+    sql: 'UPDATE botes SET participants = ? WHERE id = ?',
+    args: [JSON.stringify([...bote.participants, participant]), boteId]
   })
-  return { id, name, createdAt, participants, expenses: [], settlements: [] }
+  await db.batch(operations, 'write')
+  return participant
+}
+
+export async function addSharedWallet(
+  boteId: string,
+  wallet: SharedWallet
+): Promise<SharedWallet> {
+  await initDb()
+  await getDb().execute({
+    sql: 'INSERT INTO shared_wallets (id, bote_id, member_ids, locked_recipient_id) VALUES (?, ?, ?, ?)',
+    args: [
+      wallet.id,
+      boteId,
+      JSON.stringify(wallet.memberIds),
+      wallet.lockedRecipientId ?? null
+    ]
+  })
+  return wallet
 }
 
 export async function getBote(id: string): Promise<Bote | null> {
@@ -112,7 +187,45 @@ export async function getBote(id: string): Promise<Bote | null> {
     }
   })
 
-  return toBote(row, expenses, settlements)
+  const walletRows = await db.execute({
+    sql: 'SELECT id, member_ids, locked_recipient_id FROM shared_wallets WHERE bote_id = ? ORDER BY created_at, rowid',
+    args: [id]
+  })
+  const sharedWallets: SharedWallet[] = walletRows.rows.map((wallet) => ({
+    id: String(wallet.id),
+    memberIds: JSON.parse(String(wallet.member_ids)) as string[],
+    lockedRecipientId: wallet.locked_recipient_id
+      ? String(wallet.locked_recipient_id)
+      : null
+  }))
+
+  const bote = toBote(row, expenses, settlements, sharedWallets)
+  if (
+    sharedWallets.some((wallet) => wallet.lockedRecipientId) &&
+    settlements.every((settlement) => settlement.paid) &&
+    Object.values(computeBalances(bote)).every((balance) => balance.net === 0)
+  ) {
+    await db.execute({
+      sql: 'UPDATE shared_wallets SET locked_recipient_id = NULL WHERE bote_id = ?',
+      args: [id]
+    })
+    for (const wallet of sharedWallets) wallet.lockedRecipientId = null
+  }
+  return bote
+}
+
+export async function lockSharedWalletRecipients(
+  boteId: string,
+  recipients: Record<string, string>
+): Promise<void> {
+  await initDb()
+  const operations = Object.entries(recipients).map(
+    ([walletId, recipientId]) => ({
+      sql: 'UPDATE shared_wallets SET locked_recipient_id = ? WHERE id = ? AND bote_id = ? AND locked_recipient_id IS NULL',
+      args: [recipientId, walletId, boteId]
+    })
+  )
+  if (operations.length) await getDb().batch(operations, 'write')
 }
 
 export async function addExpense(
@@ -177,28 +290,62 @@ export async function addSettlement(
   boteId: string,
   from: string,
   to: string,
-  amountCents: number
+  amountCents: number,
+  paid = false,
+  recipients: Record<string, string> = {}
 ): Promise<Settlement | null> {
   await initDb()
   const db = getDb()
   const id = shortId()
-  await db.execute({
-    sql: 'INSERT INTO settlements (id, bote_id, from_id, to_id, amount_cents) VALUES (?, ?, ?, ?, ?)',
-    args: [id, boteId, from, to, amountCents]
+  await db.batch(
+    [
+      ...Object.entries(recipients).map(([walletId, recipientId]) => ({
+        sql: 'UPDATE shared_wallets SET locked_recipient_id = ? WHERE id = ? AND bote_id = ? AND locked_recipient_id IS NULL',
+        args: [recipientId, walletId, boteId]
+      })),
+      {
+        sql: 'INSERT INTO settlements (id, bote_id, from_id, to_id, amount_cents, paid) VALUES (?, ?, ?, ?, ?, ?)',
+        args: [id, boteId, from, to, amountCents, paid ? 1 : 0]
+      }
+    ],
+    'write'
+  )
+  return { id, from, to, amountCents, paid }
+}
+
+export async function deletePendingSettlement(
+  boteId: string,
+  settlementId: string
+): Promise<boolean> {
+  await initDb()
+  const result = await getDb().execute({
+    sql: 'DELETE FROM settlements WHERE id = ? AND bote_id = ? AND paid = 0',
+    args: [settlementId, boteId]
   })
-  return { id, from, to, amountCents, paid: false }
+  return result.rowsAffected > 0
 }
 
 export async function markSettlementPaid(
   boteId: string,
   settlementId: string,
-  paid: boolean
+  paid: boolean,
+  recipients: Record<string, string> = {}
 ): Promise<boolean> {
   await initDb()
   const db = getDb()
-  const result = await db.execute({
-    sql: 'UPDATE settlements SET paid = ? WHERE id = ? AND bote_id = ?',
-    args: [paid ? 1 : 0, settlementId, boteId]
-  })
+  const results = await db.batch(
+    [
+      ...Object.entries(recipients).map(([walletId, recipientId]) => ({
+        sql: 'UPDATE shared_wallets SET locked_recipient_id = ? WHERE id = ? AND bote_id = ? AND locked_recipient_id IS NULL',
+        args: [recipientId, walletId, boteId]
+      })),
+      {
+        sql: 'UPDATE settlements SET paid = ? WHERE id = ? AND bote_id = ?',
+        args: [paid ? 1 : 0, settlementId, boteId]
+      }
+    ],
+    'write'
+  )
+  const result = results[results.length - 1]
   return result.rowsAffected > 0
 }
