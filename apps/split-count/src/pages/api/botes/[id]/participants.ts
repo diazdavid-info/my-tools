@@ -19,6 +19,11 @@ export const POST: APIRoute = async ({ params, request }) => {
       status: 400
     })
   }
+  if (!body || typeof body !== 'object' || typeof body.name !== 'string') {
+    return new Response(JSON.stringify({ error: 'Nombre no válido' }), {
+      status: 400
+    })
+  }
   const name = body.name?.trim()
   if (!name)
     return new Response(JSON.stringify({ error: 'Escribe un nombre' }), {

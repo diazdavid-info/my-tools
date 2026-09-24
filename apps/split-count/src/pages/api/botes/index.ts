@@ -21,6 +21,30 @@ export const POST: APIRoute = async ({ request }) => {
     })
   }
 
+  if (
+    !body ||
+    typeof body !== 'object' ||
+    Array.isArray(body) ||
+    typeof body.name !== 'string' ||
+    !Array.isArray(body.participants) ||
+    body.participants.some(
+      (p) => !p || typeof p.name !== 'string' || typeof p.clientId !== 'string'
+    ) ||
+    (body.sharedWallets !== undefined &&
+      (!Array.isArray(body.sharedWallets) ||
+        body.sharedWallets.some(
+          (wallet) =>
+            !wallet ||
+            !Array.isArray(wallet.memberIds) ||
+            wallet.memberIds.some((id) => typeof id !== 'string')
+        )))
+  ) {
+    return new Response(
+      JSON.stringify({ error: 'Datos del bote no válidos' }),
+      { status: 400 }
+    )
+  }
+
   const name = body.name?.trim()
   if (!name) {
     return new Response(

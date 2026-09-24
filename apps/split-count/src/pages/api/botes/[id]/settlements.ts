@@ -35,6 +35,20 @@ export const POST: APIRoute = async ({ params, request }) => {
     })
   }
 
+  if (
+    !body ||
+    typeof body !== 'object' ||
+    Array.isArray(body) ||
+    (body.action !== undefined &&
+      !['create', 'mark', 'delete'].includes(body.action)) ||
+    (body.paid !== undefined && typeof body.paid !== 'boolean')
+  ) {
+    return new Response(
+      JSON.stringify({ error: 'Datos del pago no válidos' }),
+      { status: 400 }
+    )
+  }
+
   const bote = await getBote(boteId)
   if (!bote) {
     return new Response(JSON.stringify({ error: 'Bote no encontrado' }), {
@@ -85,14 +99,15 @@ export const POST: APIRoute = async ({ params, request }) => {
     })
   }
 
-  const amountCents = Number(body.amountCents)
+  const amountCents = body.amountCents
   if (
+    typeof body.from !== 'string' ||
+    typeof body.to !== 'string' ||
     !body.from ||
     !body.to ||
     body.from === body.to ||
-    !Number.isFinite(amountCents) ||
-    !Number.isInteger(amountCents) ||
-    amountCents <= 0
+    !Number.isSafeInteger(amountCents) ||
+    amountCents! <= 0
   ) {
     return new Response(JSON.stringify({ error: 'Datos incompletos' }), {
       status: 400
@@ -111,7 +126,7 @@ export const POST: APIRoute = async ({ params, request }) => {
     boteId,
     body.from,
     body.to,
-    amountCents,
+    amountCents!,
     body.paid === true,
     recipients
   )

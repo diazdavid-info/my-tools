@@ -19,6 +19,19 @@ export const POST: APIRoute = async ({ params, request }) => {
     })
   }
 
+  if (
+    !body ||
+    typeof body !== 'object' ||
+    Array.isArray(body) ||
+    (body.memberIds !== undefined &&
+      (!Array.isArray(body.memberIds) ||
+        body.memberIds.some((id) => typeof id !== 'string')))
+  ) {
+    return new Response(JSON.stringify({ error: 'Miembros no válidos' }), {
+      status: 400
+    })
+  }
+
   const memberIds = body.memberIds ?? []
   const people = new Set(bote.participants.map((person) => person.id))
   const occupied = new Set(

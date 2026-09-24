@@ -270,7 +270,15 @@ export function validateSplit(
   split: SplitValue,
   amountCents: number
 ): string | null {
+  if (!split || typeof split !== 'object') return 'Reparto no válido'
   if (split.mode === 'equal') return null
+  if (
+    (split.mode !== 'percentages' && split.mode !== 'amounts') ||
+    !split.shares ||
+    typeof split.shares !== 'object' ||
+    Array.isArray(split.shares)
+  )
+    return 'Reparto no válido'
   if (
     Object.values(split.shares).some(
       (value) => !Number.isFinite(value) || value < 0
