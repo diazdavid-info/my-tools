@@ -1,5 +1,11 @@
 # @mytools/tasks
 
+## 0.20.0
+
+### Minor Changes
+
+- 7059f05: Upgrade to AI SDK 7 and OpenAI provider 4. The CLI requires Node.js 22 or later.
+
 ## 0.19.0
 
 ### Minor Changes

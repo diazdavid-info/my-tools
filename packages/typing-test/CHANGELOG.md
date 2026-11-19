@@ -1,5 +1,11 @@
 # typing-test
 
+## 0.0.6
+
+### Patch Changes
+
+- 7059f05: Publish the JavaScript and declaration entry points from dist so consumers can import the package and resolve its types.
+
 ## 0.0.5
 
 ### Patch Changes
