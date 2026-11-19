@@ -1,6 +1,6 @@
 {
   "name": "api-route",
-  "version": "0.0.15",
+  "version": "0.1.0",
   "description": "Basic framework for your API in Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
