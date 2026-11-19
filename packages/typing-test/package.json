@@ -6,6 +6,11 @@
   "types": "index.d.ts",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diazdavid-info/my-tools.git",
+    "directory": "packages/typing-test"
+  },
   "files": [
     "dist"
   ],

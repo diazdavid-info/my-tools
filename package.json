@@ -6,7 +6,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,js}\"",
-    "test": "turbo test"
+    "test": "turbo test",
+    "release:version": "changeset version && pnpm install --lockfile-only --no-frozen-lockfile"
   },
   "devDependencies": {
     "@changesets/cli": "3.0.3",

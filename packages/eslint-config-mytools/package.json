@@ -3,6 +3,11 @@
   "version": "1.0.2",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diazdavid-info/my-tools.git",
+    "directory": "packages/eslint-config-mytools"
+  },
   "engines": {
     "node": "^22.22.3 || ^24.16.0 || >=26.3.0"
   },

@@ -38,11 +38,15 @@ pnpm i
 3. Instala ts y eslint `pnpm i -D @mytools/tsconfig eslint-config-mytools`
 4. Copia los ficheros `.eslintrc.js` y `tsconfig.json` de cualquiera otra app
 
-## Como subir de versión un paquete y publicarlo
+## Versionar y publicar paquetes
 
-1. Ejecutar `changeset add`
-2. Añadir el paquete que se quiere subir de versión y si es `major`, `minor` o `patch`
-3. Hacer un commit. Ejemplo de mensaje `Add changeset`
-4. Ejecutar `changeset version` que subirá de versión los paquete que hemos selecionado antes
-5. Hacer un commit. Ejemplo de mensaje `update version`
-6. Ejecutar `changeset publish` que subirar los paquete que tienen que subir
+1. Ejecuta `pnpm changeset` y elige los proyectos y el tipo de cambio (`major`, `minor` o `patch`).
+2. Incluye el changeset en el PR del cambio. Al integrarlo en `main`, CI crea o actualiza un PR con las versiones, changelogs y lockfile.
+3. Integra el PR de versiones. Tras pasar CI, se publican con procedencia las versiones pendientes de los paquetes autorizados que ya existen en npm. Changesets también gestiona versiones y changelogs para los proyectos privados. [Lista de paquetes autorizados](.github/scripts/filter-npm-publish-plan.mjs).
+
+### Activar la publicación automática
+
+- En GitHub, habilita **Allow GitHub Actions to create and approve pull requests** bajo **Settings → Actions → General**.
+- En npm, configura un Trusted Publisher para cada paquete antes de su primera publicación automática. Selecciona GitHub Actions, el propietario `diazdavid-info`, el repositorio `my-tools` y el workflow `github-actions.yml`. Deja el entorno vacío y habilita `npm publish`. [Documentación de npm](https://docs.npmjs.com/trusted-publishers/).
+
+CI ejecuta `npm audit signatures` para verificar las firmas del registro y las atestaciones de procedencia disponibles antes de ejecutar los scripts de instalación de las dependencias.

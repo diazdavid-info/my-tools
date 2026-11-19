@@ -2,7 +2,14 @@
   "name": "mytools-tasks",
   "version": "0.19.0",
   "license": "MIT",
-  "repository": "diazdavid-info/my-tools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diazdavid-info/my-tools.git",
+    "directory": "apps/tasks"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": {
     "name": "David Díaz",
     "email": "diazdavid.info@gmail.com"

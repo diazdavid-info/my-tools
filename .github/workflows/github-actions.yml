@@ -8,16 +8,25 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'release' || github.run_id }}
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    outputs:
+      changesets-mode: ${{ steps.changesets.outputs.mode }}
+      npm-pack-artifact-id: ${{ steps.upload-pack.outputs.artifact-id }}
 
     steps:
       - name: Check out code
         uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 2
+          persist-credentials: false
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v6.1.1
@@ -26,13 +35,114 @@ jobs:
         uses: actions/setup-node@v7.1.0
         with:
           node-version: 24
-          cache: 'pnpm'
+          package-manager-cache: false
+          cache: ${{ (github.event_name != 'push' || github.ref != 'refs/heads/main') && 'pnpm' || '' }}
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Verify npm signatures and provenance
+        run: npm exec --yes --ignore-scripts --package=npm@12.2.3 -- npm audit signatures
+
+      - name: Run approved dependency build scripts
+        run: pnpm --recursive --config.includeWorkspaceRoot=true rebuild --pending
 
       - name: Build
         run: pnpm build
 
       - name: Test
         run: pnpm test
+
+      - name: Select Changesets mode
+        id: changesets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: changesets/action/select-mode@v2.1.2
+
+      - name: Download Changesets publish plan
+        if: steps.changesets.outputs.mode == 'publish'
+        uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ steps.changesets.outputs.publish-plan-artifact-id }}
+          path: ${{ runner.temp }}/npm-publish-plan
+          merge-multiple: true
+
+      - name: Filter the npm publish plan
+        id: npm-plan
+        if: steps.changesets.outputs.mode == 'publish'
+        run: node .github/scripts/filter-npm-publish-plan.mjs "$RUNNER_TEMP/npm-publish-plan/publish-plan.json"
+
+      - name: Pack npm packages
+        if: steps.npm-plan.outputs.has-packages == 'true'
+        run: |
+          pnpm exec changeset pack \
+            --from-publish-plan "$RUNNER_TEMP/npm-publish-plan/publish-plan.json" \
+            --out-dir "$RUNNER_TEMP/npm-pack"
+
+      - name: Upload npm tarballs
+        id: upload-pack
+        if: steps.npm-plan.outputs.has-packages == 'true'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: npm-pack
+          path: ${{ runner.temp }}/npm-pack
+          if-no-files-found: error
+
+  version:
+    needs: build
+    if: needs.build.outputs.changesets-mode == 'version'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6.1.1
+
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Create or update the version PR
+        uses: changesets/action/version@v2.1.2
+        with:
+          script: pnpm run release:version
+
+  publish:
+    needs: build
+    if: needs.build.outputs.npm-pack-artifact-id != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6.1.1
+
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Publish packages to npm with provenance
+        uses: changesets/action/publish@v2.1.2
+        with:
+          pack-dir-artifact-id: ${{ needs.build.outputs.npm-pack-artifact-id }}
+          create-github-releases: false
+        env:
+          PNPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+          PNPM_CONFIG_PROVENANCE: 'true'

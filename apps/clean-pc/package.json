@@ -1,12 +1,20 @@
 {
   "name": "clean-pc",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "type": "module",
   "author": {
     "name": "David Díaz",
     "email": "diazdavid.info@gmail.com"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diazdavid-info/my-tools.git",
+    "directory": "apps/clean-pc"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "",
   "main": "index.js",
   "bin": {

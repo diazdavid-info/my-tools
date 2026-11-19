@@ -7,6 +7,11 @@
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diazdavid-info/my-tools.git",
+    "directory": "packages/mytools-components"
+  },
   "files": [
     "dist/**"
   ],

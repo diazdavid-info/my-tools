@@ -2,6 +2,11 @@
   "name": "mytools-tsconfig",
   "version": "0.1.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diazdavid-info/my-tools.git",
+    "directory": "packages/mytools-tsconfig"
+  },
   "publishConfig": {
     "access": "public"
   }

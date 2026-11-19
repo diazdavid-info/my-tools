@@ -15,7 +15,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/diazdavid-info/my-tools/tree/main/apps/api-route"
+    "url": "git+https://github.com/diazdavid-info/my-tools.git",
+    "directory": "apps/api-route"
   },
   "keywords": [
     "api",
@@ -25,6 +26,9 @@
   ],
   "author": "David Diaz",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=22.12.0"
   },
