@@ -4,7 +4,7 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@11.21.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -16,29 +16,29 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@astrojs/node": "^11.1.5",
-    "@astrojs/preact": "^6.0.5",
-    "@libsql/client": "^0.15.0",
-    "astro": "^7.3.2",
-    "nanoid": "^5.1.6",
-    "preact": "^10.27.2",
-    "preact-render-to-string": "^6.6.1"
+    "@astrojs/node": "^11.1.14",
+    "@astrojs/preact": "^6.1.6",
+    "@libsql/client": "^0.18.0",
+    "astro": "^7.4.13",
+    "nanoid": "^6.0.2",
+    "preact": "^11.2.0",
+    "preact-render-to-string": "^6.8.3"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "@fontsource-variable/instrument-sans": "^5.2.8",
-    "@fontsource/ibm-plex-mono": "^5.2.8",
-    "@fontsource/instrument-serif": "^5.2.8",
-    "@tailwindcss/vite": "^4.3.3",
-    "@typescript-eslint/parser": "^8.70.0",
-    "eslint": "^10.10.0",
+    "@astrojs/check": "^0.9.12",
+    "@fontsource-variable/instrument-sans": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.5",
+    "@typescript-eslint/parser": "^8.73.0",
+    "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-astro": "^3.1.0",
-    "prettier": "^3.9.6",
-    "prettier-plugin-astro": "^1.0.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "tailwindcss": "^4.3.3",
+    "tailwindcss": "^4.3.5",
     "typescript": "6.0.3",
-    "vitest": "^5.0.0"
+    "vitest": "^5.1.1"
   }
 }

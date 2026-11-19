@@ -5,7 +5,8 @@
   "compilerOptions": {
     "target": "es2022",
     "lib": ["es2022", "dom"],
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "declaration": true,
     "declarationMap": false,
     "esModuleInterop": true,

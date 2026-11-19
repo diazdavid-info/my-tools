@@ -1,0 +1,10 @@
+allowBuilds:
+  esbuild: true
+
+minimumReleaseAgeExclude:
+  - '@astrojs/node@11.1.14'
+  - '@astrojs/runtime@0.1.2'
+  - '@vitest/mocker@5.1.1'
+  - '@vitest/spy@5.1.1'
+  - astro@7.4.13
+  - vitest@5.1.1

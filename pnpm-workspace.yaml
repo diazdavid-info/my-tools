@@ -2,9 +2,36 @@ packages:
   - 'packages/*'
   - 'apps/*'
 
+allowBuilds:
+  esbuild: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - '@ai-sdk/gateway@4.0.150'
+  - '@astrojs/cloudflare@14.4.9'
+  - '@astrojs/node@11.1.14'
+  - '@astrojs/runtime@0.1.2'
+  - '@cloudflare/kv-asset-handler@0.5.1'
+  - '@cloudflare/workers-utils@0.55.0'
+  - '@turbo/darwin-64@2.11.13'
+  - '@turbo/darwin-arm64@2.11.13'
+  - '@turbo/linux-64@2.11.13'
+  - '@turbo/linux-arm64@2.11.13'
+  - '@turbo/windows-64@2.11.13'
+  - '@turbo/windows-arm64@2.11.13'
+  - '@vitest/mocker@5.1.1'
+  - '@vitest/spy@5.1.1'
+  - ai@7.0.177
+  - astro@7.4.13
+  - lucide-react@1.75.0
+  - miniflare@5.20261118.0-beta
+  - turbo@2.11.13
+  - vitest@5.1.1
+  - wrangler@4.165.0
+
 overrides:
-  'dompurify@<3.4.13': 3.4.13
-  'next@<15.5.24': 15.5.24
+  'dompurify@<3.4.13': 3.4.18
+  'next@<15.5.24': 15.5.29
   'path-to-regexp@<6.3.0': 6.3.0
-  'postcss@<8.5.23': 8.5.23
-  'sharp@<0.35.4': 0.35.4
+  'postcss@<8.5.23': 8.5.33
+  'sharp@<0.35.4': 0.35.5

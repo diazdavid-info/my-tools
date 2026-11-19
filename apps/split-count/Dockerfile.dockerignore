@@ -2,6 +2,7 @@
 !apps/
 !apps/split-count/
 !apps/split-count/package.json
+!apps/split-count/pnpm-docker.yaml
 !apps/split-count/pnpm-lock.yaml
 !apps/split-count/astro.config.mjs
 !apps/split-count/tsconfig.json

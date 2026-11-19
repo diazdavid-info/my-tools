@@ -3,10 +3,11 @@ FROM node:24-slim AS build
 
 WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@10.33.2 --activate
+RUN npm install --global pnpm@11.21.0
 
 # split-count has its own lockfile and no workspace dependencies.
 COPY apps/split-count/package.json apps/split-count/pnpm-lock.yaml ./
+COPY apps/split-count/pnpm-docker.yaml ./pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile
 
 # Copy only the files required to build split-count.
@@ -25,9 +26,10 @@ ENV PORT=4321
 
 WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@10.33.2 --activate
+RUN npm install --global pnpm@11.21.0
 
 COPY apps/split-count/package.json apps/split-count/pnpm-lock.yaml ./
+COPY apps/split-count/pnpm-docker.yaml ./pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile --prod
 
 COPY --from=build /app/dist/ ./dist/
