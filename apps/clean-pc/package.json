@@ -16,7 +16,7 @@
     "access": "public"
   },
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "bin": {
     "clean-pc": "./dist/index.js"
   },

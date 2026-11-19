@@ -9,8 +9,8 @@
   ],
   "scripts": {
     "build": "rimraf dist && tsc",
-    "dev": "nodemon",
-    "dev:example": "ts-node example/index.ts",
+    "dev": "tsx watch --include 'src/**/*.{ts,js}' --include 'example/**/*.{ts,js}' example/index.ts",
+    "dev:example": "tsx example/index.ts",
     "lint": "eslint . --fix"
   },
   "repository": {
@@ -36,10 +36,9 @@
     "@types/node": "^26.6.6",
     "eslint-config-mytools": "workspace:^",
     "mytools-tsconfig": "workspace:^",
-    "nodemon": "^3.1.14",
     "rimraf": "6.1.4",
-    "ts-node": "10.9.2",
-    "typescript": "6.0.3"
+    "tsx": "^4.23.15",
+    "typescript": "7.0.2"
   },
   "dependencies": {
     "http-parser-js": "^0.5.10",

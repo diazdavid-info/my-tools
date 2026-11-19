@@ -2,8 +2,8 @@
   "name": "typing-testing",
   "version": "0.0.5",
   "description": "",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -19,7 +19,9 @@
     "email": "diazdavid.info@gmail.com"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts"
   },
   "scripts": {
     "lint": "eslint './**/*.{js,ts}'",
